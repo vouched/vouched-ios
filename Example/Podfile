@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'Vouched_Example' do
+  pod 'Vouched', :path => '../'
+
+  target 'Vouched_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end
