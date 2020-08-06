@@ -64,10 +64,16 @@ public struct JobResult: Codable  {
     public var confidences: Confidence
 }
 
+public struct JobError: Codable  {
+    var type: String
+    var message: String
+}
+
 public struct Job: Codable  {
     public var id: String
     public var token: String
     public var result: JobResult
+    public var errors: [JobError]
 }
 
 public struct Params: Codable{
@@ -108,6 +114,20 @@ public struct Params: Codable{
         self.userPhoto = userPhoto
     }
 }
+public struct AuthenticateRequest: Codable {
+    var id: String
+    var userPhoto: String
+    public init(id:String, userPhoto: String){
+        self.id = id
+        self.userPhoto = userPhoto
+    }
+}
+public struct AuthenticateResult: Codable {
+    public var match: Float
+    public init(match:Float){
+        self.match = match
+    }
+}
 public struct SessionJobRequest: Codable {
     var type: Type
     var jobConfigId: String?
@@ -131,44 +151,60 @@ public enum APIError: Error {
     case invalidConfig(property: String)
 }
 public class API {
+    public static func post(path:String, jsonData:Data?, token: String?) throws -> Results{
+        let config = try Config()
+        let rest = RestManager()
+        guard let apiURL = config.API_URL else { throw APIError.invalidConfig(property:"API_URL") }
+        let urlStr = "\(config.API_URL!)\(path)"
+        rest.httpBody = jsonData
+        rest.requestHttpHeaders.add(value: "application/json", forKey: "Content-Type")
+        if token != nil{
+            rest.requestHttpHeaders.add(value: token!, forKey: "x-session-token")
+        }
+        rest.requestHttpHeaders.add(value: config.API_KEY!, forKey: "x-api-public-key")
+        guard let url = URL(string: urlStr) else { throw APIError.invalidURL(url:urlStr) }
+        guard let results = rest.makeRequest(toURL: url,  withHttpMethod: .post) else { throw APIError.serverError() }
+        
+        let httpStatusCode = results.response?.httpStatusCode
+        switch httpStatusCode{
+            case 0: throw APIError.connectionError()
+            case 500: throw APIError.serverError()
+            case 401: throw APIError.invalidAPIKey()
+            case 400: throw APIError.invalidRequest()
+            default: break;
+        }
+        return results
+    }
+    public static func authenticate(request: AuthenticateRequest) throws -> AuthenticateResult {
+        do{
+            let jsonData = try! JSONEncoder().encode(request)
+            let results = try! post(path: "/api/identity/authenticate", jsonData: jsonData, token: nil)
+            if let data = results.data {
+                let decoder = JSONDecoder()
+                guard let result = try? decoder.decode(AuthenticateResult.self, from: data) else { throw APIError.serverError()}
+                return result
+            } else{
+                throw APIError.serverError()
+            }
+        }catch{
+            throw error
+        }
+    }
     public static func jobSession(request:SessionJobRequest, token: String?=nil) throws -> Job {
         var request = request
-        let rest = RestManager()
         request.jobConfigId = "__token_no_review__"
         do{
-            let config = try Config()
-            rest.requestHttpHeaders.add(value: "application/json", forKey: "Content-Type")
-            if token != nil{
-                rest.requestHttpHeaders.add(value: token!, forKey: "x-session-token")
-            }
             let jsonData = try! JSONEncoder().encode(request)
-            
-            
-            rest.httpBody = jsonData
-            rest.requestHttpHeaders.add(value: config.API_KEY!, forKey: "x-api-public-key")
-
-            guard let apiURL = config.API_URL else { throw APIError.invalidConfig(property:"API_URL") }
-            var urlStr = "\(config.API_URL!)/api/jobs/session"
-            guard let url = URL(string: urlStr) else { throw APIError.invalidURL(url:urlStr) }
-
-            guard let results = rest.makeRequest(toURL: url,  withHttpMethod: .post) else { throw APIError.serverError() }
-            rest.requestHttpHeaders.add(value: config.API_KEY!, forKey: "x-api-public-key")
-            let httpStatusCode = results.response?.httpStatusCode
- 
-            switch httpStatusCode{
-                case 0: throw APIError.connectionError()
-                case 500: throw APIError.serverError()
-                case 401: throw APIError.invalidAPIKey()
-                case 400: throw APIError.invalidRequest()
-                default: break;
-            }
-
+            let results = try! post(path: "/api/jobs/session", jsonData: jsonData, token: token)
             if let data = results.data {
-                guard let json = try JSONSerialization.jsonObject(with: data, options: []) as? NSDictionary else {
-                    throw APIError.serverError()
-                }
                 let decoder = JSONDecoder()
-                guard let job = try? decoder.decode(Job.self, from: data) else { throw APIError.serverError()}
+                // print("after decoding...")
+                // guard let json = try JSONSerialization.jsonObject(with: data, options: []) as? NSDictionary else {
+                //     throw APIError.serverError()
+                // }
+                // print("json ::\(json)")
+                guard let job = try? decoder.decode(Job.self, from: data) else {
+                    throw APIError.serverError()}
                 return job
             } else{
                 throw APIError.serverError()

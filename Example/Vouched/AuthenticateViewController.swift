@@ -1,8 +1,8 @@
 //
-//  FaceViewController.swift
+//  AuthenticateViewController.swift
 //  Vouched_Example
 //
-//  Created by David Woo on 7/27/20.
+//  Created by David Woo on 8/5/20.
 //  Copyright © 2020 CocoaPods. All rights reserved.
 //
 
@@ -11,13 +11,16 @@ import AVFoundation
 import Vouched
 import Vision
 
-class FaceViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate {
+class AuthenticateViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate {
     
-    @IBOutlet weak var nextButton: UIButton!
     @IBOutlet weak var cameraView: UIView!
+    @IBOutlet weak var nextButton: UIButton!
     @IBOutlet weak var loadingIndicator: UIActivityIndicatorView!
-    @IBOutlet weak var instructionLabel: UILabel!
     
+    @IBOutlet weak var instructionLabel: UILabel!
+    @IBOutlet weak var authenticationResultLabel: UILabel!
+    
+    var jobId: String = ""
     var device: AVCaptureDevice?
     var captureSession: AVCaptureSession?
     var previewLayer: AVCaptureVideoPreviewLayer?
@@ -32,15 +35,17 @@ class FaceViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         self.navigationController?.navigationBar.isHidden = false
-        self.navigationItem.title = "Place Camera On Face"
+        self.navigationItem.title = "Capture Face To Authenticate"
         
         nextButton.isHidden = true
         loadingIndicator.isHidden = true
         
         setupCamera()
+        print(jobId)
+        // Do any additional setup after loading the view.
     }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -95,16 +100,22 @@ class FaceViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
     }
     func loadingShow(){
         DispatchQueue.main.async() {
-            print(self.loadingIndicator.isHidden)
             self.loadingIndicator.isHidden = false
-
         }
     }
-    func buttonShow(){
-        DispatchQueue.main.async() { // Correct
-            print(self.nextButton.isHidden)
-            self.nextButton.isHidden = false
-            self.loadingIndicator.isHidden = true
+    func buttonShow(authenticationResult: AuthenticateResult){
+        print(authenticationResult.match)
+        if authenticationResult.match > 0.8{
+            DispatchQueue.main.async() { // Correct
+                self.authenticationResultLabel.text = "Authentication Success"
+                self.authenticationResultLabel.isHidden = false
+                self.loadingIndicator.isHidden = true
+            }
+        }else{
+            DispatchQueue.main.async() { // Correct
+                self.authenticationResultLabel.text = "Authentication Failed"
+                self.authenticationResultLabel.isHidden = false
+            }
         }
     }
     
@@ -144,12 +155,13 @@ class FaceViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
             case .postable:
                 print("posting")
                 captureSession?.stopRunning()
-                self.loadingShow()
+                self.loadingShow()  
                 
                 do {
-                    self.job = try session!.postFace(detectedFace: detectedFace)
-                    self.buttonShow()
-                    print("Job Post Success: " + self.job!.id)
+                    print(self.jobId)
+                    let authenticationResult: AuthenticateResult = try session!.postAuthenticate(id: self.jobId, userPhoto: detectedFace.base64Image!)
+                    self.buttonShow(authenticationResult: authenticationResult)
+                    print("Authentication Post Success: " + self.jobId)
                 } catch {
                     print("Error info: \(error)")
                 }
@@ -160,17 +172,4 @@ class FaceViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
         
     }
     
-    @IBAction func nextButtonPressed(_ sender: Any) {
-//        self.cameraView.isHidden = true
-//        self.loadingIndicator.isHidden = false
-    }
-
-    override func prepare(for segue: UIStoryboardSegue, sender:Any?) {
-        if segue.identifier == "ToResultPage" {
-            let destVC = segue.destination as! ResultsViewController
-            destVC.job = self.job
-            destVC.session = self.session
-        }
-    }
-
 }

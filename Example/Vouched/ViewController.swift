@@ -21,14 +21,21 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     var previewLayer: AVCaptureVideoPreviewLayer?
     var cameraImage: UIImage?
     var cardDetect = CardDetect()
-    var faceDetect = FaceDetect()
     var count: Int = 0
-    var cardDetectJobToken:String = ""
     var firstCalled: Bool = true
+    let session: VouchedSession = VouchedSession(type: .idVerificationWithFace)
 
+    var inputFirstName: String = ""
+    var inputLastName: String = ""
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        
+        self.navigationController?.navigationBar.isHidden = false
+        self.navigationItem.title = "Place Camera On ID"
+        
+        
         nextButton.isHidden = true
         loadingIndicator.isHidden = true
         setupCamera()
@@ -108,30 +115,29 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         let imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
         let detectedCard = self.cardDetect.detect(imageBuffer!)
         
-        if firstCalled{
-            if let udetectedCard = detectedCard {
+        if firstCalled {
+            if let detectedCard = detectedCard {
                 print("Found a Card")
                 
                 if !self.cardDetect.isFar() && self.cardDetect.isPostable() {
                     print("Card Detected")
-                    
-                    let idPhoto:String? = udetectedCard.base64Image
-                    
+                    self.firstCalled = false
+                    self.loadingShow()
+                    let job:Job
                     do {
-                        self.loadingShow()
-                        let params = Params(idPhoto: idPhoto)
-                        let request = SessionJobRequest(stage: Stage.id, params: params)
-                        let job = try API.jobSession(request: request)
-
-                        cardDetectJobToken = job.token
-                        self.firstCalled = false
+                        if inputFirstName.isEmpty && inputLastName.isEmpty {
+                            job = try session.postFrontId(detectedCard: detectedCard)
+                        } else {
+                            var params = Params(firstName: inputFirstName, lastName: inputLastName)
+                            job = try session.postFrontId(detectedCard: detectedCard, params: &params)
+                        }
                         self.buttonShow()
-                        print("Job Post Success: " + job.id)
-
+                        print("Job Post Success Card: " + job.id)
                     } catch {
                         print("Error info: \(error)")
                     }
-                }else {
+                                        
+                } else {
                     print("Card Detected but too far")
                 }
             }
@@ -141,8 +147,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     override func prepare(for segue: UIStoryboardSegue, sender:Any?){
         if segue.identifier == "ToFaceDetect"{
             let destVC = segue.destination as! FaceViewController
-            print(self.cardDetectJobToken)
-            destVC.cardDetectJobToken = self.cardDetectJobToken
+            destVC.session = self.session
         }
     }
 
