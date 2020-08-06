@@ -16,8 +16,6 @@ class ResultsViewController: UIViewController, UITableViewDataSource {
     @IBOutlet weak var tableView: UITableView!
     
     var resultsReceieved: Bool = true
-    var cardDetectJobToken: String = ""
-    var id:String = ""    
     var resultName:String = ""
     var resultSuccess:Bool = false
     var resultType:String = ""
@@ -29,23 +27,23 @@ class ResultsViewController: UIViewController, UITableViewDataSource {
     var resultFaceMatch:Float = 0.0
     var resultIdQuality: Float = 0.0    
     var arr:[String] = []
+    var job: Job?
+    
+    
+    var session: VouchedSession?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.navigationController?.navigationBar.isHidden = false
+        self.navigationItem.title = "Verification Results"
+        
         tableView.dataSource = self
-      
-        do {
-            let params = Params()
-            let request = SessionJobRequest(stage: Stage.confirm, params: params)
-            let job = try API.jobSession(request: request, token: self.cardDetectJobToken)
-            print(job)
-            self.populateData(job: job)
-
-        } catch {
-            print("Error info: \(error)")
-        }
-
+        
+        print(job!)
+        self.populateData(job: self.job!)
     }
+    
     func populateData(job: Job){
         if job.result.firstName != nil && job.result.lastName != nil{
             resultName = job.result.firstName! + " " + job.result.lastName!
@@ -122,11 +120,13 @@ class ResultsViewController: UIViewController, UITableViewDataSource {
         }
         if indexPath.row == 3 {
             let text = arr[indexPath.row]
-            cell.textLabel?.text = "Name -  " + text
-            if text == ""{
+            
+            if self.job!.result.confidences.nameMatch == nil || self.job!.result.confidences.nameMatch! < 0.8{
+                cell.textLabel?.text = "Name - "
                 cell.accessoryView = UIImageView(image:UIImage(named: "x.jpg"))
                 cell.accessoryView?.frame = CGRect(x:0,y:0,width:22,height:22)
             }else{
+                cell.textLabel?.text = "Name -  " + text
                 cell.accessoryView = UIImageView(image:UIImage(named: "check.png"))
                 cell.accessoryView?.frame = CGRect(x:0,y:0,width:24,height:22)
             }
@@ -147,7 +147,7 @@ class ResultsViewController: UIViewController, UITableViewDataSource {
         if indexPath.row == 5 {
             let text = arr[indexPath.row]
             cell.textLabel?.text = "Id Quality Result -  " + text
-            if (Double(text)?.isLess(than: 0.6))!{
+            if (Double(text)?.isLess(than: 0.4))!{
                 cell.accessoryView = UIImageView(image:UIImage(named: "x.jpg"))
                 cell.accessoryView?.frame = CGRect(x:0,y:0,width:22,height:22)
             }else{
@@ -161,5 +161,11 @@ class ResultsViewController: UIViewController, UITableViewDataSource {
         cell.textLabel?.text = text
         return cell
     }
- 
+    override func prepare(for segue: UIStoryboardSegue, sender:Any?){
+        if segue.identifier == "ToAuthenticate"{
+            let destVC = segue.destination as! AuthenticateViewController
+            destVC.jobId = self.job!.id
+            destVC.session = self.session
+        }
+    }
 }
