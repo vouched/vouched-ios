@@ -13,17 +13,17 @@
 4. Run Vouched-Example on a device with iOS 11.0+
 
 **1st Screen** - Name Input (Optional)  
-**2st Screen** - Card Detection
+**2st Screen** - Card Detection  
 **3nd Screen** - Face Detection  
-**4th Screen** - ID Verification Results
-**5th Screen** - Face Authenticaion
+**4th Screen** - ID Verification Results  
+**5th Screen** - Face Authenticaion  
 
 #### Features displayed in Example 
 * ID Card and Passport Detection
 * Face Detection (w and w/o liveness)
 * ID Verification
 * Name Verification
-* Face Authenticaion
+* Face Authenticaion (Demo purposes only)
 
 ## How to use the Vouched Library
 
