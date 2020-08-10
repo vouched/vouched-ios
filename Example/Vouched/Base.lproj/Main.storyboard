@@ -42,6 +42,13 @@
                                     <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="clQ-n9-KHv">
                                         <rect key="frame" x="188.5" y="171.5" width="37" height="37"/>
                                     </activityIndicatorView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="djq-aN-2Ij">
+                                        <rect key="frame" x="67" y="586" width="280" height="80"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="23"/>
+                                        <color key="textColor" red="0.2405811548" green="0.13808485870000001" blue="0.6588643193" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <constraints>
@@ -65,6 +72,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="cameraView" destination="CFf-XG-upV" id="tCz-13-L7h"/>
+                        <outlet property="instructionLabel" destination="djq-aN-2Ij" id="iMd-UL-vYQ"/>
                         <outlet property="loadingIndicator" destination="clQ-n9-KHv" id="L08-Of-gyB"/>
                         <outlet property="nextButton" destination="u5V-aO-TtP" id="1qU-S5-7IP"/>
                     </connections>
@@ -102,7 +110,6 @@
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                         <connections>
-                                            <action selector="nextButtonPressed:" destination="mGF-Gl-eBh" eventType="touchUpInside" id="Ys4-Mh-6Li"/>
                                             <segue destination="hpj-Sc-TGW" kind="show" identifier="ToResultPage" id="4Su-7L-87m"/>
                                         </connections>
                                     </button>
@@ -110,7 +117,7 @@
                                         <rect key="frame" x="188.5" y="171.5" width="37" height="37"/>
                                     </activityIndicatorView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rLT-dW-ECv">
-                                        <rect key="frame" x="113" y="577" width="200" height="80"/>
+                                        <rect key="frame" x="73" y="577" width="280" height="80"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="23"/>
                                         <color key="textColor" red="0.2405811548" green="0.13808485870000001" blue="0.6588643193" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
@@ -176,9 +183,18 @@
                                 </prototypes>
                             </tableView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="34w-cs-vpo">
-                                <rect key="frame" x="155.5" y="793" width="103" height="34"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                <state key="normal" title="Authenticate"/>
+                                <rect key="frame" x="137" y="797" width="140" height="30"/>
+                                <color key="backgroundColor" red="0.2405811548" green="0.13808485870000001" blue="0.6588643193" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                                <inset key="contentEdgeInsets" minX="1" minY="0.0" maxX="1" maxY="0.0"/>
+                                <state key="normal" title="Authenticate">
+                                    <color key="titleColor" red="0.94121545549999996" green="0.94093686340000005" blue="0.96077996489999995" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="5"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
                                 <connections>
                                     <segue destination="Eh5-0M-iHb" kind="show" identifier="ToAuthenticate" id="TsT-mB-aKN"/>
                                 </connections>
@@ -357,11 +373,20 @@
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="R8h-lv-6qB">
-                                <rect key="frame" x="132" y="732" width="150" height="30"/>
+                                <rect key="frame" x="132" y="715" width="150" height="47"/>
+                                <color key="backgroundColor" red="0.2405811548" green="0.13808485870000001" blue="0.6588643193" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="150" id="QYy-RJ-HrE"/>
                                 </constraints>
-                                <state key="normal" title="Next: Verify ID"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="29"/>
+                                <state key="normal" title="Continue">
+                                    <color key="titleColor" red="0.94121545549999996" green="0.94093686340000005" blue="0.96077996489999995" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="5"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
                                 <connections>
                                     <segue destination="vXZ-lx-hvc" kind="show" identifier="ToInputNames" id="dVX-DN-k7y"/>
                                 </connections>

@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 
 
+## [0.1.0](https://github.com/vouched/vouched-ios/compare/v0.0.3...v0.1.0) - 2020-08-10
+
+#### Added
+- VouchedLogger for easier debugging 
+
+#### Removed
+- Unused code
+- Unnecessary print statements
+
+
 ## [0.0.3](https://github.com/vouched/vouched-ios/compare/v0.0.2...v0.0.3) - 2020-08-06
 
 ### <ins>SDK</ins>
