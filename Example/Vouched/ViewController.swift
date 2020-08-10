@@ -14,15 +14,15 @@ import Vision
 class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate {
     @IBOutlet weak var cameraView: UIView!
     @IBOutlet weak var nextButton: UIButton!
-    
     @IBOutlet weak var loadingIndicator: UIActivityIndicatorView!
+    @IBOutlet weak var instructionLabel: UILabel!
+    
     var device: AVCaptureDevice?
     var captureSession: AVCaptureSession?
     var previewLayer: AVCaptureVideoPreviewLayer?
     var cameraImage: UIImage?
     var cardDetect = CardDetect()
     var count: Int = 0
-    var firstCalled: Bool = true
     let session: VouchedSession = VouchedSession(type: .idVerificationWithFace)
 
     var inputFirstName: String = ""
@@ -31,10 +31,8 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        
         self.navigationController?.navigationBar.isHidden = false
         self.navigationItem.title = "Place Camera On ID"
-        
         
         nextButton.isHidden = true
         loadingIndicator.isHidden = true
@@ -96,7 +94,6 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     }
     func loadingShow(){
         DispatchQueue.main.async() {
-            print(self.loadingIndicator.isHidden)
             self.loadingIndicator.isHidden = false
 
         }
@@ -108,6 +105,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
 
         }
     }
+    
     /**
      This method called from AVCaptureVideoDataOutputSampleBufferDelegate - passed in sampleBuffer
      */
@@ -115,30 +113,32 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         let imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
         let detectedCard = self.cardDetect.detect(imageBuffer!)
         
-        if firstCalled {
-            if let detectedCard = detectedCard {
-                print("Found a Card")
-                
-                if !self.cardDetect.isFar() && self.cardDetect.isPostable() {
-                    print("Card Detected")
-                    self.firstCalled = false
-                    self.loadingShow()
-                    let job:Job
-                    do {
-                        if inputFirstName.isEmpty && inputLastName.isEmpty {
-                            job = try session.postFrontId(detectedCard: detectedCard)
-                        } else {
-                            var params = Params(firstName: inputFirstName, lastName: inputLastName)
-                            job = try session.postFrontId(detectedCard: detectedCard, params: &params)
-                        }
-                        self.buttonShow()
-                        print("Job Post Success Card: " + job.id)
-                    } catch {
-                        print("Error info: \(error)")
+        if let detectedCard = detectedCard {
+            if cardDetect.isFar() {
+              DispatchQueue.main.async() {
+                  self.instructionLabel.text = "Too Far Away"
+              }
+            } else if !cardDetect.isPostable() {
+              DispatchQueue.main.async() {
+                  self.instructionLabel.text = "Hold Steady"
+              }
+            }
+            else {
+                captureSession?.stopRunning()
+                self.loadingShow()
+                DispatchQueue.main.async() {
+                    self.instructionLabel.text = "Processing Image"
+                }
+                do {
+                    if inputFirstName.isEmpty && inputLastName.isEmpty {
+                        _ = try session.postFrontId(detectedCard: detectedCard)
+                    } else {
+                        var params = Params(firstName: inputFirstName, lastName: inputLastName)
+                        _ = try session.postFrontId(detectedCard: detectedCard, params: &params)
                     }
-                                        
-                } else {
-                    print("Card Detected but too far")
+                    self.buttonShow()
+                } catch {
+                    print("Error info: \(error)")
                 }
             }
         }

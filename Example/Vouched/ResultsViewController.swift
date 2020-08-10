@@ -40,16 +40,13 @@ class ResultsViewController: UIViewController, UITableViewDataSource {
         
         tableView.dataSource = self
         
-        print(job!)
         self.populateData(job: self.job!)
     }
     
     func populateData(job: Job){
+        resultSuccess = job.result.success
         if job.result.firstName != nil && job.result.lastName != nil{
             resultName = job.result.firstName! + " " + job.result.lastName!
-        }
-        if job.result.success != nil{
-            resultSuccess = job.result.success
         }
         if job.result.confidences.faceMatch != nil{
             resultFaceMatch = job.result.confidences.faceMatch!

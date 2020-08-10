@@ -1,6 +1,5 @@
 
 import Foundation
-import Vouched
 
 @available(iOS 11.0, *)
 
@@ -144,18 +143,21 @@ public struct SessionJobRequest: Codable {
 }
 public enum APIError: Error {
     case invalidURL(url: String)
-    case invalidRequest()
-    case invalidAPIKey()
-    case connectionError()
-    case serverError()
+    case invalidRequest
+    case invalidAPIKey
+    case connectionError
+    case serverError
     case invalidConfig(property: String)
 }
 public class API {
     public static func post(path:String, jsonData:Data?, token: String?) throws -> Results{
         let config = try Config()
         let rest = RestManager()
-        guard let apiURL = config.API_URL else { throw APIError.invalidConfig(property:"API_URL") }
-        let urlStr = "\(config.API_URL!)\(path)"
+        guard let apiURL = config.API_URL else {
+            VouchedLogger.shared.error("Missing API_URL. Please refer to documentation to set up your api url")
+            throw APIError.invalidConfig(property:"API_URL")
+        }
+        let urlStr = "\(apiURL)\(path)"
         rest.httpBody = jsonData
         rest.requestHttpHeaders.add(value: "application/json", forKey: "Content-Type")
         if token != nil{
@@ -163,14 +165,14 @@ public class API {
         }
         rest.requestHttpHeaders.add(value: config.API_KEY!, forKey: "x-api-public-key")
         guard let url = URL(string: urlStr) else { throw APIError.invalidURL(url:urlStr) }
-        guard let results = rest.makeRequest(toURL: url,  withHttpMethod: .post) else { throw APIError.serverError() }
+        guard let results = rest.makeRequest(toURL: url,  withHttpMethod: .post) else { throw APIError.serverError }
         
         let httpStatusCode = results.response?.httpStatusCode
         switch httpStatusCode{
-            case 0: throw APIError.connectionError()
-            case 500: throw APIError.serverError()
-            case 401: throw APIError.invalidAPIKey()
-            case 400: throw APIError.invalidRequest()
+            case 0: throw APIError.connectionError
+            case 500: throw APIError.serverError
+            case 401: throw APIError.invalidAPIKey
+            case 400: throw APIError.invalidRequest
             default: break;
         }
         return results
@@ -181,10 +183,14 @@ public class API {
             let results = try! post(path: "/api/identity/authenticate", jsonData: jsonData, token: nil)
             if let data = results.data {
                 let decoder = JSONDecoder()
-                guard let result = try? decoder.decode(AuthenticateResult.self, from: data) else { throw APIError.serverError()}
+                guard let result = try? decoder.decode(AuthenticateResult.self, from: data) else {
+                    let rawStr = String(decoding: data, as: UTF8.self)
+                    VouchedLogger.shared.error("Unable to decode data into a AuthenticateResult object. Here is the data:\n\(rawStr)")
+                    throw APIError.serverError
+                }
                 return result
             } else{
-                throw APIError.serverError()
+                throw APIError.serverError
             }
         }catch{
             throw error
@@ -196,21 +202,18 @@ public class API {
         do{
             let jsonData = try! JSONEncoder().encode(request)
             let results = try! post(path: "/api/jobs/session", jsonData: jsonData, token: token)
-            if let data = results.data {
+            if let data: Data = results.data {
                 let decoder = JSONDecoder()
-                // print("after decoding...")
-                // guard let json = try JSONSerialization.jsonObject(with: data, options: []) as? NSDictionary else {
-                //     throw APIError.serverError()
-                // }
-                // print("json ::\(json)")
                 guard let job = try? decoder.decode(Job.self, from: data) else {
-                    throw APIError.serverError()}
+                    let rawStr = String(decoding: data, as: UTF8.self)
+                    VouchedLogger.shared.error("Unable to decode data into a Job object. Here is the data:\n\(rawStr)")
+                    throw APIError.serverError
+                }
                 return job
-            } else{
-                throw APIError.serverError()
+            } else {
+                throw APIError.serverError
             }
-            
-        }catch{
+        } catch {
             throw error
         }
     }

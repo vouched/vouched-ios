@@ -39,6 +39,9 @@ public class VouchedSession
         var job = try Utils.retryWithBackoff(withRetries: 3, operation: {
             return try API.jobSession(request: request, token: self.token)
         })
+
+        VouchedLogger.shared.info("Succesfully posted front id")
+        VouchedLogger.shared.debug("\(job)")
         self.token = job.token
         
         // IDV with only the id. run confirm directly after
@@ -58,6 +61,9 @@ public class VouchedSession
         var job = try Utils.retryWithBackoff(withRetries: 3, operation: {
             return try API.jobSession(request: request, token: self.token)
         })
+        VouchedLogger.shared.info("Succesfully posted face")
+        VouchedLogger.shared.debug("\(job)")
+
         self.token = job.token
         
         // IDV with id + face. run confirm directly after
@@ -74,7 +80,9 @@ public class VouchedSession
         let job = try Utils.retryWithBackoff(withRetries: 3, operation: {
             return try API.jobSession(request: request, token: self.token)
         })
-            
+        VouchedLogger.shared.info("Succesfully confirmed job")
+        VouchedLogger.shared.debug("\(job)")
+        
         self.token = job.token
         return job
     }
@@ -84,6 +92,9 @@ public class VouchedSession
         let job = try Utils.retryWithBackoff(withRetries: 3, operation: {
             return try API.authenticate(request: request)
         })
+        VouchedLogger.shared.info("Succesfully posted authentication request")
+        VouchedLogger.shared.debug("\(job)")
+        
         return job
     }
 }

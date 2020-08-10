@@ -24,8 +24,8 @@ public struct User: Decodable {
     let avatar: URL
 }
 enum RestManagerTestsError: Error {
-    case invalidUrl()
-    case invalidRequest()
+    case invalidUrl
+    case invalidRequest
 }
 
 class RestManagerTests: XCTestCase {
@@ -44,8 +44,8 @@ class RestManagerTests: XCTestCase {
 
         let rest = RestManager()
     
-        guard let url = URL(string: "https://reqres.in/api/users") else { throw RestManagerTestsError.invalidUrl() }
-        guard let results = rest.makeRequest(toURL: url, withHttpMethod: .get) else { throw RestManagerTestsError.invalidRequest() }
+        guard let url = URL(string: "https://reqres.in/api/users") else { throw RestManagerTestsError.invalidUrl }
+        guard let results = rest.makeRequest(toURL: url, withHttpMethod: .get) else { throw RestManagerTestsError.invalidRequest }
         let httpStatusCode = results.response?.httpStatusCode
         XCTAssertEqual(httpStatusCode, 200)
         if let data = results.data {

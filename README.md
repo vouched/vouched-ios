@@ -13,17 +13,17 @@
 4. Run Vouched-Example on a device with iOS 11.0+
 
 **1st Screen** - Name Input (Optional)  
-**2st Screen** - Card Detection  
+**2st Screen** - Card Detection   
 **3nd Screen** - Face Detection  
 **4th Screen** - ID Verification Results  
-**5th Screen** - Face Authenticaion  
+**5th Screen** - Face Authenticaion (**Demo purposes only**) 
 
 #### Features displayed in Example 
 * ID Card and Passport Detection
 * Face Detection (w and w/o liveness)
 * ID Verification
 * Name Verification
-* Face Authenticaion (Demo purposes only)
+* Face Authenticaion (**Demo purposes only**)
 
 ## How to use the Vouched Library
 
@@ -69,23 +69,40 @@ let faceDetect = FaceDetect(config: FaceDetectConfig(liveness: .mouthMovement))
 if let detectedFace = detectedFace {
   switch detectedFace.step {
   case .preDetected:
-    self.instructionLabel.text = "Loading Camera"
+    // prompt user to look into camera
   case .detected:
     updateLabelFromInstruction(detectedFace.instruction)
   case .postable:
     do {
-      // make sure to use the same session instance created above
-      let job = try session!.postFace(detectedFace: detectedFace)
+      // make sure to use the same session instance created previously
+      let job = try session.postFace(detectedFace: detectedFace)
     } catch {
       // handle error cases
     }
   }
 } else {
-  DispatchQueue.main.async() {
-    self.instructionLabel.text = "Waiting for a face"
-  }
+    // prompt user to look into camera
 }
 ```
+
+**Debugging/Logging Vouched**  
+Destinations - where the log output is written
+* .xcode (Xcode output)
+* .console (Console app via [os_log](https://developer.apple.com/documentation/os/oslog))
+* .none
+
+Levels - the severity of the log
+* .debug
+* .info
+* .error
+
+The level is inclusive of more severe logs. i.e - debug will also log info and error 
+
+Configure VouchedLogger to the destination and level desired
+```
+VouchedLogger.shared.configure(destination: .xcode, level: .debug)
+```
+If not configured, VouchedLogger defaults to .none and .error
 
 ## Environment Variables
 
@@ -102,17 +119,6 @@ SLASH = /
 API_URL = http:$(SLASH)/localhost:7700
 
 ```
-
-## Tips
-
-- Create a new Swift class
-  - Add to Vouched/Classes
-  - Add file from XCode
-  - Run pod install
-
-## Classes
-
-- Config.swift - configuration static and env variables
 
 ## Tests
 

@@ -13,7 +13,6 @@
 		2C2796BF24DBAB5C000CCC9E /* AuthenticateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2796BE24DBAB5C000CCC9E /* AuthenticateViewController.swift */; };
 		2C2796C124DBAB6C000CCC9E /* InputViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2796C024DBAB6C000CCC9E /* InputViewController.swift */; };
 		2C2796C524DBAB9A000CCC9E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2796C424DBAB9A000CCC9E /* ViewController.swift */; };
-		2C2796C724DBABB6000CCC9E /* PastViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2796C624DBABB6000CCC9E /* PastViewController.swift */; };
 		607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD51AFB9204008FA782 /* AppDelegate.swift */; };
 		607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 607FACD91AFB9204008FA782 /* Main.storyboard */; };
 		607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDC1AFB9204008FA782 /* Images.xcassets */; };
@@ -51,7 +50,6 @@
 		2C2796BE24DBAB5C000CCC9E /* AuthenticateViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticateViewController.swift; sourceTree = "<group>"; };
 		2C2796C024DBAB6C000CCC9E /* InputViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InputViewController.swift; sourceTree = "<group>"; };
 		2C2796C424DBAB9A000CCC9E /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		2C2796C624DBABB6000CCC9E /* PastViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PastViewController.swift; sourceTree = "<group>"; };
 		607FACD01AFB9204008FA782 /* Vouched_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Vouched_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACD41AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		607FACD51AFB9204008FA782 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -132,7 +130,6 @@
 				607FACD51AFB9204008FA782 /* AppDelegate.swift */,
 				BC5F230724CF835600B0CB8E /* MainViewController.swift */,
 				2C2796BE24DBAB5C000CCC9E /* AuthenticateViewController.swift */,
-				2C2796C624DBABB6000CCC9E /* PastViewController.swift */,
 				2C2796C024DBAB6C000CCC9E /* InputViewController.swift */,
 				2C2796C424DBAB9A000CCC9E /* ViewController.swift */,
 				BC5F230D24CFFCF100B0CB8E /* FaceViewController.swift */,
@@ -384,7 +381,6 @@
 				BC5F230E24CFFCF100B0CB8E /* FaceViewController.swift in Sources */,
 				2C2796C524DBAB9A000CCC9E /* ViewController.swift in Sources */,
 				2C2796C124DBAB6C000CCC9E /* InputViewController.swift in Sources */,
-				2C2796C724DBABB6000CCC9E /* PastViewController.swift in Sources */,
 				BC5F231024D009F400B0CB8E /* ResultsViewController.swift in Sources */,
 				2C2796BF24DBAB5C000CCC9E /* AuthenticateViewController.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,

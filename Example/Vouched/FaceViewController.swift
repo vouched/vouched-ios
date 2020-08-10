@@ -50,7 +50,7 @@ class FaceViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
      This method sets up the Camera device details
      */
     func setupCamera() {
-        var discoverySession = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInWideAngleCamera],
+        let discoverySession = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInWideAngleCamera],
                                                                 mediaType: AVMediaType.video,
                                                                 position: .front)
         
@@ -95,14 +95,12 @@ class FaceViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
     }
     func loadingShow(){
         DispatchQueue.main.async() {
-            print(self.loadingIndicator.isHidden)
             self.loadingIndicator.isHidden = false
 
         }
     }
     func buttonShow(){
         DispatchQueue.main.async() { // Correct
-            print(self.nextButton.isHidden)
             self.nextButton.isHidden = false
             self.loadingIndicator.isHidden = true
         }
@@ -137,34 +135,32 @@ class FaceViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
         if let detectedFace = detectedFace {
             switch detectedFace.step {
             case .preDetected:
-                print("waiting for the face...")
+                DispatchQueue.main.async() {
+                    self.instructionLabel.text = "Waiting for Camera to Load"
+                }
             case .detected:
-                print("instruction: \(detectedFace.instruction)")
                 self.updateLabel(detectedFace.instruction)
             case .postable:
-                print("posting")
                 captureSession?.stopRunning()
                 self.loadingShow()
-                
+                DispatchQueue.main.async() {
+                    self.instructionLabel.text = "Processing Image"
+                }
                 do {
                     self.job = try session!.postFace(detectedFace: detectedFace)
                     self.buttonShow()
-                    print("Job Post Success: " + self.job!.id)
                 } catch {
                     print("Error info: \(error)")
                 }
             }
         } else {
-            print("no face...")
+            DispatchQueue.main.async() {
+                self.instructionLabel.text = "Look into the Camera"
+            }
         }
         
     }
     
-    @IBAction func nextButtonPressed(_ sender: Any) {
-//        self.cameraView.isHidden = true
-//        self.loadingIndicator.isHidden = false
-    }
-
     override func prepare(for segue: UIStoryboardSegue, sender:Any?) {
         if segue.identifier == "ToResultPage" {
             let destVC = segue.destination as! ResultsViewController

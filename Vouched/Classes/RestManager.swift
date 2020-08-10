@@ -37,9 +37,6 @@ public class RestManager {
             let sessionConfiguration = URLSessionConfiguration.default
             let session = URLSession(configuration: sessionConfiguration)
             let task = session.dataTask(with: request) { (data, response, error) in
-//                let json = String(decoding: data!, as: UTF8.self)
-//                print("restman:::\(json)")
-
                 results = Results(withData: data,
                                    response: Response(fromURLResponse: response),
                                    error: error)
@@ -51,8 +48,6 @@ public class RestManager {
         group.wait()    
         return results
     }
-    
-    
     
     public func getData(fromURL url: URL, completion: @escaping (_ data: Data?) -> Void) {
         DispatchQueue.global(qos: .userInitiated).async {
@@ -66,10 +61,7 @@ public class RestManager {
         }
     }
     
-    
-    
     // MARK: - Private Methods
-    
     private func addURLQueryParameters(toURL url: URL) -> URL {
         if urlQueryParameters.totalItems() > 0 {
             guard var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false) else { return url }
@@ -92,16 +84,7 @@ public class RestManager {
     
     
     private func getHttpBody() -> Data? {
-        // guard let contentType = requestHttpHeaders.value(forKey: "Content-Type") else { return nil }
-        
-        // if contentType.contains("application/json") {
-        //     return try? JSONSerialization.data(withJSONObject: httpBodyParameters.allValues(), options: [.prettyPrinted, .sortedKeys])
-        // } else if contentType.contains("application/x-www-form-urlencoded") {
-        //     let bodyString = httpBodyParameters.allValues().map { "\($0)=\(String(describing: $1.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)))" }.joined(separator: "&")
-        //     return bodyString.data(using: .utf8)
-        // } else {
         return httpBody
-        // }
     }
     
     
@@ -122,10 +105,6 @@ public class RestManager {
 
 
 // MARK: - RestManager Custom Types
-
-
-
-
 public struct RestEntity {
     private var values: [String: String] = [:]
     
@@ -145,6 +124,7 @@ public struct RestEntity {
         return values.count
     }
 }
+
 public struct Response {
     public var response: URLResponse?
     public var httpStatusCode: Int = 0
@@ -162,6 +142,7 @@ public struct Response {
         }
     }
 }
+
 public struct Results {
     public var data: Data?
     public var response: Response?
@@ -186,15 +167,6 @@ public extension RestManager {
         case patch
         case delete
     }
-
-    
-    
-    
-    
-    
-    
-    
-    
     
     enum CustomError: Error {
         case failedToCreateRequest

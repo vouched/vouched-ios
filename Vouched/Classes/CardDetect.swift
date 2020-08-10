@@ -42,21 +42,24 @@ public class CardDetect {
     /// if the card/passport doesn't meet the box threshold, far is set to False
     /// returns the base64 image if card/passport is detected
     public func detect(_ cvPixelBuffer: CVPixelBuffer) -> CardDetectResult? {
-        let result = modelDataHandler?.runModel(onFrame: cvPixelBuffer)
-        guard let unwrappedResult = result else {
+        guard let result = modelDataHandler?.runModel(onFrame: cvPixelBuffer) else {
             return nil
         }
-        for inference in unwrappedResult.inferences {
+        
+        for inference in result.inferences {
             // a card was found
             // update the 'far' flag depending on if it's too far away
             // update consecutiveDetections. when there are 3, postable = true
             // return the base64 image
+            
             if inference.confidence > MINIMUM_CONFIDENCE {
+                VouchedLogger.shared.debug("Found a Card/Passport")
+
                 let frame = inference.rect
                 let frameSize = frame.height * frame.width
                 self.far = frameSize < self.boxThresholdWithScale
                 
-                self.consecutiveDetections += 1
+                self.consecutiveDetections = self.far ? 0 : self.consecutiveDetections + 1
                 self.postable = self.consecutiveDetections >= 3
                 
                 // resize image then convert to base64
@@ -69,10 +72,10 @@ public class CardDetect {
         }
         
         // no face was found
+        VouchedLogger.shared.debug("Unable to find a Card/Passport")
         self.far = true
         self.postable = false
         self.consecutiveDetections = 0
         return nil
     }
-
 }

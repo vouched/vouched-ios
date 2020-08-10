@@ -42,8 +42,6 @@ class AuthenticateViewController: UIViewController, AVCaptureVideoDataOutputSamp
         loadingIndicator.isHidden = true
         
         setupCamera()
-        print(jobId)
-        // Do any additional setup after loading the view.
     }
     
     override func didReceiveMemoryWarning() {
@@ -55,7 +53,7 @@ class AuthenticateViewController: UIViewController, AVCaptureVideoDataOutputSamp
      This method sets up the Camera device details
      */
     func setupCamera() {
-        var discoverySession = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInWideAngleCamera],
+        let discoverySession = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInWideAngleCamera],
                                                                 mediaType: AVMediaType.video,
                                                                 position: .front)
         
@@ -104,8 +102,7 @@ class AuthenticateViewController: UIViewController, AVCaptureVideoDataOutputSamp
         }
     }
     func buttonShow(authenticationResult: AuthenticateResult){
-        print(authenticationResult.match)
-        if authenticationResult.match > 0.8{
+        if authenticationResult.match > 0.8 {
             DispatchQueue.main.async() { // Correct
                 self.authenticationResultLabel.text = "Authentication Success"
                 self.authenticationResultLabel.isHidden = false
@@ -148,26 +145,28 @@ class AuthenticateViewController: UIViewController, AVCaptureVideoDataOutputSamp
         if let detectedFace = detectedFace {
             switch detectedFace.step {
             case .preDetected:
-                print("waiting for the face...")
+                DispatchQueue.main.async() {
+                    self.instructionLabel.text = "Waiting for Camera to Load"
+                }
             case .detected:
-                print("instruction: \(detectedFace.instruction)")
                 self.updateLabel(detectedFace.instruction)
             case .postable:
-                print("posting")
                 captureSession?.stopRunning()
-                self.loadingShow()  
-                
+                DispatchQueue.main.async() {
+                    self.instructionLabel.text = "Processing Image"
+                }
+                self.loadingShow()
                 do {
-                    print(self.jobId)
                     let authenticationResult: AuthenticateResult = try session!.postAuthenticate(id: self.jobId, userPhoto: detectedFace.base64Image!)
                     self.buttonShow(authenticationResult: authenticationResult)
-                    print("Authentication Post Success: " + self.jobId)
                 } catch {
                     print("Error info: \(error)")
                 }
             }
         } else {
-            print("no face...")
+            DispatchQueue.main.async() {
+                self.instructionLabel.text = "Look into the Camera"
+            }
         }
         
     }

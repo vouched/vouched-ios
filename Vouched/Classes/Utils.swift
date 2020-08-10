@@ -3,7 +3,7 @@
 import Foundation
 
 enum RetryError: Error {
-    case retryCountOutOfBounds()
+    case retryCountOutOfBounds
 }
 
 @available(iOS 11.0, *)
@@ -12,9 +12,8 @@ public class Utils {
     private static let fibonacci: [Int] = [1, 1, 2, 3, 5, 8]
 
     public static func imageToBase64(image: UIImage )->String? {
-        let jpegCompressionQuality: CGFloat = 0.9 // Set this to whatever suits your purpose
+        let jpegCompressionQuality: CGFloat = 0.9
         if let base64String = UIImageJPEGRepresentation(image, jpegCompressionQuality)?.base64EncodedString() {
-       // if let base64String = image.jpegData(compressionQuality: jpegCompressionQuality) )?.base64EncodedString() {
             return base64String
         }
         return nil
@@ -27,7 +26,7 @@ public class Utils {
                                     withMillisecondWaitTime time: Int = 500,
                                     executionCount: Int = 0) throws -> T {
         if retryCount > 6 {
-            throw RetryError.retryCountOutOfBounds()
+            throw RetryError.retryCountOutOfBounds
         }
         do {
             return try operation()

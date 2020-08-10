@@ -100,7 +100,7 @@ class ModelDataHandler: NSObject {
             forResource: modelFilename,
             ofType: modelFileInfo.extension
             ) else {
-                print("Failed to load the model file with name: \(modelFilename).")
+                VouchedLogger.shared.error("Failed to load the model file with name: \(modelFilename).")
                 return nil
         }
         
@@ -114,7 +114,7 @@ class ModelDataHandler: NSObject {
             // Allocate memory for the model's input `Tensor`s.
             try interpreter.allocateTensors()
         } catch let error {
-            print("Failed to create the interpreter with error: \(error.localizedDescription)")
+            VouchedLogger.shared.error("Failed to create the interpreter with error: \(error.localizedDescription)")
             return nil
         }
         
@@ -160,7 +160,7 @@ class ModelDataHandler: NSObject {
                 byteCount: batchSize * inputWidth * inputHeight * inputChannels,
                 isModelQuantized: inputTensor.dataType == .uInt8
                 ) else {
-                    print("Failed to convert the image buffer to RGB data.")
+                    VouchedLogger.shared.error("Failed to convert the image buffer to RGB data.")
                     return nil
             }
             
@@ -177,7 +177,7 @@ class ModelDataHandler: NSObject {
             outputScores = try interpreter.output(at: 2)
             outputCount = try interpreter.output(at: 3)
         } catch let error {
-            print("Failed to invoke the interpreter with error: \(error.localizedDescription)")
+            VouchedLogger.shared.error("Failed to invoke the interpreter with error: \(error.localizedDescription)")
             return nil
         }
         

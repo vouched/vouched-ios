@@ -90,11 +90,13 @@ public class FaceDetect {
                 return resetStateReturnNil()
             }
             if faces.count == 0 {
+                VouchedLogger.shared.debug("Unable to find a face")
                 return resetStateReturnNil()
             }
 
             // checkpoint 2
             if faces.count > 1 {
+                VouchedLogger.shared.debug("Found more than one face")
                 return getResult(withInstruction: .onlyOneFace)
             }
             let face = faces[0]
@@ -104,6 +106,7 @@ public class FaceDetect {
             // checkpoint 3
             let boxSize = self.boudingBox.height * self.boudingBox.width
             if boxSize < self.boxThresholdPctWithScale {
+                VouchedLogger.shared.debug("Face is too far away")
                 return getResult(withInstruction: .moveCloser)
             }
                         
@@ -111,34 +114,33 @@ public class FaceDetect {
             switch self.config.liveness {
             case .mouthMovement:
                 if !self.mouthStates.isEmpty() {
-                    do {
-                        // TODO: safely unwrap all variables
-                        let outerLips = face.landmarks!.outerLips!
-                        let innerLips = face.landmarks!.innerLips!
-                        let currentMouthState = self.getMouthState(outerLips, innerLips);
-                        updatePreviousMouthState(currentMouthState)
-                        let needed = self.mouthStates.peek()
-                        if currentMouthState == needed {
-                            if consecutiveMouthStates() {
-                                self.mouthStates.pop()
-                            }
-                            if !self.mouthStates.isEmpty() {
-                                return getResult(withInstruction: self.mouthStates.peek() == .closed ? .closeMouth : .openMouth)
-                            }
-                        } else {
-                            return getResult(withInstruction: needed == .closed ? .closeMouth : .openMouth)
+                    // TODO: safely unwrap all variables
+                    let outerLips = face.landmarks!.outerLips!
+                    let innerLips = face.landmarks!.innerLips!
+                    let currentMouthState = self.getMouthState(outerLips, innerLips);
+                    updatePreviousMouthState(currentMouthState)
+                    let needed = self.mouthStates.peek()
+                    if currentMouthState == needed {
+                        if consecutiveMouthStates() {
+                            _ = self.mouthStates.pop()
                         }
-                    } catch {
-                        print("liveness error: \(error)")
+                        if !self.mouthStates.isEmpty() {
+                            VouchedLogger.shared.debug(self.mouthStates.peek() == .closed ? "Close Mouth" : "Open Mouth")
+                            return getResult(withInstruction: self.mouthStates.peek() == .closed ? .closeMouth : .openMouth)
+                        }
+                    } else {
+                        VouchedLogger.shared.debug(needed == .closed ? "Close Mouth" : "Open Mouth")
+                        return getResult(withInstruction: needed == .closed ? .closeMouth : .openMouth)
                     }
                 }
             case .none:
-                print("skipping liveness check")
+                VouchedLogger.shared.debug("skipping liveness check")
             }
             
             //checkpoint 5
             self.holdSteadyStart = self.holdSteadyStart ?? Date().addingTimeInterval(3)
             if Date() < self.holdSteadyStart! {
+                VouchedLogger.shared.debug("Hold steady")
                 return getResult(withInstruction: .holdSteady)
             }
             
@@ -150,7 +152,7 @@ public class FaceDetect {
             return getResult(withInstruction: .none, withImage: base64Image)
 
         } catch {
-            print("face detect errors")
+            VouchedLogger.shared.error("\(error)")
             return resetStateReturnNil()
         }
         
@@ -203,21 +205,16 @@ public class FaceDetect {
     // find the height of the top lip
     private func getTopLipHeight(_ outerLips: VNFaceLandmarkRegion2D, _ innerLips: VNFaceLandmarkRegion2D) -> CGFloat {
         return getHeight(outerLips, innerLips, correspondingPairs: [(0,0), (2,1), (4,2)])
-//        return getHeight(outerLips, innerLips, correspondingPairs: [(2,1)])
-//        return getHeight(outerLips, innerLips, correspondingPairs: [(0,0), (4,2)])
     }
     
     // find the height of the bottom lip
     private func getBottomLipHeight(_ outerLips: VNFaceLandmarkRegion2D, _ innerLips: VNFaceLandmarkRegion2D) -> CGFloat {
         return getHeight(outerLips, innerLips, correspondingPairs: [(8,5), (7,4), (6,3)])
-//        return getHeight(outerLips, innerLips, correspondingPairs: [(7,4)])
-//        return getHeight(outerLips, innerLips, correspondingPairs: [(8,5), (6,3)])
     }
     
     // find the height of mouth's opening
     private func getMouthOpenHeight(_ innerLips: VNFaceLandmarkRegion2D) -> CGFloat {
         // for the sake of DRYness, using the same method to get height mouth opening
-//        return getHeight(innerLips, innerLips, correspondingPairs: [(5,0), (4,1), (3,2)])
         return getHeight(innerLips, innerLips, correspondingPairs: [(4,1)])
     }
     
