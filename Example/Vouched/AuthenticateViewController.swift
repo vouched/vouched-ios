@@ -127,6 +127,8 @@ class AuthenticateViewController: UIViewController, AVCaptureVideoDataOutputSamp
             str = "Come Closer to Camera"
         case .holdSteady:
             str = "Hold Steady"
+        case .onlyOne:
+            str = "Multiple Faces"
         default:
             str = "Look Forward"
         }
@@ -134,6 +136,7 @@ class AuthenticateViewController: UIViewController, AVCaptureVideoDataOutputSamp
             self.instructionLabel.text = str
         }
     }
+    
     
     /**
      This method called from AVCaptureVideoDataOutputSampleBufferDelegate - passed in sampleBuffer
@@ -146,7 +149,7 @@ class AuthenticateViewController: UIViewController, AVCaptureVideoDataOutputSamp
             switch detectedFace.step {
             case .preDetected:
                 DispatchQueue.main.async() {
-                    self.instructionLabel.text = "Waiting for Camera to Load"
+                    self.instructionLabel.text = "Look into the Camera"
                 }
             case .detected:
                 self.updateLabel(detectedFace.instruction)

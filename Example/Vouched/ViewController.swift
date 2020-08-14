@@ -106,6 +106,23 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         }
     }
     
+    func updateLabel(_ instruction:Instruction) {
+        var str: String
+        switch instruction {
+        case .moveCloser:
+            str = "Come Closer to Camera"
+        case .holdSteady:
+            str = "Hold Steady"
+        case .onlyOne:
+            str = "Multiple IDs"
+        default:
+            str = "Look Forward"
+        }
+        DispatchQueue.main.async() {
+            self.instructionLabel.text = str
+        }
+    }
+    
     /**
      This method called from AVCaptureVideoDataOutputSampleBufferDelegate - passed in sampleBuffer
      */
@@ -114,16 +131,14 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         let detectedCard = self.cardDetect.detect(imageBuffer!)
         
         if let detectedCard = detectedCard {
-            if cardDetect.isFar() {
-              DispatchQueue.main.async() {
-                  self.instructionLabel.text = "Too Far Away"
-              }
-            } else if !cardDetect.isPostable() {
-              DispatchQueue.main.async() {
-                  self.instructionLabel.text = "Hold Steady"
-              }
-            }
-            else {
+            switch detectedCard.step {
+            case .preDetected:
+                DispatchQueue.main.async() {
+                    self.instructionLabel.text = "Show ID Card"
+                }
+            case .detected:
+                self.updateLabel(detectedCard.instruction)
+            case .postable:
                 captureSession?.stopRunning()
                 self.loadingShow()
                 DispatchQueue.main.async() {
@@ -141,7 +156,12 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
                     print("Error info: \(error)")
                 }
             }
+        } else {
+            DispatchQueue.main.async() {
+                self.instructionLabel.text = "Show ID Card"
+            }
         }
+        
     }
   
     override func prepare(for segue: UIStoryboardSegue, sender:Any?){

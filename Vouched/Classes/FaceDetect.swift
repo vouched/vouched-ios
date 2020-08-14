@@ -14,21 +14,6 @@ public enum LivenessDetection {
     case none
 }
 
-public enum Instruction {
-    case onlyOneFace
-    case moveCloser
-    case holdSteady
-    case openMouth
-    case closeMouth
-    case none
-}
-
-public enum Step {
-    case preDetected
-    case detected
-    case postable
-}
-
 // MARK: - public structs
 public struct FaceDetectResult {
     public let base64Image: String?
@@ -79,7 +64,7 @@ public class FaceDetect {
                         
             /// list of checkpoints ...
             /// checkpoint 1: no faces, return nil
-            /// checkpoint 2: more than one face, return with Instruction.onlyOneFace. one face, update boudingBox AND step
+            /// checkpoint 2: more than one face, return with Instruction.onlyOne. one face, update boudingBox AND step
             /// checkpoint 3: too far away, return with Instruction.moveCloser
             /// checkpoint 4: liveness check, return with Instruction.openMouth OR closeMouth
             /// checkpoint 5: clear picture check, return with Instruction.holdSteady
@@ -97,7 +82,7 @@ public class FaceDetect {
             // checkpoint 2
             if faces.count > 1 {
                 VouchedLogger.shared.debug("Found more than one face")
-                return getResult(withInstruction: .onlyOneFace)
+                return getResult(withInstruction: .onlyOne)
             }
             let face = faces[0]
             self.boudingBox = face.boundingBox
@@ -145,7 +130,8 @@ public class FaceDetect {
             }
             
             self.step = .postable
-            
+            VouchedLogger.shared.debug("Face is ready to be posted")
+
             let image = UIImage(pixelBuffer: cvPixelBuffer)?.resize(withMaxResolution: 1024.0)
             let jpeg = UIImageJPEGRepresentation(image!, 0.95)
             let base64Image = jpeg!.base64EncodedString(options: Data.Base64EncodingOptions.lineLength64Characters)
@@ -159,7 +145,7 @@ public class FaceDetect {
     }
     
     // MARK: - private helper methods
-   private func getResult(withInstruction instruction: Instruction, withImage image: String?=nil) -> FaceDetectResult {
+    private func getResult(withInstruction instruction: Instruction, withImage image: String?=nil) -> FaceDetectResult {
         return FaceDetectResult(
             base64Image: image,
             boudingBox: self.boudingBox,
@@ -174,6 +160,7 @@ public class FaceDetect {
         self.mouthStates = Stack([.closed, .open, .closed])
         self.previousMouthStates = [.closed, .open, .closed]
         self.boudingBox = CGRect(x: 0, y: 0, width: 0, height: 0)
+        self.holdSteadyStart = nil
         return nil
     }
     
