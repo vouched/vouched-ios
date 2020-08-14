@@ -1,6 +1,5 @@
 # Vouched
 
-[![CI Status](https://img.shields.io/travis/marcusoliver/Vouched.svg?style=flat)](https://travis-ci.org/marcusoliver/Vouched)
 [![Version](https://img.shields.io/cocoapods/v/Vouched.svg?style=flat)](https://cocoapods.org/pods/Vouched)
 [![License](https://img.shields.io/cocoapods/l/Vouched.svg?style=flat)](https://cocoapods.org/pods/Vouched)
 [![Platform](https://img.shields.io/cocoapods/p/Vouched.svg?style=flat)](https://cocoapods.org/pods/Vouched)
@@ -40,23 +39,22 @@ let session: VouchedSession = VouchedSession(type: .idVerificationWithFace)
 
 let detectedCard = cardDetect.detect(cvPixelBuffer)
 
-if let detectedCard = detectedCard {
-  if cardDetect.isFar() {
-    // prompt user to move camera closer
-  } else if !cardDetect.isPostable() {
-    // prompt user to hold camera steady
-  }
-  else {
-    // the card/passport is detected, is close enough, and is ready to submit
 
+if let detectedCard = detectedCard {
+  switch detectedCard.step {
+  case .preDetected:
+    // prompt user to show ID card
+  case .detected:
+    updateLabelFromInstruction(detectedCard.instruction)
+  case .postable:
     do {
       let job = try session.postFrontId(detectedCard: detectedCard)
-      // make sure to hold on to job.token (theJobToken)
-      // this token will be needed for future requests
     } catch {
       // handle error cases
     }
   }
+} else {
+    // prompt user to show ID card
 }
 ```
 

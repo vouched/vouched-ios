@@ -117,6 +117,8 @@ class FaceViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
             str = "Come Closer to Camera"
         case .holdSteady:
             str = "Hold Steady"
+        case .onlyOne:
+            str = "Multiple Faces"
         default:
             str = "Look Forward"
         }
@@ -136,7 +138,7 @@ class FaceViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
             switch detectedFace.step {
             case .preDetected:
                 DispatchQueue.main.async() {
-                    self.instructionLabel.text = "Waiting for Camera to Load"
+                    self.instructionLabel.text = "Look into the Camera"
                 }
             case .detected:
                 self.updateLabel(detectedFace.instruction)
