@@ -49,6 +49,10 @@ if let detectedCard = detectedCard {
   case .postable:
     do {
       let job = try session.postFrontId(detectedCard: detectedCard)
+      let retryableErrors = VouchedUtils.extractRetryableErrors(job)
+      if !retryableErrors.isEmpty {
+        // retry card detection
+      }
     } catch {
       // handle error cases
     }
@@ -74,6 +78,10 @@ if let detectedFace = detectedFace {
     do {
       // make sure to use the same session instance created previously
       let job = try session.postFace(detectedFace: detectedFace)
+      let retryableErrors = VouchedUtils.extractRetryableErrors(job)
+      if !retryableErrors.isEmpty {
+        // retry face detection
+      }
     } catch {
       // handle error cases
     }

@@ -127,6 +127,27 @@ class FaceViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
         }
     }
     
+    func updateLabel(_ retryableError: RetryableError) {
+        var str: String
+
+        switch retryableError {
+        case .InvalidIdError:
+            str = "Invalid ID"
+        case .InvalidIdPhotoError:
+            str = "Invalid Photo ID"
+        case .InvalidUserPhotoError:
+            str = "Invalid Selfie"
+        case .ExpiredIdError:
+            str = "Expired ID"
+        case .PoorIdImageQuality:
+            str = "Poor Image Quality"
+        }
+        
+        DispatchQueue.main.async() {
+            self.instructionLabel.text = str
+        }
+    }
+    
     /**
      This method called from AVCaptureVideoDataOutputSampleBufferDelegate - passed in sampleBuffer
      */
@@ -150,6 +171,15 @@ class FaceViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
                 }
                 do {
                     self.job = try session!.postFace(detectedFace: detectedFace)
+                    let retryableErrors = VouchedUtils.extractRetryableErrors(self.job!)
+                    // if there are retryable errors, update label and retry card detection
+                    if !retryableErrors.isEmpty {
+                        self.updateLabel(retryableErrors.first!)
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+                            self.captureSession?.startRunning()
+                        }
+                        return;
+                    }
                     self.buttonShow()
                 } catch {
                     print("Error info: \(error)")
