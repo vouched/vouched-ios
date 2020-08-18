@@ -106,7 +106,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         }
     }
     
-    func updateLabel(_ instruction:Instruction) {
+    func updateLabel(_ instruction: Instruction) {
         var str: String
         switch instruction {
         case .moveCloser:
@@ -118,6 +118,27 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         default:
             str = "Look Forward"
         }
+        DispatchQueue.main.async() {
+            self.instructionLabel.text = str
+        }
+    }
+    
+    func updateLabel(_ retryableError: RetryableError) {
+        var str: String
+
+        switch retryableError {
+        case .InvalidIdError:
+            str = "Invalid ID"
+        case .InvalidIdPhotoError:
+            str = "Invalid Photo ID"
+        case .InvalidUserPhotoError:
+            str = "Invalid Selfie"
+        case .ExpiredIdError:
+            str = "Expired ID"
+        case .PoorIdImageQuality:
+            str = "Poor Image Quality"
+        }
+        
         DispatchQueue.main.async() {
             self.instructionLabel.text = str
         }
@@ -145,11 +166,22 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
                     self.instructionLabel.text = "Processing Image"
                 }
                 do {
+                    let job: Job
                     if inputFirstName.isEmpty && inputLastName.isEmpty {
-                        _ = try session.postFrontId(detectedCard: detectedCard)
+                        job = try session.postFrontId(detectedCard: detectedCard)
                     } else {
                         var params = Params(firstName: inputFirstName, lastName: inputLastName)
-                        _ = try session.postFrontId(detectedCard: detectedCard, params: &params)
+                        job = try session.postFrontId(detectedCard: detectedCard, params: &params)
+                    }
+                    
+                    let retryableErrors = VouchedUtils.extractRetryableErrors(job)
+                    // if there are retryable errors, update label and retry card detection
+                    if !retryableErrors.isEmpty {
+                        self.updateLabel(retryableErrors.first!)
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+                            self.captureSession?.startRunning()
+                        }
+                        return;
                     }
                     self.buttonShow()
                 } catch {

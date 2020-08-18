@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.0](https://github.com/vouched/vouched-ios/compare/v0.2.0...v0.3.0) - 2020-08-17
+
+#### Added
+- VouchedUtils
+- RetryableError - notion of which errors to retry card/face detection
+
 ## [0.2.0](https://github.com/vouched/vouched-ios/compare/v0.1.0...v0.2.0) - 2020-08-14
 
 #### Added

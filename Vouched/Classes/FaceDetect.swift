@@ -48,7 +48,7 @@ public class FaceDetect {
     
     public init(config: FaceDetectConfig) {
         self.step = .preDetected
-        self.mouthStates = Stack([.closed, .open, .closed])
+        self.mouthStates = Stack([.closed, .open])
         self.previousMouthStates = [.closed, .open, .closed]
         self.boudingBox = CGRect(x: 0, y: 0, width: 0, height: 0)
         self.boxThresholdPctWithScale = BOX_THRESHOLD_PCT / UIScreen.main.scale
@@ -157,7 +157,7 @@ public class FaceDetect {
     // reset to initial internal state and return nil
     private func resetStateReturnNil() -> FaceDetectResult? {
         self.step = .preDetected
-        self.mouthStates = Stack([.closed, .open, .closed])
+        self.mouthStates = Stack([.closed, .open])
         self.previousMouthStates = [.closed, .open, .closed]
         self.boudingBox = CGRect(x: 0, y: 0, width: 0, height: 0)
         self.holdSteadyStart = nil
@@ -181,7 +181,7 @@ public class FaceDetect {
         let topLipHeight = getTopLipHeight(outerLips, innerLips)
         let bottomLipHeight = getBottomLipHeight(outerLips, innerLips)
         let mouthOpeningHeight = getMouthOpenHeight(innerLips)
-        let openingHeightThresholdRatio: CGFloat = 0.8
+        let openingHeightThresholdRatio: CGFloat = 0.7
         if mouthOpeningHeight > (min(topLipHeight, bottomLipHeight) * openingHeightThresholdRatio) {
             return .open
         } else {
