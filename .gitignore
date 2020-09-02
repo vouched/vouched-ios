@@ -25,6 +25,9 @@ DerivedData
 inference_graph.tflite
 labelmap_mobilenet_card.txt
 
+# Vouched IP
+Vouched/
+
 # Bundler
 .bundle
 
