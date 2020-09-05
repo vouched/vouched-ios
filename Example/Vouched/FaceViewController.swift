@@ -117,6 +117,8 @@ class FaceViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
             str = "Come Closer to Camera"
         case .holdSteady:
             str = "Hold Steady"
+        case .lookForward:
+            str = "Look Forward"
         case .onlyOne:
             str = "Multiple Faces"
         default:

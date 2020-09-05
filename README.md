@@ -26,8 +26,10 @@
 
 ## How to use the Vouched Library
 
-The Vouched library are the contents of the Vouched directory.
-The goal is to distribute the library as a CocoaPod.
+### Install
+Follow the Installation Guide [here](https://cocoapods.org/pods/Vouched)
+
+### Code
 To use the library in your own project refer to the following code snippets:
 
 **ID Card detection and submission**
@@ -36,9 +38,10 @@ To use the library in your own project refer to the following code snippets:
 import Vouched
 let cardDetect = CardDetect()
 let session: VouchedSession = VouchedSession(type: .idVerificationWithFace)
+// if you need to specify a federated group within your account 
+// let session: VouchedSession = VouchedSession(type: .idVerificationWithFace, groupId: "{theGroupId}")
 
 let detectedCard = cardDetect.detect(cvPixelBuffer)
-
 
 if let detectedCard = detectedCard {
   switch detectedCard.step {
