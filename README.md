@@ -70,6 +70,8 @@ if let detectedCard = detectedCard {
 ```
 import Vouched
 let faceDetect = FaceDetect(config: FaceDetectConfig(liveness: .mouthMovement))
+// if liveness detecetion is not needed 
+// let faceDetect = FaceDetect(config: FaceDetectConfig(liveness: .none))
 
 if let detectedFace = detectedFace {
   switch detectedFace.step {
