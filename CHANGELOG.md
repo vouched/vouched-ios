@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.1](https://github.com/vouched/vouched-ios/compare/v0.4.0...v0.4.1) - 2020-09-14
+
+#### Added
+- idAddress to JobResult
+
 ## [0.4.0](https://github.com/vouched/vouched-ios/compare/v0.3.0...v0.4.0) - 2020-09-05
 
 #### Added
