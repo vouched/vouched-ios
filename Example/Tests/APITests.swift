@@ -65,6 +65,15 @@ class APITests: XCTestCase {
             request = SessionJobRequest(stage: Stage.face, params: params)
             job = try API.jobSession(request: request, token: job.token)
 
+
+            // add secondary photos
+            if( userPhoto != nil) {
+                let photo = SecondaryPhotoRequest(name:"my-photo", photo:userPhoto)
+                let photos = [photo]
+                let spsRequest = SessionUpdateSecondaryPhotosRequest(photos: photos)
+                try API.updateSecondaryPhotosSession(request: spsRequest, token: job.token)
+            }
+
             // confirm
             params = Params()
             request = SessionJobRequest(stage: Stage.confirm, params: params)
@@ -73,7 +82,7 @@ class APITests: XCTestCase {
             let result: JobResult = job.result
             let confidence: Confidence = job.result.confidences
 
-            XCTAssertEqual(result.firstName!, "THOR THUNDER")
+            XCTAssertEqual(result.firstName!, "THOR")
             XCTAssertEqual(result.lastName!, "ODINSON")
             XCTAssertEqual(result.state, "OH")
             XCTAssertEqual(result.country, "US")
