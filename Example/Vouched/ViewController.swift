@@ -21,13 +21,14 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     var captureSession: AVCaptureSession?
     var previewLayer: AVCaptureVideoPreviewLayer?
     var cameraImage: UIImage?
-    var cardDetect = CardDetect()
+    var cardDetect = CardDetect(options: CardDetectOptionsBuilder().withEnableDistanceCheck(true).build())
     var count: Int = 0
     let session: VouchedSession = VouchedSession(type: .idVerificationWithFace)
 
     var inputFirstName: String = ""
     var inputLastName: String = ""
-    
+    var nextRun: Date = Date();
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -110,13 +111,15 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         var str: String
         switch instruction {
         case .moveCloser:
-            str = "Come Closer to Camera"
+            str = "Move Closer"
+        case .moveAway:
+            str = "Move Away"
         case .holdSteady:
             str = "Hold Steady"
         case .onlyOne:
             str = "Multiple IDs"
         default:
-            str = "Look Forward"
+            str = "Show ID"
         }
         DispatchQueue.main.async() {
             self.instructionLabel.text = str
@@ -127,18 +130,15 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         var str: String
 
         switch retryableError {
-        case .InvalidIdError:
-            str = "Invalid ID"
-        case .InvalidIdPhotoError:
+        case .blurryIdPhotoError:
+            str = "Photo is blurry"
+        case .glareIdPhotoError:
+            str = "Photo has glare"
+        case .invalidIdPhotoError:
             str = "Invalid Photo ID"
-        case .InvalidUserPhotoError:
-            str = "Invalid Selfie"
-        case .ExpiredIdError:
-            str = "Expired ID"
-        case .PoorIdImageQuality:
-            str = "Poor Image Quality"
+        case .invalidUserPhotoError:
+            str = "Invalid Photo ID"
         }
-        
         DispatchQueue.main.async() {
             self.instructionLabel.text = str
         }
@@ -174,7 +174,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
                         job = try session.postFrontId(detectedCard: detectedCard, params: &params)
                     }
                     
-                    let retryableErrors = VouchedUtils.extractRetryableErrors(job)
+                    let retryableErrors = VouchedUtils.extractRetryableIdErrors(job)
                     // if there are retryable errors, update label and retry card detection
                     if !retryableErrors.isEmpty {
                         self.updateLabel(retryableErrors.first!)

@@ -22,8 +22,7 @@ class FaceViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
     var captureSession: AVCaptureSession?
     var previewLayer: AVCaptureVideoPreviewLayer?
     var cameraImage: UIImage?
-    var cardDetect = CardDetect()
-    var faceDetect = FaceDetect(config: FaceDetectConfig(liveness: .mouthMovement))
+    var faceDetect = FaceDetect(options: FaceDetectOptionsBuilder().withLivenessMode(.mouthMovement).build())
     var count: Int = 0
     var id:String = ""
     var firstCalled:Bool = true
@@ -121,6 +120,8 @@ class FaceViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
             str = "Look Forward"
         case .onlyOne:
             str = "Multiple Faces"
+        case .moveAway:
+            str = "Move Away"
         default:
             str = "Look Forward"
         }
@@ -133,18 +134,15 @@ class FaceViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
         var str: String
 
         switch retryableError {
-        case .InvalidIdError:
-            str = "Invalid ID"
-        case .InvalidIdPhotoError:
+        case .blurryIdPhotoError:
+            str = "Photo is blurry"
+        case .glareIdPhotoError:
+            str = "Photo has glare"
+        case .invalidIdPhotoError:
             str = "Invalid Photo ID"
-        case .InvalidUserPhotoError:
-            str = "Invalid Selfie"
-        case .ExpiredIdError:
-            str = "Expired ID"
-        case .PoorIdImageQuality:
-            str = "Poor Image Quality"
+        case .invalidUserPhotoError:
+            str = "Invalid Face Photo"
         }
-        
         DispatchQueue.main.async() {
             self.instructionLabel.text = str
         }
@@ -173,7 +171,7 @@ class FaceViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
                 }
                 do {
                     self.job = try session!.postFace(detectedFace: detectedFace)
-                    let retryableErrors = VouchedUtils.extractRetryableErrors(self.job!)
+                    let retryableErrors = VouchedUtils.extractRetryableFaceErrors(self.job!)
                     // if there are retryable errors, update label and retry card detection
                     if !retryableErrors.isEmpty {
                         self.updateLabel(retryableErrors.first!)

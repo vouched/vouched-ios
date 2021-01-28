@@ -25,8 +25,7 @@ class AuthenticateViewController: UIViewController, AVCaptureVideoDataOutputSamp
     var captureSession: AVCaptureSession?
     var previewLayer: AVCaptureVideoPreviewLayer?
     var cameraImage: UIImage?
-    var cardDetect = CardDetect()
-    var faceDetect = FaceDetect(config: FaceDetectConfig(liveness: .mouthMovement))
+    var faceDetect = FaceDetect(options: FaceDetectOptionsBuilder().withLivenessMode(.distance).build())
     var count: Int = 0
     var id:String = ""
     var firstCalled:Bool = true
@@ -162,7 +161,7 @@ class AuthenticateViewController: UIViewController, AVCaptureVideoDataOutputSamp
                 }
                 self.loadingShow()
                 do {
-                    let authenticationResult: AuthenticateResult = try session!.postAuthenticate(id: self.jobId, userPhoto: detectedFace.base64Image!)
+                    let authenticationResult: AuthenticateResult = try session!.postAuthenticate(id: self.jobId, userPhoto: detectedFace.image!)
                     self.buttonShow(authenticationResult: authenticationResult)
                 } catch {
                     print("Error info: \(error)")

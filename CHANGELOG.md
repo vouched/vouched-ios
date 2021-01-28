@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.0](https://github.com/vouched/vouched-ios/compare/v0.4.4...v0.5.0) - 2020-01-27
+
+#### Added
+
+- Distance liveness module
+- Performance updates
+
+#### Changed
+
+- Retryable Errors interface and logic
+
+#### Breaking Changes
+
+- CardDetect initializer
+- FaceDetect initializer
+
 ## [0.4.4](https://github.com/vouched/vouched-ios/compare/v0.4.3...v0.4.4) - 2020-11-02
 
 #### Added

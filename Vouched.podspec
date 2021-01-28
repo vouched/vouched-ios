@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'Vouched'
-  s.version          = '0.4.4'
+  s.version          = '0.5.0'
   s.summary          = 'Making Verifications Fast and Simple.'
   s.description      = <<-DESC
                        The Vouched Library allows for fast and simple verifications using an ID and Selfie.
@@ -12,6 +12,8 @@ Pod::Spec.new do |s|
   s.ios.deployment_target = '11.0'
   s.ios.vendored_frameworks = "Vouched.framework"
   s.dependency 'TensorFlowLiteSwift', '~> 2.2'
+  s.user_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
+  s.pod_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
   s.static_framework = true
   s.swift_versions = ['4.0']
 end
