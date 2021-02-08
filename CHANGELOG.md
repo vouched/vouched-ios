@@ -2,7 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.5.0](https://github.com/vouched/vouched-ios/compare/v0.4.4...v0.5.0) - 2020-01-27
+## [0.5.1](https://github.com/vouched/vouched-ios/compare/v0.5.0...v0.5.1) - 2021-02-07
+
+#### Added
+
+- Pass API Key into VouchedSession initializer (Optional)
+
+#### Removed
+
+- Auto job confirmations
+
+## [0.5.0](https://github.com/vouched/vouched-ios/compare/v0.4.4...v0.5.0) - 2021-01-27
 
 #### Added
 

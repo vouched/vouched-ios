@@ -23,7 +23,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     var cameraImage: UIImage?
     var cardDetect = CardDetect(options: CardDetectOptionsBuilder().withEnableDistanceCheck(true).build())
     var count: Int = 0
-    let session: VouchedSession = VouchedSession(type: .idVerificationWithFace)
+    let session: VouchedSession = VouchedSession()
 
     var inputFirstName: String = ""
     var inputLastName: String = ""

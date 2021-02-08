@@ -196,7 +196,6 @@ class FaceViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
     override func prepare(for segue: UIStoryboardSegue, sender:Any?) {
         if segue.identifier == "ToResultPage" {
             let destVC = segue.destination as! ResultsViewController
-            destVC.job = self.job
             destVC.session = self.session
         }
     }

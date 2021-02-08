@@ -28,8 +28,6 @@ class ResultsViewController: UIViewController, UITableViewDataSource {
     var resultIdQuality: Float = 0.0    
     var arr:[String] = []
     var job: Job?
-    
-    
     var session: VouchedSession?
     
     override func viewDidLoad() {
@@ -40,7 +38,14 @@ class ResultsViewController: UIViewController, UITableViewDataSource {
         
         tableView.dataSource = self
         
-        self.populateData(job: self.job!)
+        do {
+            let job = try session!.postConfirm()
+            self.job = job
+            self.populateData(job: job)
+        } catch {
+            print("Error info: \(error)")
+        }
+
     }
     
     func populateData(job: Job){
