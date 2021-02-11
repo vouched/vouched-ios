@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'Vouched'
-  s.version          = '0.5.3'
+  s.version          = '0.5.4'
   s.summary          = 'Making Verifications Fast and Simple.'
   s.description      = <<-DESC
                        The Vouched Library allows for fast and simple verifications using an ID and Selfie.
