@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.5](https://github.com/vouched/vouched-ios/compare/v0.5.4...v0.5.5) - 2021-03-23
+
+#### Added
+
+- Support Bitcode
+
 ## [0.5.4](https://github.com/vouched/vouched-ios/compare/v0.5.3...v0.5.4) - 2021-02-10
 
 #### Added
