@@ -40,7 +40,7 @@ class APITests: XCTestCase {
             request = SessionJobRequest(stage: Stage.confirm, params: params)
             job = try API.jobSession(request: request, token: job.token)
 
-            let authRequest = AuthenticateRequest(id: job.id, userPhoto: userAuthPhoto! )
+            let authRequest = AuthenticateRequest(id: job.id, userPhoto: userAuthPhoto!, matchId: false)
             let result = try API.authenticate(request: authRequest)
             XCTAssertEqual(result.match >= 0.90, true)
 

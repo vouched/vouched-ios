@@ -25,7 +25,7 @@ class AuthenticateViewController: UIViewController, AVCaptureVideoDataOutputSamp
     var captureSession: AVCaptureSession?
     var previewLayer: AVCaptureVideoPreviewLayer?
     var cameraImage: UIImage?
-    var faceDetect = FaceDetect(options: FaceDetectOptionsBuilder().withLivenessMode(.distance).build())
+    var faceDetect = FaceDetect(options: FaceDetectOptionsBuilder().withLivenessMode(.mouthMovement).build())
     var count: Int = 0
     var id:String = ""
     var firstCalled:Bool = true
@@ -101,7 +101,7 @@ class AuthenticateViewController: UIViewController, AVCaptureVideoDataOutputSamp
         }
     }
     func buttonShow(authenticationResult: AuthenticateResult){
-        if authenticationResult.match > 0.8 {
+        if authenticationResult.match > 0.9 {
             DispatchQueue.main.async() { // Correct
                 self.authenticationResultLabel.text = "Authentication Success"
                 self.authenticationResultLabel.isHidden = false
@@ -130,6 +130,8 @@ class AuthenticateViewController: UIViewController, AVCaptureVideoDataOutputSamp
             str = "Look Forward"
         case .onlyOne:
             str = "Multiple Faces"
+        case .moveAway:
+            str = "Move Away"
         default:
             str = "Look Forward"
         }
@@ -137,7 +139,6 @@ class AuthenticateViewController: UIViewController, AVCaptureVideoDataOutputSamp
             self.instructionLabel.text = str
         }
     }
-    
     
     /**
      This method called from AVCaptureVideoDataOutputSampleBufferDelegate - passed in sampleBuffer
@@ -161,7 +162,7 @@ class AuthenticateViewController: UIViewController, AVCaptureVideoDataOutputSamp
                 }
                 self.loadingShow()
                 do {
-                    let authenticationResult: AuthenticateResult = try session!.postAuthenticate(id: self.jobId, userPhoto: detectedFace.image!)
+                    let authenticationResult: AuthenticateResult = try session!.postAuthenticate(id: self.jobId, userPhoto: detectedFace.image!, matchId: true)
                     self.buttonShow(authenticationResult: authenticationResult)
                 } catch {
                     print("Error info: \(error)")

@@ -21,7 +21,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     var captureSession: AVCaptureSession?
     var previewLayer: AVCaptureVideoPreviewLayer?
     var cameraImage: UIImage?
-    var cardDetect = CardDetect(options: CardDetectOptionsBuilder().withEnableDistanceCheck(true).build())
+    var cardDetect = CardDetect(options: CardDetectOptionsBuilder().withEnableDistanceCheck(false).build())
     var count: Int = 0
     let session: VouchedSession = VouchedSession()
 
@@ -43,6 +43,34 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    /**
+     This method provides onTouch camera focus
+     */
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        let touchPoint = touches.first! as UITouch
+        let screenSize = cameraView.bounds.size
+        let focusPoint = CGPoint(x: touchPoint.location(in: cameraView).y / screenSize.height, y: 1.0 - touchPoint.location(in: cameraView).x / screenSize.width)
+
+        if let device = device {
+            do {
+                try device.lockForConfiguration()
+                defer {
+                    device.unlockForConfiguration()
+                }
+                if device.isFocusPointOfInterestSupported {
+                    device.focusPointOfInterest = focusPoint
+                    device.focusMode = AVCaptureDevice.FocusMode.autoFocus
+                }
+                if device.isExposurePointOfInterestSupported {
+                    device.exposurePointOfInterest = focusPoint
+                    device.exposureMode = AVCaptureDevice.ExposureMode.autoExpose
+                }
+            } catch {
+                print(error)
+            }
+        }
     }
     
     /**
