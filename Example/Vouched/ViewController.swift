@@ -11,6 +11,14 @@ import AVFoundation
 import Vouched
 import Vision
 
+func getValue(key:String)-> String?{
+    let v = Bundle.main.infoDictionary?[key] as? String
+    if v == "" {
+        return nil
+    }
+    return v
+}
+
 class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate {
     @IBOutlet weak var cameraView: UIView!
     @IBOutlet weak var nextButton: UIButton!
@@ -23,7 +31,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     var cameraImage: UIImage?
     var cardDetect = CardDetect(options: CardDetectOptionsBuilder().withEnableDistanceCheck(false).build())
     var count: Int = 0
-    let session: VouchedSession = VouchedSession()
+    let session: VouchedSession = VouchedSession(apiKey: getValue(key:"API_KEY"))
 
     var inputFirstName: String = ""
     var inputLastName: String = ""
@@ -201,7 +209,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
                         var params = Params(firstName: inputFirstName, lastName: inputLastName)
                         job = try session.postFrontId(detectedCard: detectedCard, params: &params)
                     }
-                    
+                    print(job)
                     let retryableErrors = VouchedUtils.extractRetryableIdErrors(job)
                     // if there are retryable errors, update label and retry card detection
                     if !retryableErrors.isEmpty {

@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.7](https://github.com/vouched/vouched-ios/compare/v0.5.6...v0.5.7) - 2021-04-18
+
+#### Added
+
+- Blinking Liveness
+- Update README
+
 ## [0.5.6](https://github.com/vouched/vouched-ios/compare/v0.5.5...v0.5.6) - 2021-04-12
 
 #### Added

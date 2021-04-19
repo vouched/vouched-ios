@@ -4,142 +4,267 @@
 [![License](https://img.shields.io/cocoapods/l/Vouched.svg?style=flat)](https://cocoapods.org/pods/Vouched)
 [![Platform](https://img.shields.io/cocoapods/p/Vouched.svg?style=flat)](https://cocoapods.org/pods/Vouched)
 
-## Run the Example
+## Run Example
 
-1. Clone the repo and run `pod install` from the Example directory
-2. Setup the [environment variables](#environment-variables)
-3. Add `inference_graph.tflite` and `labelmap_mobilenet_card.txt` to the ./Example/Vouched directory. Ensure these files are in **Copy Bundle Resources**
-4. Run Vouched-Example on a device with iOS 11.0+
+Clone this repo and change directory to _example_
 
-**1st Screen** - Name Input (Optional)  
-**2st Screen** - Card Detection   
-**3nd Screen** - Face Detection  
-**4th Screen** - ID Verification Results  
-**5th Screen** - Face Authenticaion (**Demo purposes only**) 
+```shell
+git clone https://github.com/vouched/vouched-ios
 
-#### Features displayed in Example 
-* ID Card and Passport Detection
-* Face Detection (w and w/o liveness)
-* ID Verification
-* Name Verification
-* Face Authenticaion (**Demo purposes only**)
-
-## How to use the Vouched Library
-
-### Install
-Follow the Installation Guide [here](https://cocoapods.org/pods/Vouched)
-
-### Code
-To use the library in your own project refer to the following code snippets:
-
-**ID Card detection and submission**
-
+cd vouched-ios/Example
 ```
-import Vouched
-let cardDetect = CardDetect()
-let session: VouchedSession = VouchedSession(type: .idVerificationWithFace)
-// if you need to specify a federated group within your account 
-// let session: VouchedSession = VouchedSession(type: .idVerificationWithFace, groupId: "{theGroupId}")
 
-let detectedCard = cardDetect.detect(cvPixelBuffer)
+Then, follow steps listed on the [example README](https://github.com/vouched/vouched-ios/blob/master/Example/README.md)
 
-if let detectedCard = detectedCard {
-  switch detectedCard.step {
-  case .preDetected:
-    // prompt user to show ID card
-  case .detected:
-    updateLabelFromInstruction(detectedCard.instruction)
-  case .postable:
-    do {
-      let job = try session.postFrontId(detectedCard: detectedCard)
-      let retryableErrors = VouchedUtils.extractRetryableErrors(job)
-      if !retryableErrors.isEmpty {
-        // retry card detection
-      }
-    } catch {
-      // handle error cases
-    }
-  }
-} else {
-    // prompt user to show ID card
+## Prerequisites
+
+- An account with Vouched
+- Your Vouched Public Key
+- Mobile Assets (available on the dashboard)
+
+## Install
+
+Add the package to your existing project's Podfile
+
+```shell
+pod 'Vouched', 'VOUCHED_VERSION'
+```
+
+## Getting Started
+
+This section will provide a _step-by-step_ to understand the Vouched SDK through the Example.
+
+0. [Get familiar with Vouched](https://docs.vouched.id/#section/Overview)
+
+1. [Run the Example](#run-example)
+   - Go through the verification process but stop after each step and take a look at the logs. Particularly understand the [Job](https://docs.vouched.id/#tag/job-model) data from each step.
+   ```swift
+   print(job)
+   ```
+   - Once completed, take a look at the [Job details on your Dashboard](https://docs.vouched.id/#section/Dashboard/Jobs)
+2. Modify the [SampleBufferDelegate](https://developer.apple.com/documentation/avfoundation/avcapturevideodataoutputsamplebufferdelegate)
+
+   - Locate the [captureOutput](https://developer.apple.com/documentation/avfoundation/avcapturevideodataoutputsamplebufferdelegate/1385775-captureoutput) in each Controller and make modifications.
+
+     - Comment out the [RetryableErrors](#retryableerror)
+       `let retryableErrors = ...`
+     - Add custom logic to display data or control the navigation
+
+   - Locate the Vouched detectors and add logging
+     - `cardDetect.detect(imageBuffer!)`
+     - `faceDetect.detect(imageBuffer!)`
+
+3. Tweak [AVCapture](https://developer.apple.com/documentation/avfoundation/avcapturedevice) settings  
+   Better images lead to better results from Vouched AI
+4. You are ready to integrate Vouched SDK into your app
+
+## Reference
+
+### VouchedSession
+
+This class handles a user's Vouched session. It takes care of the API calls. Use one instance for the duration of a user's verification session.
+
+##### Initialize
+
+```swift
+let session = VouchedSession(apiKey: "PUBLIC_KEY", groupId: "GROUP_ID")
+```
+
+| Parameter Type | Nullable |
+| -------------- | :------: |
+| String         |  false   |
+| String         |   true   |
+
+##### POST Front Id image
+
+```swift
+let job = try session.postFrontId(detectedCard: detectedCard, params: &params)
+```
+
+| Parameter Type                        | Nullable |
+| ------------------------------------- | :------: |
+| [CardDetectResult](#carddetectresult) |  false   |
+| [Params](#params)                     |   true   |
+
+`Returns` - [Job](https://docs.vouched.id/#tag/job-model)
+
+##### POST Selfie image
+
+```swift
+let job = try session.postFace(detectedFace: detectedFace)
+```
+
+| Parameter Type                        | Nullable |
+| ------------------------------------- | :------: |
+| [FaceDetectResult](#facedetectresult) |  false   |
+
+`Returns` - [Job](https://docs.vouched.id/#tag/job-model)
+
+##### POST confirm verification
+
+```swift
+let job = try session.postConfirm()
+```
+
+`Returns` - [Job](https://docs.vouched.id/#tag/job-model)
+
+### CardDetect
+
+This class handles detecting an ID (cards and passports) and performing necessary steps to ensure image is `Step.postable`.
+
+##### Initialize
+
+```swift
+let cardDetect = CardDetect(options: CardDetectOptionsBuilder().withEnableDistanceCheck(true).build())
+```
+
+| Parameter Type                          | Nullable |
+| --------------------------------------- | :------: |
+| [CardDetectOptions](#carddetectoptions) |  false   |
+
+##### Process Image
+
+```swift
+let detectedCard = cardDetect.detect(imageBuffer)
+```
+
+| Parameter Type | Nullable |
+| -------------- | :------: |
+| CVImageBuffer  |  false   |
+
+`Returns` - [CardDetectResult](#carddetectresult)
+
+### FaceDetect
+
+This class handles detecting a face and performing necessary steps to ensure image is `Step.postable`.
+
+##### Initialize
+
+```swift
+let faceDetect = FaceDetect(options: FaceDetectOptionsBuilder().withLivenessMode(.distance).build())
+```
+
+| Parameter Type                          | Nullable |
+| --------------------------------------- | :------: |
+| [FaceDetectOptions](#facedetectoptions) |  false   |
+
+##### Process Image
+
+```swift
+let detectedFace = faceDetect.detect(imageBuffer)
+```
+
+| Parameter Type | Nullable |
+| -------------- | :------: |
+| CVImageBuffer  |  false   |
+
+`Returns` - [FaceDetectResult](#facedetectresult)
+
+### Types
+
+##### CardDetectResult
+
+The output from [Card Detection](#carddetect) and used to submit an ID.
+
+```swift
+struct CardDetectResult {
+    public let image: String?
+    public let distanceImage: String?
+    public let step: Step
+    public let instruction: Instruction
 }
 ```
 
-**Face(Selfie) detection and submission**
+##### FaceDetectResult
 
-```
-import Vouched
-let faceDetect = FaceDetect(config: FaceDetectConfig(liveness: .mouthMovement))
-// if liveness detecetion is not needed 
-// let faceDetect = FaceDetect(config: FaceDetectConfig(liveness: .none))
+The output from [Face Detection](#facedetect) and used to submit a Selfie.
 
-if let detectedFace = detectedFace {
-  switch detectedFace.step {
-  case .preDetected:
-    // prompt user to look into camera
-  case .detected:
-    updateLabelFromInstruction(detectedFace.instruction)
-  case .postable:
-    do {
-      // make sure to use the same session instance created previously
-      let job = try session.postFace(detectedFace: detectedFace)
-      let retryableErrors = VouchedUtils.extractRetryableErrors(job)
-      if !retryableErrors.isEmpty {
-        // retry face detection
-      }
-    } catch {
-      // handle error cases
-    }
-  }
-} else {
-    // prompt user to look into camera
+```swift
+struct FaceDetectResult {
+    public let image: String?
+    public let distanceImage: String?
+    public let step: Step
+    public let instruction: Instruction
 }
 ```
 
-**Debugging/Logging Vouched**  
-Destinations - where the log output is written
-* .xcode (Xcode output)
-* .console (Console app via [os_log](https://developer.apple.com/documentation/os/oslog))
-* .none
+##### Params
 
-Levels - the severity of the log
-* .debug
-* .info
-* .error
+The parameters that are used to submit a Job.
 
-The level is inclusive of more severe logs. i.e - debug will also log info and error 
-
-Configure VouchedLogger to the destination and level desired
+```swift
+struct Params: Codable{
+    var firstName: String?
+    var lastName: String?
+    var email: String?
+    var phone: String?
+    var birthDate: String?
+    var properties: [Property]?
+    var idPhoto: String?
+    var userPhoto: String?
+    var idDistancePhoto: String?
+    var userDistancePhoto: String?
+}
 ```
+
+##### CardDetectOptions
+
+The options for [Card Detection](#carddetect).
+
+```swift
+class CardDetectOptionsBuilder {
+    public func withEnableDistanceCheck(_ enableDistanceCheck: Bool) -> CardDetectOptionsBuilder { ... }
+
+    public func build() -> CardDetectOptions { ... }
+}
+```
+
+##### FaceDetectOptions
+
+The options for [Face Detection](#facedetect).
+
+```swift
+class FaceDetectOptionsBuilder {
+    public func withLivenessMode(_ livenessMode: LivenessMode) -> FaceDetectOptionsBuilder { ... }
+
+    public func build() -> FaceDetectOptions { ... }
+}
+```
+
+##### RetryableError
+
+An enum to provide an optional baseline of Verification Error(s) for a given Job.
+
+```swift
+enum RetryableError: String {
+    case invalidIdPhotoError
+    case blurryIdPhotoError
+    case glareIdPhotoError
+    case invalidUserPhotoError
+}
+```
+
+## Debugging/Logging
+
+Configure VouchedLogger to the destination and level desired. If not configured, VouchedLogger defaults to `.none` and `.error`
+
+```swift
 VouchedLogger.shared.configure(destination: .xcode, level: .debug)
 ```
-If not configured, VouchedLogger defaults to .none and .error
 
-## Environment Variables
+Destinations - where the log output is written
 
-Set Environment Variables:
+- .xcode (Xcode output)
+- .console (Console app via [os_log](https://developer.apple.com/documentation/os/oslog))
+- .none
 
-[XCConfig Reference](https://www.mokacoding.com/blog/double-slash-xcconfig/). Create `Example/Development.xcconfig` where the contents are:
+Levels - the severity of the log
 
-```
-API_KEY = <PUBLIC_KEY>
-APP_NAME = Vouched (Dev)
+- .debug
+- .info
+- .error
 
-// local dev server usage only. Otherwise don't specify API_URL
-SLASH = /
-API_URL = http:$(SLASH)/localhost:7700
-
-```
-
-## Tests
-
-Located under:
-`Example/Tests`
-
-Running tests:
-
-- Open Xcode
-- Select Product/Test (Cmd+U)
+The level is inclusive of more severe logs. i.e - `.debug` will also log `.info` and `.error`
 
 ## License
 

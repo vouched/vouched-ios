@@ -40,6 +40,7 @@ class ResultsViewController: UIViewController, UITableViewDataSource {
         
         do {
             let job = try session!.postConfirm()
+            print(job)
             self.job = job
             self.populateData(job: job)
         } catch {

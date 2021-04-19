@@ -122,6 +122,8 @@ class FaceViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
             str = "Multiple Faces"
         case .moveAway:
             str = "Move Away"
+        case .blinkEyes:
+            str = "Slowly Blink"
         default:
             str = "Look Forward"
         }
@@ -171,6 +173,7 @@ class FaceViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
                 }
                 do {
                     self.job = try session!.postFace(detectedFace: detectedFace)
+                    print(job)
                     let retryableErrors = VouchedUtils.extractRetryableFaceErrors(self.job!)
                     // if there are retryable errors, update label and retry card detection
                     if !retryableErrors.isEmpty {
