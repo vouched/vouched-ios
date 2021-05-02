@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.6.0](https://github.com/vouched/vouched-ios/compare/v0.5.8...v0.6.0) - 2021-05-01
+
+#### Added
+
+- Barcode Support
+- Example port to Swift 5
+- Xcode 12.5 Support
+
 ## [0.5.8](https://github.com/vouched/vouched-ios/compare/v0.5.7...v0.5.8) - 2021-04-23
 
 #### Added

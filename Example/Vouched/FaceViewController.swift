@@ -150,6 +150,26 @@ class FaceViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
         }
     }
     
+    func updateLabel(_ insight: Insight) {
+        var str: String
+
+        switch insight {
+        case .nonGlare:
+            str = "has glare"
+        case .quality:
+            str = "is blurry"
+        case .brightness:
+            str = "needs to be brighter"
+        case .face:
+            str = "missing required visual markers"
+        case .unknown:
+            str = "No Error Message"
+        }
+        DispatchQueue.main.async() {
+            self.instructionLabel.text = str
+        }
+    }
+    
     /**
      This method called from AVCaptureVideoDataOutputSampleBufferDelegate - passed in sampleBuffer
      */
@@ -174,10 +194,11 @@ class FaceViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
                 do {
                     self.job = try session!.postFace(detectedFace: detectedFace)
                     print(job)
-                    let retryableErrors = VouchedUtils.extractRetryableFaceErrors(self.job!)
-                    // if there are retryable errors, update label and retry card detection
-                    if !retryableErrors.isEmpty {
-                        self.updateLabel(retryableErrors.first!)
+
+                    // if there are job insights, update label and retry card detection
+                    let insights = VouchedUtils.extractInsights(job)
+                    if !insights.isEmpty {
+                        self.updateLabel(insights.first!)
                         DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
                             self.captureSession?.startRunning()
                         }

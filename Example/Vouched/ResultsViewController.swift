@@ -19,13 +19,12 @@ class ResultsViewController: UIViewController, UITableViewDataSource {
     var resultName:String = ""
     var resultSuccess:Bool = false
     var resultType:String = ""
-    var resultId:String = ""
     var resultIssueDate:String = ""
     var resultExpireDate:String = ""
     var resultCountry:String = ""
     var resultState:String = ""
     var resultFaceMatch:Float = 0.0
-    var resultIdQuality: Float = 0.0    
+    var resultId: Float = 0.0
     var arr:[String] = []
     var job: Job?
     var session: VouchedSession?
@@ -58,7 +57,7 @@ class ResultsViewController: UIViewController, UITableViewDataSource {
             resultFaceMatch = job.result.confidences.faceMatch!
         }
         if job.result.confidences.idQuality != nil{
-            resultIdQuality = job.result.confidences.idQuality!
+            resultId = job.result.confidences.id!
         }
         populateArray()
     }
@@ -75,7 +74,7 @@ class ResultsViewController: UIViewController, UITableViewDataSource {
         }
         arr.append(resultName)
         arr.append(String(resultFaceMatch))
-        arr.append(String(resultIdQuality))
+        arr.append(String(resultId))
     }
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
@@ -137,8 +136,8 @@ class ResultsViewController: UIViewController, UITableViewDataSource {
         }
         if indexPath.row == 4 {
             let text = arr[indexPath.row]
-            cell.textLabel?.text = "Face Match Result -  " + text
-            if (Double(text)?.isLess(than: 0.7))!{
+            cell.textLabel?.text = "Face Match Confidence -  " + text
+            if (Double(text)?.isLess(than: 0.9))!{
                 cell.accessoryView = UIImageView(image:UIImage(named: "x.jpg"))
                 cell.accessoryView?.frame = CGRect(x:0,y:0,width:22,height:22)
             }else{
@@ -149,8 +148,8 @@ class ResultsViewController: UIViewController, UITableViewDataSource {
         }
         if indexPath.row == 5 {
             let text = arr[indexPath.row]
-            cell.textLabel?.text = "Id Quality Result -  " + text
-            if (Double(text)?.isLess(than: 0.4))!{
+            cell.textLabel?.text = "Overall Id Confidence -  " + text
+            if (Double(text)?.isLess(than: 0.9))!{
                 cell.accessoryView = UIImageView(image:UIImage(named: "x.jpg"))
                 cell.accessoryView?.frame = CGRect(x:0,y:0,width:22,height:22)
             }else{

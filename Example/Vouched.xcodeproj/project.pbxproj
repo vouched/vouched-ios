@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		2C072B9524C944F500EE7540 /* inference_graph.tflite in Resources */ = {isa = PBXBuildFile; fileRef = 2C072B9424C944F500EE7540 /* inference_graph.tflite */; };
 		2C072B9724C9452700EE7540 /* labelmap_mobilenet_card.txt in Resources */ = {isa = PBXBuildFile; fileRef = 2C072B9624C9452700EE7540 /* labelmap_mobilenet_card.txt */; };
-		2C072B9B24D684FC00EE7540 /* Development.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 2C072B9A24D684FC00EE7540 /* Development.xcconfig */; };
 		2C2796BF24DBAB5C000CCC9E /* AuthenticateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2796BE24DBAB5C000CCC9E /* AuthenticateViewController.swift */; };
 		2C2796C124DBAB6C000CCC9E /* InputViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2796C024DBAB6C000CCC9E /* InputViewController.swift */; };
 		2C2796C524DBAB9A000CCC9E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2796C424DBAB9A000CCC9E /* ViewController.swift */; };
@@ -27,8 +26,6 @@
 		D7353FC224CD511C002B31EB /* oh-id.png in Resources */ = {isa = PBXBuildFile; fileRef = D7353FC024CD511C002B31EB /* oh-id.png */; };
 		D7353FC824CD5568002B31EB /* UtilsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7353FC724CD5568002B31EB /* UtilsTest.swift */; };
 		D76D280A24D55D55009B6362 /* oh-authenticate.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D76D280924D55D55009B6362 /* oh-authenticate.jpg */; };
-		D76D281824D572D0009B6362 /* Development.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = D76D281724D572D0009B6362 /* Development.xcconfig */; };
-		D76D281924D572D0009B6362 /* Development.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = D76D281724D572D0009B6362 /* Development.xcconfig */; };
 		E7C5510458C0ECE019E3C6C4 /* Pods_Vouched_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F808CAAF4A65FC3C67A6808F /* Pods_Vouched_Example.framework */; };
 /* End PBXBuildFile section */
 
@@ -50,6 +47,7 @@
 		2C2796BE24DBAB5C000CCC9E /* AuthenticateViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticateViewController.swift; sourceTree = "<group>"; };
 		2C2796C024DBAB6C000CCC9E /* InputViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InputViewController.swift; sourceTree = "<group>"; };
 		2C2796C424DBAB9A000CCC9E /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		2C27FAAA263A279D000007E8 /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
 		607FACD01AFB9204008FA782 /* Vouched_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Vouched_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACD41AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		607FACD51AFB9204008FA782 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -59,7 +57,7 @@
 		607FACE51AFB9204008FA782 /* Vouched_Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Vouched_Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACEA1AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		77F00009BAE5644686B7D4A4 /* Pods_Vouched_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Vouched_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		7A73398DE57BF36B25760D9C /* Vouched.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = Vouched.podspec; path = ../Vouched.podspec; sourceTree = "<group>"; };
+		7A73398DE57BF36B25760D9C /* Vouched.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = Vouched.podspec; path = ../Vouched.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		7D03310F095B7074FAABC39F /* Pods-Vouched_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Vouched_Example.release.xcconfig"; path = "Target Support Files/Pods-Vouched_Example/Pods-Vouched_Example.release.xcconfig"; sourceTree = "<group>"; };
 		BC5F230724CF835600B0CB8E /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		BC5F230D24CFFCF100B0CB8E /* FaceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FaceViewController.swift; sourceTree = "<group>"; };
@@ -132,13 +130,14 @@
 				2C2796BE24DBAB5C000CCC9E /* AuthenticateViewController.swift */,
 				2C2796C024DBAB6C000CCC9E /* InputViewController.swift */,
 				2C2796C424DBAB9A000CCC9E /* ViewController.swift */,
-				BC5F230D24CFFCF100B0CB8E /* FaceViewController.swift */,
 				BC5F230F24D009F400B0CB8E /* ResultsViewController.swift */,
+				BC5F230D24CFFCF100B0CB8E /* FaceViewController.swift */,
 				607FACD91AFB9204008FA782 /* Main.storyboard */,
 				607FACDC1AFB9204008FA782 /* Images.xcassets */,
 				607FACDE1AFB9204008FA782 /* LaunchScreen.xib */,
 				607FACD31AFB9204008FA782 /* Supporting Files */,
 				2C072B9A24D684FC00EE7540 /* Development.xcconfig */,
+				2C27FAAA263A279D000007E8 /* Release.xcconfig */,
 			);
 			name = "Example for Vouched";
 			path = Vouched;
@@ -225,6 +224,7 @@
 				607FACCC1AFB9204008FA782 /* Sources */,
 				607FACCD1AFB9204008FA782 /* Frameworks */,
 				607FACCE1AFB9204008FA782 /* Resources */,
+				37F404EDC65AED7A977A1E4D /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -261,18 +261,16 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0830;
-				LastUpgradeCheck = 0830;
+				LastUpgradeCheck = 1250;
 				ORGANIZATIONNAME = CocoaPods;
 				TargetAttributes = {
 					607FACCF1AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
-						DevelopmentTeam = 8TFP3663W6;
-						LastSwiftMigration = 0900;
+						LastSwiftMigration = 1250;
 					};
 					607FACE41AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
-						DevelopmentTeam = 8TFP3663W6;
-						LastSwiftMigration = 0900;
+						LastSwiftMigration = 1250;
 						TestTargetID = 607FACCF1AFB9204008FA782;
 					};
 				};
@@ -306,8 +304,6 @@
 				2C072B9524C944F500EE7540 /* inference_graph.tflite in Resources */,
 				2C072B9724C9452700EE7540 /* labelmap_mobilenet_card.txt in Resources */,
 				D7353FC224CD511C002B31EB /* oh-id.png in Resources */,
-				2C072B9B24D684FC00EE7540 /* Development.xcconfig in Resources */,
-				D76D281824D572D0009B6362 /* Development.xcconfig in Resources */,
 				607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */,
 				D76D280A24D55D55009B6362 /* oh-authenticate.jpg in Resources */,
 				607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */,
@@ -319,13 +315,42 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D76D281924D572D0009B6362 /* Development.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		37F404EDC65AED7A977A1E4D /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Vouched_Example/Pods-Vouched_Example-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
+				"${BUILT_PRODUCTS_DIR}/GoogleDataTransport/GoogleDataTransport.framework",
+				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
+				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
+				"${BUILT_PRODUCTS_DIR}/PromisesObjC/FBLPromises.framework",
+				"${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework",
+				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleDataTransport.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBLPromises.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Protobuf.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Vouched_Example/Pods-Vouched_Example-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		42B173618BD0F87797B8ABBF /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -473,7 +498,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -483,6 +508,7 @@
 		};
 		607FACEE1AFB9204008FA782 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2C27FAAA263A279D000007E8 /* Release.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -519,7 +545,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
@@ -532,15 +558,16 @@
 			baseConfigurationReference = DA903CD55119EC4AA9D0851B /* Pods-Vouched_Example.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = 8TFP3663W6;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_BITCODE = YES;
 				INFOPLIST_FILE = Vouched/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = ExampleApp;
-				PRODUCT_BUNDLE_IDENTIFIER = "io.vouched.dww.Vouched-Example";
+				PRODUCT_BUNDLE_IDENTIFIER = id.vouched.dev.example;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -549,15 +576,16 @@
 			baseConfigurationReference = 7D03310F095B7074FAABC39F /* Pods-Vouched_Example.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = 8TFP3663W6;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_BITCODE = YES;
 				INFOPLIST_FILE = Vouched/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = ExampleApp;
-				PRODUCT_BUNDLE_IDENTIFIER = "io.vouched.dww.Vouched-Example";
+				PRODUCT_BUNDLE_IDENTIFIER = id.vouched.dev.example;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
@@ -565,7 +593,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = FC756112F5C3ACBF38E604B1 /* Pods-Vouched_Tests.debug.xcconfig */;
 			buildSettings = {
-				DEVELOPMENT_TEAM = 8TFP3663W6;
+				DEVELOPMENT_TEAM = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -579,7 +607,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Vouched_Example.app/Vouched_Example";
 			};
 			name = Debug;
@@ -588,7 +616,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = E0ED76C6EBBA95530A0AF325 /* Pods-Vouched_Tests.release.xcconfig */;
 			buildSettings = {
-				DEVELOPMENT_TEAM = 8TFP3663W6;
+				DEVELOPMENT_TEAM = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -598,7 +626,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Vouched_Example.app/Vouched_Example";
 			};
 			name = Release;
@@ -649,7 +677,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -662,15 +690,16 @@
 			baseConfigurationReference = F54B3D67EEAD23D2219B1856 /* Pods-Vouched_Example.development.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = 8TFP3663W6;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_BITCODE = YES;
 				INFOPLIST_FILE = Vouched/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = ExampleApp;
-				PRODUCT_BUNDLE_IDENTIFIER = "io.vouched.dww.Vouched-Example";
+				PRODUCT_BUNDLE_IDENTIFIER = id.vouched.dev.example;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Development;
 		};
@@ -678,7 +707,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1CCB48F506D04246FDB4D435 /* Pods-Vouched_Tests.development.xcconfig */;
 			buildSettings = {
-				DEVELOPMENT_TEAM = 8TFP3663W6;
+				DEVELOPMENT_TEAM = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -692,7 +721,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Vouched_Example.app/Vouched_Example";
 			};
 			name = Development;

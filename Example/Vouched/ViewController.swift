@@ -35,7 +35,9 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
 
     var inputFirstName: String = ""
     var inputLastName: String = ""
-    var nextRun: Date = Date();
+
+    var onBarcodeStep = false;
+    var includeBarcode = false;
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -129,13 +131,15 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         
         captureSession?.startRunning()
     }
-    func loadingShow(){
+    
+    func loadingToggle() {
         DispatchQueue.main.async() {
-            self.loadingIndicator.isHidden = false
+            self.loadingIndicator.isHidden = !self.loadingIndicator.isHidden
 
         }
     }
-    func buttonShow(){
+    
+    func buttonShow() {
         DispatchQueue.main.async() { // Correct
             self.nextButton.isHidden = false
             self.loadingIndicator.isHidden = true
@@ -180,13 +184,77 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         }
     }
     
+    func updateLabel(_ insight: Insight) {
+        var str: String
+
+        switch insight {
+        case .nonGlare:
+            str = "has glare"
+        case .quality:
+            str = "is blurry"
+        case .brightness:
+            str = "needs to be brighter"
+        case .face:
+            str = "missing required visual markers"
+        case .unknown:
+            str = "No Error Message"
+        }
+        DispatchQueue.main.async() {
+            self.instructionLabel.text = str
+        }
+    }
+    
     /**
      This method called from AVCaptureVideoDataOutputSampleBufferDelegate - passed in sampleBuffer
      */
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+        if onBarcodeStep {
+            captureBarcode(sampleBuffer)
+        } else {
+            captureFrontId(sampleBuffer)
+        }
+    }
+
+    func captureBarcode(_ sampleBuffer: CMSampleBuffer) {
+        let detectedBarcode = self.cardDetect.findBarcode(sampleBuffer, cameraPosition: .back)
+        guard let detectedBarcode = detectedBarcode else {
+            DispatchQueue.main.async() {
+                self.instructionLabel.text = "Focus camera on barcode"
+            }
+            return
+        }
+
+        captureSession?.stopRunning()
+        self.loadingToggle()
+        DispatchQueue.main.async() {
+            self.instructionLabel.text = "Processing"
+        }
+        
+        do {
+            let job = try session.postBackId(detectedBarcode: detectedBarcode)
+            print(job)
+            
+            // if there are job insights, update label and retry card detection
+            let insights = VouchedUtils.extractInsights(job)
+            if !insights.isEmpty {
+                self.updateLabel(insights.first!)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+                    self.loadingToggle()
+                    self.captureSession?.startRunning()
+                }
+                return;
+            }
+            self.buttonShow()
+        } catch {
+            print("Error Barcode: \(error.localizedDescription)")
+        }
+        
+    }
+    
+    func captureFrontId(_ sampleBuffer: CMSampleBuffer) {
         let imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
         let detectedCard = self.cardDetect.detect(imageBuffer!)
-        
+
         if let detectedCard = detectedCard {
             switch detectedCard.step {
             case .preDetected:
@@ -197,7 +265,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
                 self.updateLabel(detectedCard.instruction)
             case .postable:
                 captureSession?.stopRunning()
-                self.loadingShow()
+                self.loadingToggle()
                 DispatchQueue.main.async() {
                     self.instructionLabel.text = "Processing Image"
                 }
@@ -210,18 +278,29 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
                         job = try session.postFrontId(detectedCard: detectedCard, params: &params)
                     }
                     print(job)
-                    let retryableErrors = VouchedUtils.extractRetryableIdErrors(job)
-                    // if there are retryable errors, update label and retry card detection
-                    if !retryableErrors.isEmpty {
-                        self.updateLabel(retryableErrors.first!)
+                    
+                    // if there are job insights, update label and retry card detection
+                    let insights = VouchedUtils.extractInsights(job)
+                    if !insights.isEmpty {
+                        self.updateLabel(insights.first!)
                         DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+                            self.loadingToggle()
                             self.captureSession?.startRunning()
                         }
                         return;
                     }
-                    self.buttonShow()
+                    if includeBarcode {
+                        onBarcodeStep = true;
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                            self.loadingToggle()
+                            self.captureSession?.sessionPreset = AVCaptureSession.Preset.high
+                            self.captureSession?.startRunning()
+                        }
+                    } else {
+                        self.buttonShow()
+                    }
                 } catch {
-                    print("Error info: \(error)")
+                    print("Error FrontId: \(error.localizedDescription)")
                 }
             }
         } else {
@@ -229,9 +308,8 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
                 self.instructionLabel.text = "Show ID Card"
             }
         }
-        
     }
-  
+    
     override func prepare(for segue: UIStoryboardSegue, sender:Any?){
         if segue.identifier == "ToFaceDetect"{
             let destVC = segue.destination as! FaceViewController

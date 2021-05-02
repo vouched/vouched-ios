@@ -12,6 +12,8 @@ class InputViewController: UIViewController {
 
     @IBOutlet weak var inputFirstName: UITextField!
     @IBOutlet weak var inputLastName: UITextField!
+    @IBOutlet weak var barcodeSwitch: UISwitch!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.navigationBar.isHidden = false
@@ -38,6 +40,7 @@ class InputViewController: UIViewController {
             let destVC = segue.destination as! ViewController
             destVC.inputFirstName = self.inputFirstName.text!
             destVC.inputLastName = self.inputLastName.text!
+            destVC.includeBarcode = self.barcodeSwitch.isOn
             
         }
     }
