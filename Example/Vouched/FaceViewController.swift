@@ -200,6 +200,7 @@ class FaceViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
                     if !insights.isEmpty {
                         self.updateLabel(insights.first!)
                         DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+                            self.faceDetect.reset();
                             self.captureSession?.startRunning()
                         }
                         return;

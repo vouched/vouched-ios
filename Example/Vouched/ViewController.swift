@@ -31,8 +31,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     var cameraImage: UIImage?
     var cardDetect = CardDetect(options: CardDetectOptionsBuilder().withEnableDistanceCheck(false).build())
     var count: Int = 0
-    let session: VouchedSession = VouchedSession(apiKey: getValue(key:"API_KEY"))
-
+    let session: VouchedSession = VouchedSession(apiKey: getValue(key:"API_KEY"), sessionParameters: VouchedSessionParameters())
     var inputFirstName: String = ""
     var inputLastName: String = ""
 
@@ -56,34 +55,6 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     }
     
     /**
-     This method provides onTouch camera focus
-     */
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        let touchPoint = touches.first! as UITouch
-        let screenSize = cameraView.bounds.size
-        let focusPoint = CGPoint(x: touchPoint.location(in: cameraView).y / screenSize.height, y: 1.0 - touchPoint.location(in: cameraView).x / screenSize.width)
-
-        if let device = device {
-            do {
-                try device.lockForConfiguration()
-                defer {
-                    device.unlockForConfiguration()
-                }
-                if device.isFocusPointOfInterestSupported {
-                    device.focusPointOfInterest = focusPoint
-                    device.focusMode = AVCaptureDevice.FocusMode.autoFocus
-                }
-                if device.isExposurePointOfInterestSupported {
-                    device.exposurePointOfInterest = focusPoint
-                    device.exposureMode = AVCaptureDevice.ExposureMode.autoExpose
-                }
-            } catch {
-                print(error)
-            }
-        }
-    }
-    
-    /**
      This method sets up the Camera device details
      */
     func setupCamera() {
@@ -96,6 +67,12 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             return
         }
         device = discoverySession.devices[0]
+        
+        if(device!.isFocusModeSupported(.continuousAutoFocus)) {
+            try! device!.lockForConfiguration()
+            device!.focusMode = .continuousAutoFocus
+            device!.unlockForConfiguration()
+        }
         
         let input: AVCaptureDeviceInput
         do {
@@ -216,8 +193,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     }
 
     func captureBarcode(_ sampleBuffer: CMSampleBuffer) {
-        let detectedBarcode = self.cardDetect.findBarcode(sampleBuffer, cameraPosition: .back)
-        guard let detectedBarcode = detectedBarcode else {
+        guard let detectedBarcode = self.cardDetect.findBarcode(sampleBuffer, cameraPosition: .back) else {
             DispatchQueue.main.async() {
                 self.instructionLabel.text = "Focus camera on barcode"
             }
@@ -278,12 +254,13 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
                         job = try session.postFrontId(detectedCard: detectedCard, params: &params)
                     }
                     print(job)
-                    
+
                     // if there are job insights, update label and retry card detection
                     let insights = VouchedUtils.extractInsights(job)
                     if !insights.isEmpty {
                         self.updateLabel(insights.first!)
                         DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+                            self.cardDetect.reset();
                             self.loadingToggle()
                             self.captureSession?.startRunning()
                         }
