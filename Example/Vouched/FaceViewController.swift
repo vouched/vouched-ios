@@ -155,13 +155,15 @@ class FaceViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
 
         switch insight {
         case .nonGlare:
-            str = "has glare"
+            str = "image has glare"
         case .quality:
-            str = "is blurry"
+            str = "image is blurry"
         case .brightness:
-            str = "needs to be brighter"
+            str = "image needs to be brighter"
         case .face:
-            str = "missing required visual markers"
+            str = "image is missing required visual markers"
+        case .glasses:
+            str = "please take off your glasses"
         case .unknown:
             str = "No Error Message"
         }
