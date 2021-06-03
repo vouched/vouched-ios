@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.6.3](https://github.com/vouched/vouched-ios/compare/v0.6.2...v0.6.3) - 2021-06-03
+
+#### Added
+
+- token to VouchedSessionParameters
+
 ## [0.6.2](https://github.com/vouched/vouched-ios/compare/v0.6.1...v0.6.2) - 2021-05-14
 
 #### Added

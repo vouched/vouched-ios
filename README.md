@@ -75,6 +75,11 @@ let session = VouchedSession(apiKey: "PUBLIC_KEY", groupId: "GROUP_ID")
 | String         |  false   |
 | String         |   true   |
 
+##### Initializing with a token
+```swift
+let session = VouchedSession(apiKey: "PUBLIC_KEY", groupId: "GROUP_ID", sessionParameters: VouchedSessionParameters(token: "TOKEN"))
+```
+
 ##### POST Front Id image
 
 ```swift
