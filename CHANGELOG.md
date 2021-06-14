@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.6.4](https://github.com/vouched/vouched-ios/compare/v0.6.3...v0.6.4) - 2021-06-13
+
+#### Added
+
+- boundingBox to CardDetectResult
+
 ## [0.6.3](https://github.com/vouched/vouched-ios/compare/v0.6.2...v0.6.3) - 2021-06-03
 
 #### Added
