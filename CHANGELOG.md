@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.7.0](https://github.com/vouched/vouched-ios/compare/v0.6.4...v0.7.0) - 2021-08-08
+
+#### Added
+
+- VouchedCameraHelper
+- Split Core and Barcode dependencies
+
+#### Breaking Changes
+
+- CardDetect.detect
+- FaceDetect.detect
+
 ## [0.6.4](https://github.com/vouched/vouched-ios/compare/v0.6.3...v0.6.4) - 2021-06-13
 
 #### Added

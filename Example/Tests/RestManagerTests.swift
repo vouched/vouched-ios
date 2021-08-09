@@ -7,7 +7,7 @@
 //
 
 import XCTest
-import Vouched
+import VouchedCore
 
 public struct Users: Decodable {
     let page: Int

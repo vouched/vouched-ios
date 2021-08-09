@@ -8,7 +8,7 @@
 
 import UIKit
 import AVFoundation
-import Vouched
+import VouchedCore
 import Vision
 
 class AuthenticateViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate {
@@ -144,10 +144,9 @@ class AuthenticateViewController: UIViewController, AVCaptureVideoDataOutputSamp
      This method called from AVCaptureVideoDataOutputSampleBufferDelegate - passed in sampleBuffer
      */
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-        let imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
-        let detectedFace = self.faceDetect.detect(imageBuffer!)
+        let detectedFace = faceDetect?.detect(sampleBuffer)
         
-        if let detectedFace = detectedFace {
+        if let detectedFace = detectedFace as? FaceDetectResult {
             switch detectedFace.step {
             case .preDetected:
                 DispatchQueue.main.async() {

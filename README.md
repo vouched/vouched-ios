@@ -51,8 +51,8 @@ This section will provide a _step-by-step_ to understand the Vouched SDK through
      - Add custom logic to display data or control the navigation
 
    - Locate the Vouched detectors and add logging
-     - `cardDetect.detect(imageBuffer!)`
-     - `faceDetect.detect(imageBuffer!)`
+     - `cardDetect?.detect(sampleBuffer)`
+     - `faceDetect?.detect(sampleBuffer)`
 
 3. Tweak [AVCapture](https://developer.apple.com/documentation/avfoundation/avcapturedevice) settings  
    Better images lead to better results from Vouched AI
@@ -83,7 +83,7 @@ let session = VouchedSession(apiKey: "PUBLIC_KEY", groupId: "GROUP_ID", sessionP
 ##### POST Front Id image
 
 ```swift
-let job = try session.postFrontId(detectedCard: detectedCard, params: &params)
+let job = try session.postFrontId(detectedCard: detectedCard, details: details)
 ```
 
 | Parameter Type                        | Nullable |
@@ -130,7 +130,7 @@ let cardDetect = CardDetect(options: CardDetectOptionsBuilder().withEnableDistan
 ##### Process Image
 
 ```swift
-let detectedCard = cardDetect.detect(imageBuffer)
+let detectedCard = cardDetect.detect(sampleBuffer)
 ```
 
 | Parameter Type | Nullable |
@@ -156,7 +156,7 @@ let faceDetect = FaceDetect(options: FaceDetectOptionsBuilder().withLivenessMode
 ##### Process Image
 
 ```swift
-let detectedFace = faceDetect.detect(imageBuffer)
+let detectedFace = faceDetect.detect(sampleBuffer)
 ```
 
 | Parameter Type | Nullable |

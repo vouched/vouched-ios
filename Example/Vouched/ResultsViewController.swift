@@ -8,7 +8,7 @@
 
 import UIKit
 import AVFoundation
-import Vouched
+import VouchedCore
 
 class ResultsViewController: UIViewController, UITableViewDataSource {
     @IBOutlet weak var loading: UIActivityIndicatorView!

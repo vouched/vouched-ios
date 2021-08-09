@@ -7,7 +7,8 @@
 //
 
 import UIKit
-import Vouched
+import VouchedCore
+import VouchedBarcode
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -17,6 +18,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         VouchedLogger.shared.configure(destination: .xcode, level: .info)
+        FaceDetect.register()
+        CardDetect.register()
+        BarcodeDetect.register()
         return true
     }
 

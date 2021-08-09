@@ -1,7 +1,8 @@
 use_frameworks!
 
 target 'Vouched_Example' do
-  pod 'Vouched', '~> 0.6.4'
+  pod 'Vouched', '~> 0.7'
+  pod 'Vouched/Barcode', '~> 0.7'
 
   target 'Vouched_Tests' do
     inherit! :search_paths

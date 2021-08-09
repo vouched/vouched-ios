@@ -37,11 +37,18 @@ class InputViewController: UIViewController {
     
     override func prepare(for segue: UIStoryboardSegue, sender:Any?) {
         if segue.identifier == "ToInputNames"{
-            let destVC = segue.destination as! ViewController
-            destVC.inputFirstName = self.inputFirstName.text!
-            destVC.inputLastName = self.inputLastName.text!
-            destVC.includeBarcode = self.barcodeSwitch.isOn
-            
+            switch segue.destination {
+            case let destVC as IdViewController:
+                destVC.inputFirstName = self.inputFirstName.text!
+                destVC.inputLastName = self.inputLastName.text!
+                destVC.includeBarcode = self.barcodeSwitch.isOn
+            case let destVC as IdViewControllerV2:
+                destVC.inputFirstName = self.inputFirstName.text!
+                destVC.inputLastName = self.inputLastName.text!
+                destVC.includeBarcode = self.barcodeSwitch.isOn
+            default:
+                break
+            }
         }
     }
 

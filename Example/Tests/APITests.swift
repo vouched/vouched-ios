@@ -1,6 +1,6 @@
 
 import XCTest
-import Vouched
+import VouchedCore
 
 enum APITestsError: Error {
     case invalidImage(image: String)

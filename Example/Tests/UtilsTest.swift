@@ -7,7 +7,8 @@
 //
 
 import XCTest
-import Vouched
+import VouchedCore
+
 class UtilsTests: XCTestCase {
 
     override func setUpWithError() throws {
