@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+
+## [0.7.1](https://github.com/vouched/vouched-ios/compare/v0.7.0...v0.7.1) - 2021-08-10
+
+#### Added
+
+- example for VouchedCameraHelper
+- better error handling and logging
+
 ## [0.7.0](https://github.com/vouched/vouched-ios/compare/v0.6.4...v0.7.0) - 2021-08-08
 
 #### Added

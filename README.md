@@ -60,6 +60,78 @@ This section will provide a _step-by-step_ to understand the Vouched SDK through
 
 ## Reference
 
+### VouchedCameraHelper
+
+This class is introduced to make it easier for developers to integrate `VouchedSDK` and provide the optimal photography. The helper takes care of configuring the capture session, input, and output. Helper has following modes: 'ID' | 'Selfie' | 'Barcode'
+
+##### Initialize
+
+```swift
+let helper = VouchedCameraHelper(with: VouchedCameraMode, helperOptions: VouchedCameraHelperOptions, detectionOptions: [VouchedDetectionOptions], in: UIView)
+```
+
+| Parameter Type | Nullable |
+| -------------- | :------: |
+| [VouchedCameraMode](vouchedcameramode)         |  false   |
+| [VouchedCameraHelperOptions](vouchedcamerahelperoptions)         |   false   |
+| [[VouchedDetectionOptions](voucheddetectionoptions)]         |   false   |
+| UIView         |   false   |
+
+##### Observe Results
+
+There are two helper methods that serve as delegates to obtain capturing results
+
+```swift
+func withCapture(delegate: @escaping ((CaptureResult) -> Void)) -> VouchedCameraHelper
+```
+
+| Parameter Type | Nullable |
+| -------------- | :------: |
+| Closure([CaptureResult](#captureresult) )         |  false   |
+
+```swift
+func observeBoundingBox(observer: @escaping ((BoundingBox) -> Void)) -> VouchedCameraHelper
+```
+
+| Parameter Type | Nullable |
+| -------------- | :------: |
+| Closure([BoundingBox](boundingbox))         |  false   |
+
+
+##### Run
+
+In order to start capturing, put the following code:
+
+```swift
+helper.startCapture()
+```
+
+Once the results are ready to process/submit, stop capturing:
+
+```swift
+helper.stopCapture()
+```
+
+##### Usage
+
+Typical usage is as following:
+
+```swift
+let helper = VouchedCameraHelper(with: .id,
+                                 detectionOptions: [.cardDetect(CardDetectOptionsBuilder().withEnableDistanceCheck(false).build())],
+                                 in: previewContainer)?
+    .withCapture(delegate: { (result) in
+        switch result {
+        case .empty:
+            ...
+        case .id(let result):
+            ...
+        default:
+            break
+        }
+    })
+```
+
 ### VouchedSession
 
 This class handles a user's Vouched session. It takes care of the API calls. Use one instance for the duration of a user's verification session.
@@ -130,7 +202,7 @@ let cardDetect = CardDetect(options: CardDetectOptionsBuilder().withEnableDistan
 ##### Process Image
 
 ```swift
-let detectedCard = cardDetect.detect(sampleBuffer)
+let detectedCard = cardDetect?.detect(sampleBuffer)
 ```
 
 | Parameter Type | Nullable |
@@ -156,7 +228,7 @@ let faceDetect = FaceDetect(options: FaceDetectOptionsBuilder().withLivenessMode
 ##### Process Image
 
 ```swift
-let detectedFace = faceDetect.detect(sampleBuffer)
+let detectedFace = faceDetect?.detect(sampleBuffer)
 ```
 
 | Parameter Type | Nullable |
@@ -166,6 +238,17 @@ let detectedFace = faceDetect.detect(sampleBuffer)
 `Returns` - [FaceDetectResult](#facedetectresult)
 
 ### Types
+
+##### BoundingBox
+
+The bounding box of detected `ID card` for the output from [Card Detection](#carddetectresult).
+
+```swift
+public struct BoundingBox {
+    public let box: CGRect?
+    public let imageSize: CGSize
+}
+```
 
 ##### CardDetectResult
 
@@ -177,6 +260,7 @@ struct CardDetectResult {
     public let distanceImage: String?
     public let step: Step
     public let instruction: Instruction
+    public let boundingBox: CGRect?
 }
 ```
 
@@ -246,6 +330,73 @@ enum RetryableError: String {
     case blurryIdPhotoError
     case glareIdPhotoError
     case invalidUserPhotoError
+}
+```
+
+##### VouchedCameraMode
+
+An enum to provide mode for [VouchedCameraHelper](#vouchedcamerahelper)
+
+```swift
+public enum VouchedCameraMode {
+    case id
+    case barcode(String, DetectorOptions)
+    case selfie
+}
+```
+
+##### VouchedCameraHelperOptions
+
+List of options to alter image processing for [VouchedCameraHelper](#vouchedcamerahelper)
+
+```swift
+public struct VouchedCameraHelperOptions {
+    public static var usePhotoCapture: VouchedCameraHelperOptions
+    public static var cropIdImage: VouchedCameraHelperOptions
+}
+```
+
+##### VouchedDetectionOptions
+
+An enum to provide settings for `ID`/`Selfie` detection for [VouchedCameraHelper](#vouchedcamerahelper)
+
+```swift
+public enum VouchedDetectionOptions {
+    case cardDetect(CardDetectOptions)
+    case faceDetect(FaceDetectOptions)
+}
+```
+
+| Parameter Type | Nullable |
+| -------------- | :------: |
+|  [CardDetectOptions](#carddetectoptions)  |  false   |
+| [FaceDetectOptions](#facedetectoptions)  |  false   |
+
+##### CaptureResult
+
+An enum to deliver detection results
+
+```swift
+public enum CaptureResult {
+    case empty
+    case id(DetectionResult)
+    case selfie(DetectionResult)
+    case barcode(DetectionResult)
+}
+```
+
+| Parameter Type | Nullable |
+| -------------- | :------: |
+|  [DetectionResult](#detectionresult)  |  false   |
+
+
+##### DetectionResult
+
+Generic protocol, used to submit detection results
+
+```swift
+public protocol DetectionResult {
+    func params() throws -> Params
 }
 ```
 
