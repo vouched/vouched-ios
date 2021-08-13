@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.7.2](https://github.com/vouched/vouched-ios/compare/v0.7.1...v0.7.2) - 2021-08-12
+
+#### Removed
+
+- dependency that may lead to crashes
 
 ## [0.7.1](https://github.com/vouched/vouched-ios/compare/v0.7.0...v0.7.1) - 2021-08-10
 
