@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.7.3](https://github.com/vouched/vouched-ios/compare/v0.7.2...v0.7.3) - 2021-09-17
+
+#### Added
+
+- error reporting with Sentry
+- ablility to reuse VouchedSession instance for failed verifications
+- improvements for LivenessMode.distance 
+- VouchedCameraHelper example for face capture
+
 ## [0.7.2](https://github.com/vouched/vouched-ios/compare/v0.7.1...v0.7.2) - 2021-08-12
 
 #### Removed

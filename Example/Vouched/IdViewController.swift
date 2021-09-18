@@ -32,7 +32,7 @@ class IdViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDe
     var cardDetect = CardDetect(options: CardDetectOptionsBuilder().withEnableDistanceCheck(false).build())
     var barCodeDetect = BarcodeDetect()
     var count: Int = 0
-    let session: VouchedSession = VouchedSession(apiKey: getValue(key:"API_KEY"), sessionParameters: VouchedSessionParameters())
+    let session = VouchedSession(apiKey: getValue(key:"API_KEY"), sessionParameters: VouchedSessionParameters())
     var inputFirstName: String = ""
     var inputLastName: String = ""
 

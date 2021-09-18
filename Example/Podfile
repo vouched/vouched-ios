@@ -3,9 +3,10 @@ use_frameworks!
 target 'Vouched_Example' do
   # pod 'Vouched'
   pod 'Vouched/Barcode'
+  pod 'Sentry'
 
   target 'Vouched_Tests' do
     inherit! :search_paths
-
   end
 end
+

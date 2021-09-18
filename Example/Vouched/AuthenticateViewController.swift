@@ -106,12 +106,15 @@ class AuthenticateViewController: UIViewController, AVCaptureVideoDataOutputSamp
                 self.authenticationResultLabel.text = "Authentication Success"
                 self.authenticationResultLabel.isHidden = false
                 self.loadingIndicator.isHidden = true
+                self.instructionLabel.text = nil
             }
         }else{
             DispatchQueue.main.async() { // Correct
                 self.authenticationResultLabel.text = "Authentication Failed"
                 self.authenticationResultLabel.isHidden = false
-            }
+                self.loadingIndicator.isHidden = true
+                self.instructionLabel.text = nil
+           }
         }
     }
     
@@ -165,6 +168,7 @@ class AuthenticateViewController: UIViewController, AVCaptureVideoDataOutputSamp
                     self.buttonShow(authenticationResult: authenticationResult)
                 } catch {
                     print("Error info: \(error)")
+                    self.buttonShow(authenticationResult: AuthenticateResult(match: 0))
                 }
             }
         } else {
@@ -172,7 +176,5 @@ class AuthenticateViewController: UIViewController, AVCaptureVideoDataOutputSamp
                 self.instructionLabel.text = "Look into the Camera"
             }
         }
-        
     }
-    
 }

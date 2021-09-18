@@ -28,6 +28,7 @@
 		D7353FC824CD5568002B31EB /* UtilsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7353FC724CD5568002B31EB /* UtilsTest.swift */; };
 		D76D280A24D55D55009B6362 /* oh-authenticate.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D76D280924D55D55009B6362 /* oh-authenticate.jpg */; };
 		FA428A3926835247009C5720 /* IdViewControllerV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA428A1026834E8A009C5720 /* IdViewControllerV2.swift */; };
+		FAE2340826A82A2B00F15EBC /* FaceViewControllerV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAE2340726A82A2B00F15EBC /* FaceViewControllerV2.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -77,6 +78,7 @@
 		ECAE7D15B84FC0F6F28A20DD /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		F54B3D67EEAD23D2219B1856 /* Pods-Vouched_Example.development.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Vouched_Example.development.xcconfig"; path = "Target Support Files/Pods-Vouched_Example/Pods-Vouched_Example.development.xcconfig"; sourceTree = "<group>"; };
 		FA428A1026834E8A009C5720 /* IdViewControllerV2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdViewControllerV2.swift; sourceTree = "<group>"; };
+		FAE2340726A82A2B00F15EBC /* FaceViewControllerV2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FaceViewControllerV2.swift; sourceTree = "<group>"; };
 		FC756112F5C3ACBF38E604B1 /* Pods-Vouched_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Vouched_Tests.debug.xcconfig"; path = "Target Support Files/Pods-Vouched_Tests/Pods-Vouched_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -135,6 +137,7 @@
 				FA428A1026834E8A009C5720 /* IdViewControllerV2.swift */,
 				BC5F230F24D009F400B0CB8E /* ResultsViewController.swift */,
 				BC5F230D24CFFCF100B0CB8E /* FaceViewController.swift */,
+				FAE2340726A82A2B00F15EBC /* FaceViewControllerV2.swift */,
 				607FACD91AFB9204008FA782 /* Main.storyboard */,
 				607FACDC1AFB9204008FA782 /* Images.xcassets */,
 				607FACDE1AFB9204008FA782 /* LaunchScreen.xib */,
@@ -394,6 +397,7 @@
 			files = (
 				BC5F230824CF835600B0CB8E /* MainViewController.swift in Sources */,
 				FA428A3926835247009C5720 /* IdViewControllerV2.swift in Sources */,
+				FAE2340826A82A2B00F15EBC /* FaceViewControllerV2.swift in Sources */,
 				BC5F230E24CFFCF100B0CB8E /* FaceViewController.swift in Sources */,
 				2C2796C524DBAB9A000CCC9E /* IdViewController.swift in Sources */,
 				2C2796C124DBAB6C000CCC9E /* InputViewController.swift in Sources */,
@@ -550,7 +554,7 @@
 			baseConfigurationReference = DA903CD55119EC4AA9D0851B /* Pods-Vouched_Example.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 8TFP3663W6;
 				ENABLE_BITCODE = YES;
 				INFOPLIST_FILE = Vouched/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
@@ -571,7 +575,7 @@
 			baseConfigurationReference = 7D03310F095B7074FAABC39F /* Pods-Vouched_Example.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 8TFP3663W6;
 				ENABLE_BITCODE = YES;
 				INFOPLIST_FILE = Vouched/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
@@ -591,7 +595,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = FC756112F5C3ACBF38E604B1 /* Pods-Vouched_Tests.debug.xcconfig */;
 			buildSettings = {
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 8TFP3663W6;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -618,7 +622,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = E0ED76C6EBBA95530A0AF325 /* Pods-Vouched_Tests.release.xcconfig */;
 			buildSettings = {
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 8TFP3663W6;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -696,7 +700,7 @@
 			baseConfigurationReference = F54B3D67EEAD23D2219B1856 /* Pods-Vouched_Example.development.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 8TFP3663W6;
 				ENABLE_BITCODE = YES;
 				INFOPLIST_FILE = Vouched/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
@@ -716,7 +720,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1CCB48F506D04246FDB4D435 /* Pods-Vouched_Tests.development.xcconfig */;
 			buildSettings = {
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 8TFP3663W6;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
 					"$(inherited)",

@@ -23,7 +23,7 @@ class IdViewControllerV2: UIViewController {
     var includeBarcode = false
 
     private var helper: VouchedCameraHelper?
-    private let session: VouchedSession = VouchedSession(apiKey: getValue(key:"API_KEY"), sessionParameters: VouchedSessionParameters())
+    private let session = VouchedSession(apiKey: getValue(key:"API_KEY"), sessionParameters: VouchedSessionParameters())
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -51,69 +51,65 @@ class IdViewControllerV2: UIViewController {
 
     override func prepare(for segue: UIStoryboardSegue, sender:Any?){
         if segue.identifier == "ToFaceDetect"{
-            let destVC = segue.destination as! FaceViewController
+            let destVC = segue.destination as! FaceViewControllerV2
             destVC.session = self.session
         }
     }
 
-    func configureHelper(_ mode: VouchedCameraMode) {
-        helper = VouchedCameraHelper(with: .id, detectionOptions: [.cardDetect(CardDetectOptionsBuilder().withEnableDistanceCheck(false).build())], in: previewContainer)?.withCapture(delegate: { self.handleResult($0) })
+    private func configureHelper(_ mode: VouchedCameraMode) {
+        helper = VouchedCameraHelper(with: mode, in: previewContainer)?.withCapture(delegate: { self.handleResult($0) })
     }
     
-    func handleResult(_ result: VouchedCore.CaptureResult) {
+    private func handleResult(_ result: VouchedCore.CaptureResult) {
         switch result {
         case .empty:
-            DispatchQueue.main.async() {
-                self.instructionLabel.text = self.onBarcodeStep ? "Focus camera on barcode" : "Show ID Card"
-            }
+            self.instructionLabel.text = self.onBarcodeStep ? "Focus camera on barcode" : "Show ID Card"
         case .id(let result):
             guard let result = result as? CardDetectResult else { return }
             switch result.step {
             case .preDetected:
-                DispatchQueue.main.async() {
-                    self.instructionLabel.text = "Show ID Card"
-                }
+                self.instructionLabel.text = "Show ID Card"
             case .detected:
                 self.updateLabel(result.instruction)
             case .postable:
                 helper?.stopCapture()
                 self.loadingToggle()
-                DispatchQueue.main.async() {
-                    self.instructionLabel.text = "Processing Image"
-                }
-                do {
-                    let job: Job
-                    if inputFirstName.isEmpty && inputLastName.isEmpty {
-                        job = try session.postFrontId(detectedCard: result)
-                    } else {
-                        let details = Params(firstName: inputFirstName, lastName: inputLastName)
-                        job = try session.postFrontId(detectedCard: result, details: details)
-                    }
-                    print(job)
+                self.instructionLabel.text = "Processing Image"
+                DispatchQueue.global().async {
+                    do {
+                        let job: Job
+                        if self.inputFirstName.isEmpty && self.inputLastName.isEmpty {
+                            job = try self.session.postFrontId(detectedCard: result)
+                        } else {
+                            let details = Params(firstName: self.inputFirstName, lastName: self.inputLastName)
+                            job = try self.session.postFrontId(detectedCard: result, details: details)
+                        }
+                        print(job)
 
-                    // if there are job insights, update label and retry card detection
-                    let insights = VouchedUtils.extractInsights(job)
-                    if !insights.isEmpty {
-                        self.updateLabel(insights.first!)
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
-                            self.helper?.resetDetection()
-                            self.loadingToggle()
-                            self.helper?.startCapture()
+                        // if there are job insights, update label and retry card detection
+                        let insights = VouchedUtils.extractInsights(job)
+                        if !insights.isEmpty {
+                            self.updateLabel(insights.first!)
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+                                self.helper?.resetDetection()
+                                self.loadingToggle()
+                                self.helper?.startCapture()
+                            }
+                            return
                         }
-                        return
-                    }
-                    if includeBarcode {
-                        onBarcodeStep = true
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                            self.loadingToggle()
-                            self.configureHelper(.barcode(BarcodeDetect.defaultIdentifier, BarcodeScannerOptions(formats: [.PDF417])))
-                            self.helper?.startCapture()
+                        if self.includeBarcode {
+                            self.onBarcodeStep = true
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                                self.loadingToggle()
+                                self.configureHelper(.barcode(BarcodeDetect.defaultIdentifier, BarcodeScannerOptions(formats: [.PDF417])))
+                                self.helper?.startCapture()
+                            }
+                        } else {
+                            self.buttonShow()
                         }
-                    } else {
-                        self.buttonShow()
+                    } catch {
+                        print("Error FrontId: \(error.localizedDescription)")
                     }
-                } catch {
-                    print("Error FrontId: \(error.localizedDescription)")
                 }
             }
         case .selfie(_):
@@ -121,10 +117,8 @@ class IdViewControllerV2: UIViewController {
         case .barcode(let result):
             helper?.stopCapture()
             self.loadingToggle()
-            DispatchQueue.main.async() {
-                self.instructionLabel.text = "Processing"
-            }
-            
+            self.instructionLabel.text = "Processing"
+
             do {
                 let job = try session.postBackId(detectedBarcode: result)
                 print(job)
@@ -146,7 +140,7 @@ class IdViewControllerV2: UIViewController {
         }
     }
     
-    func updateLabel(_ instruction: Instruction) {
+    private func updateLabel(_ instruction: Instruction) {
         var str: String
         switch instruction {
         case .moveCloser:
@@ -165,7 +159,7 @@ class IdViewControllerV2: UIViewController {
         }
     }
         
-    func updateLabel(_ insight: Insight) {
+    private func updateLabel(_ insight: Insight) {
         var str: String
 
         switch insight {
@@ -188,17 +182,15 @@ class IdViewControllerV2: UIViewController {
         }
     }
 
-    func buttonShow() {
-        DispatchQueue.main.async() { // Correct
+    private func buttonShow() {
+        DispatchQueue.main.async() {
             self.nextButton.isHidden = false
             self.loadingIndicator.isHidden = true
-
-        }
+            self.instructionLabel.text = nil
+       }
     }
 
-    func loadingToggle() {
-        DispatchQueue.main.async() {
-            self.loadingIndicator.isHidden = !self.loadingIndicator.isHidden
-        }
+    private func loadingToggle() {
+        self.loadingIndicator.isHidden = !self.loadingIndicator.isHidden
     }
 }
