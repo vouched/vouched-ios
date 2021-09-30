@@ -554,7 +554,7 @@
 			baseConfigurationReference = DA903CD55119EC4AA9D0851B /* Pods-Vouched_Example.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = 8TFP3663W6;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = YES;
 				INFOPLIST_FILE = Vouched/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
@@ -575,7 +575,7 @@
 			baseConfigurationReference = 7D03310F095B7074FAABC39F /* Pods-Vouched_Example.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = 8TFP3663W6;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = YES;
 				INFOPLIST_FILE = Vouched/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
@@ -595,7 +595,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = FC756112F5C3ACBF38E604B1 /* Pods-Vouched_Tests.debug.xcconfig */;
 			buildSettings = {
-				DEVELOPMENT_TEAM = 8TFP3663W6;
+				DEVELOPMENT_TEAM = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -622,7 +622,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = E0ED76C6EBBA95530A0AF325 /* Pods-Vouched_Tests.release.xcconfig */;
 			buildSettings = {
-				DEVELOPMENT_TEAM = 8TFP3663W6;
+				DEVELOPMENT_TEAM = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -700,7 +700,7 @@
 			baseConfigurationReference = F54B3D67EEAD23D2219B1856 /* Pods-Vouched_Example.development.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = 8TFP3663W6;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = YES;
 				INFOPLIST_FILE = Vouched/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
@@ -720,7 +720,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1CCB48F506D04246FDB4D435 /* Pods-Vouched_Tests.development.xcconfig */;
 			buildSettings = {
-				DEVELOPMENT_TEAM = 8TFP3663W6;
+				DEVELOPMENT_TEAM = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
 					"$(inherited)",

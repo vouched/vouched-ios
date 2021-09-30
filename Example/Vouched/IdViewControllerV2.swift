@@ -137,6 +137,14 @@ class IdViewControllerV2: UIViewController {
             } catch {
                 print("Error Barcode: \(error.localizedDescription)")
             }
+        case .error(let error):
+            if let error = error as? VouchedError, let description = error.errorDescription {
+                print("Error processing: \(description)")
+            } else {
+                print("Error processing: \(error.localizedDescription)")
+            }
+        @unknown default:
+            print("Unknown Error")
         }
     }
     
@@ -174,6 +182,8 @@ class IdViewControllerV2: UIViewController {
         case .glasses:
             str = "please take off your glasses"
         case .unknown:
+            str = "No Error Message"
+        @unknown default:
             str = "No Error Message"
         }
         

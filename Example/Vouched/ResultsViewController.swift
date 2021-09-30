@@ -45,24 +45,25 @@ class ResultsViewController: UIViewController, UITableViewDataSource {
 
     }
     
-    func populateData(job: Job){
-        resultSuccess = job.result.success
-        
-        if job.result.firstName != nil && job.result.lastName != nil{
-            resultName = job.result.firstName! + " " + job.result.lastName!
+    func populateData(job: Job) {
+        let jobResult = job.result
+        resultSuccess = jobResult.success
+
+        if jobResult.firstName != nil && jobResult.lastName != nil{
+            resultName = jobResult.firstName! + " " + jobResult.lastName!
         }
 
-        if job.result.confidences.id != nil {
-            resultId = job.result.confidences.id!
+        if jobResult.confidences.id != nil {
+            resultId = jobResult.confidences.id!
         }
-        if job.result.confidences.selfie != nil {
-            resultSelfie = job.result.confidences.selfie!
+        if jobResult.confidences.selfie != nil {
+            resultSelfie = jobResult.confidences.selfie!
         }
-        if job.result.confidences.faceMatch != nil {
-            resultFaceMatch = job.result.confidences.faceMatch!
+        if jobResult.confidences.faceMatch != nil {
+            resultFaceMatch = jobResult.confidences.faceMatch!
         }
-        if job.result.confidences.nameMatch != nil {
-            resultNameMatch = job.result.confidences.nameMatch!
+        if jobResult.confidences.nameMatch != nil {
+            resultNameMatch = jobResult.confidences.nameMatch!
         }
 
         populateArray()

@@ -156,6 +156,8 @@ class IdViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDe
             str = "Invalid Photo ID"
         case .invalidUserPhotoError:
             str = "Invalid Photo ID"
+        @unknown default:
+            str = "Unknown error"
         }
         DispatchQueue.main.async() {
             self.instructionLabel.text = str
@@ -178,6 +180,8 @@ class IdViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDe
             str = "please take off your glasses"
         case .unknown:
             str = "No Error Message"
+        @unknown default:
+            str = "No Error Message"
         }
         
         DispatchQueue.main.async() {
@@ -197,7 +201,22 @@ class IdViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDe
     }
 
     func captureBarcode(_ sampleBuffer: CMSampleBuffer) {
-        guard let detectedBarcode = self.barCodeDetect?.detect(sampleBuffer, cameraPosition: .back) else {
+        var result: VouchedCore.DetectionResult?
+        do {
+            result = try self.barCodeDetect?.detect(sampleBuffer, cameraPosition: .back)
+        } catch {
+            DispatchQueue.main.async() {
+                self.instructionLabel.text = "Misconfigured Vouched"
+            }
+            if let error = error as? VouchedError, let description = error.errorDescription {
+                print("Error Barcode: \(description)")
+            } else {
+                print("Error Barcode: \(error.localizedDescription)")
+            }
+            return
+        }
+        
+        guard let detectedBarcode = result else {
             DispatchQueue.main.async() {
                 self.instructionLabel.text = "Focus camera on barcode"
             }
@@ -232,60 +251,75 @@ class IdViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDe
     }
     
     func captureFrontId(_ sampleBuffer: CMSampleBuffer) {
-        let detectedCard = cardDetect?.detect(sampleBuffer)
+        do {
+            let detectedCard = try cardDetect?.detect(sampleBuffer)
+            
+            if let detectedCard = detectedCard as? CardDetectResult {
+                switch detectedCard.step {
+                case .preDetected:
+                    DispatchQueue.main.async() {
+                        self.instructionLabel.text = "Show ID Card"
+                    }
+                case .detected:
+                    self.updateLabel(detectedCard.instruction)
+                case .postable:
+                    captureSession?.stopRunning()
+                    self.loadingToggle()
+                    DispatchQueue.main.async() {
+                        self.instructionLabel.text = "Processing Image"
+                    }
+                    do {
+                        let job: Job
+                        if inputFirstName.isEmpty && inputLastName.isEmpty {
+                            job = try session.postFrontId(detectedCard: detectedCard)
+                        } else {
+                            let details = Params(firstName: inputFirstName, lastName: inputLastName)
+                            job = try session.postFrontId(detectedCard: detectedCard, details: details)
+                        }
+                        print(job)
 
-        if let detectedCard = detectedCard as? CardDetectResult {
-            switch detectedCard.step {
-            case .preDetected:
+                        // if there are job insights, update label and retry card detection
+                        let insights = VouchedUtils.extractInsights(job)
+                        if !insights.isEmpty {
+                            self.updateLabel(insights.first!)
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+                                self.cardDetect?.reset();
+                                self.loadingToggle()
+                                self.captureSession?.startRunning()
+                            }
+                            return;
+                        }
+                        if includeBarcode {
+                            onBarcodeStep = true;
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                                self.loadingToggle()
+                                self.captureSession?.sessionPreset = AVCaptureSession.Preset.high
+                                self.captureSession?.startRunning()
+                            }
+                        } else {
+                            self.buttonShow()
+                        }
+                    } catch {
+                        print("Error FrontId: \(error.localizedDescription)")
+                    }
+                @unknown default:
+                    DispatchQueue.main.async() {
+                        self.instructionLabel.text = "Show ID Card"
+                    }
+                }
+            } else {
                 DispatchQueue.main.async() {
                     self.instructionLabel.text = "Show ID Card"
                 }
-            case .detected:
-                self.updateLabel(detectedCard.instruction)
-            case .postable:
-                captureSession?.stopRunning()
-                self.loadingToggle()
-                DispatchQueue.main.async() {
-                    self.instructionLabel.text = "Processing Image"
-                }
-                do {
-                    let job: Job
-                    if inputFirstName.isEmpty && inputLastName.isEmpty {
-                        job = try session.postFrontId(detectedCard: detectedCard)
-                    } else {
-                        let details = Params(firstName: inputFirstName, lastName: inputLastName)
-                        job = try session.postFrontId(detectedCard: detectedCard, details: details)
-                    }
-                    print(job)
-
-                    // if there are job insights, update label and retry card detection
-                    let insights = VouchedUtils.extractInsights(job)
-                    if !insights.isEmpty {
-                        self.updateLabel(insights.first!)
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
-                            self.cardDetect?.reset();
-                            self.loadingToggle()
-                            self.captureSession?.startRunning()
-                        }
-                        return;
-                    }
-                    if includeBarcode {
-                        onBarcodeStep = true;
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                            self.loadingToggle()
-                            self.captureSession?.sessionPreset = AVCaptureSession.Preset.high
-                            self.captureSession?.startRunning()
-                        }
-                    } else {
-                        self.buttonShow()
-                    }
-                } catch {
-                    print("Error FrontId: \(error.localizedDescription)")
-                }
             }
-        } else {
+        } catch {
             DispatchQueue.main.async() {
-                self.instructionLabel.text = "Show ID Card"
+                self.instructionLabel.text = "Misconfigured Vouched"
+            }
+            if let error = error as? VouchedError, let description = error.errorDescription {
+                print("Error FrontId: \(description)")
+            } else {
+                print("Error FrontId: \(error.localizedDescription)")
             }
         }
     }
@@ -296,5 +330,4 @@ class IdViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDe
             destVC.session = self.session
         }
     }
-
 }

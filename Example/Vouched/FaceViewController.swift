@@ -144,6 +144,8 @@ class FaceViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
             str = "Invalid Photo ID"
         case .invalidUserPhotoError:
             str = "Invalid Face Photo"
+        @unknown default:
+            str = "Unknown error"
         }
         DispatchQueue.main.async() {
             self.instructionLabel.text = str
@@ -166,6 +168,8 @@ class FaceViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
             str = "please take off your glasses"
         case .unknown:
             str = "No Error Message"
+        @unknown default:
+            str = "No Error Message"
         }
         DispatchQueue.main.async() {
             self.instructionLabel.text = str
@@ -176,9 +180,22 @@ class FaceViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
      This method called from AVCaptureVideoDataOutputSampleBufferDelegate - passed in sampleBuffer
      */
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-        let detectedFace = faceDetect?.detect(sampleBuffer)
+        var result: VouchedCore.DetectionResult?
+        do {
+            result = try faceDetect?.detect(sampleBuffer)
+        } catch {
+            DispatchQueue.main.async() {
+                self.instructionLabel.text = "Misconfigured Vouched"
+            }
+            if let error = error as? VouchedError, let description = error.errorDescription {
+                print("Error info: \(description)")
+            } else {
+                print("Error info: \(error.localizedDescription)")
+            }
+            return
+        }
         
-        if let detectedFace = detectedFace as? FaceDetectResult {
+        if let detectedFace = result as? FaceDetectResult {
             switch detectedFace.step {
             case .preDetected:
                 DispatchQueue.main.async() {
@@ -209,6 +226,10 @@ class FaceViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
                     self.buttonShow()
                 } catch {
                     print("Error info: \(error)")
+                }
+            @unknown default:
+                DispatchQueue.main.async() {
+                    self.instructionLabel.text = "Look into the Camera"
                 }
             }
         } else {

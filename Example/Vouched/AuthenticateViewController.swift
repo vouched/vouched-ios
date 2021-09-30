@@ -147,9 +147,23 @@ class AuthenticateViewController: UIViewController, AVCaptureVideoDataOutputSamp
      This method called from AVCaptureVideoDataOutputSampleBufferDelegate - passed in sampleBuffer
      */
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-        let detectedFace = faceDetect?.detect(sampleBuffer)
         
-        if let detectedFace = detectedFace as? FaceDetectResult {
+        var result: VouchedCore.DetectionResult?
+        do {
+            result = try faceDetect?.detect(sampleBuffer)
+        } catch {
+            DispatchQueue.main.async() {
+                self.instructionLabel.text = "Misconfigured Vouched"
+            }
+            if let error = error as? VouchedError, let description = error.errorDescription {
+                print("Error info: \(description)")
+            } else {
+                print("Error info: \(error)")
+            }
+            return
+        }
+        
+        if let detectedFace = result as? FaceDetectResult {
             switch detectedFace.step {
             case .preDetected:
                 DispatchQueue.main.async() {
@@ -169,6 +183,10 @@ class AuthenticateViewController: UIViewController, AVCaptureVideoDataOutputSamp
                 } catch {
                     print("Error info: \(error)")
                     self.buttonShow(authenticationResult: AuthenticateResult(match: 0))
+                }
+            @unknown default:
+                DispatchQueue.main.async() {
+                    self.instructionLabel.text = "Look into the Camera"
                 }
             }
         } else {

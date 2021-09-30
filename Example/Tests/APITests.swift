@@ -79,8 +79,8 @@ class APITests: XCTestCase {
             request = SessionJobRequest(stage: Stage.confirm, params: params)
             job = try API.jobSession(request: request, token: job.token)
 
-            let result: JobResult = job.result
-            let confidence: Confidence = job.result.confidences
+            let result = job.result
+            let confidence = result.confidences
 
             XCTAssertEqual(result.firstName!, "THOR")
             XCTAssertEqual(result.lastName!, "ODINSON")

@@ -2,27 +2,33 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.8.0](https://github.com/vouched/vouched-ios/compare/v0.7.3...v0.8.0) - 2021-09-30
+
+#### Added
+- Updated job model
+- Error when assets are misconfigured
+
 ## [0.7.3](https://github.com/vouched/vouched-ios/compare/v0.7.2...v0.7.3) - 2021-09-17
 
 #### Added
 
-- error reporting with Sentry
-- ablility to reuse VouchedSession instance for failed verifications
-- improvements for LivenessMode.distance 
+- Error reporting with Sentry
+- Ablility to reuse VouchedSession instance for failed verifications
+- Improvements for LivenessMode.distance 
 - VouchedCameraHelper example for face capture
 
 ## [0.7.2](https://github.com/vouched/vouched-ios/compare/v0.7.1...v0.7.2) - 2021-08-12
 
 #### Removed
 
-- dependency that may lead to crashes
+- Dependency that may lead to crashes
 
 ## [0.7.1](https://github.com/vouched/vouched-ios/compare/v0.7.0...v0.7.1) - 2021-08-10
 
 #### Added
 
-- example for VouchedCameraHelper
-- better error handling and logging
+- Example for VouchedCameraHelper
+- Better error handling and logging
 
 ## [0.7.0](https://github.com/vouched/vouched-ios/compare/v0.6.4...v0.7.0) - 2021-08-08
 
