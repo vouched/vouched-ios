@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.8.1](https://github.com/vouched/vouched-ios/compare/v0.8.0...v0.8.1) - 2021-10-06
+
+#### Added
+- Compiled with Swift 5.5
+
 ## [0.8.0](https://github.com/vouched/vouched-ios/compare/v0.7.3...v0.8.0) - 2021-09-30
 
 #### Added
