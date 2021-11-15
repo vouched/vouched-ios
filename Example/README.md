@@ -25,7 +25,7 @@ We suggest to use [Xcode](https://developer.apple.com/xcode/) to run and modify 
 ### Environment
 
 1. If necessary, navigate to your Vouched Dashboard and create a [Public Key](https://docs.vouched.id/#section/Dashboard/Manage-keys).
-2. Create `Development.xcconfig`
+2. Create a file named `Development.xcconfig` in the Example directory, and add the following information, replacing the <PUBLIC_KEY> placeholder with the public key you have previously created:
 
 ```
 API_KEY = <PUBLIC_KEY>
@@ -35,13 +35,16 @@ APP_NAME = Vouched Example
 ### Add Vouched Assets
 
 1. Navigate to your Vouched Dashboard and download the iOS [Mobile Assets](https://docs.vouched.id/#section/Dashboard/Mobile-Assets).
-2. Unzip and copy `inference_graph.tflite` and `labelmap_mobilenet_card.txt` to the `Vouched` directory. Ensure these files are in **Copy Bundle Resources**
+2. Unzip and copy `inference_graph.tflite` and `labelmap_mobilenet_card.txt` to the Vouched directory. Ensure these files are listed in **Copy Bundle Resources**, found under the Build Phases tab in the Xcode project view.
+
 
 ### Install Pods
 
 ```
 pod install
 ```
+
+Open the project using the Vouched.xcworkspace file
 
 ### Run
 

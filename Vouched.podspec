@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'Vouched'
-  s.version          = '0.8.1'
+  s.version          = '0.9.0'
   s.summary          = 'Making Verifications Fast and Simple.'
   s.swift_version    = '5.0'
   s.description      = <<-DESC
@@ -18,14 +18,12 @@ Pod::Spec.new do |s|
 
   s.default_subspec = 'Core'
   s.subspec 'Core' do |cr|
-      cr.dependency 'TensorFlowLiteSwift', '~> 2.2'
-      cr.dependency 'Sentry'
+      cr.dependency 'TensorFlowLiteSwift',
       cr.ios.vendored_frameworks = 'VouchedMobileSDK/VouchedCore.framework'
   end
 
   s.subspec 'Barcode' do |bc|
       bc.dependency 'Vouched/Core'
-      bc.dependency 'GoogleMLKit/BarcodeScanning'
       bc.ios.vendored_frameworks = 'VouchedMobileSDK/VouchedCore.framework', 'VouchedMobileSDK/VouchedBarcode.framework'
   end
 end

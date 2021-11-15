@@ -9,4 +9,3 @@ target 'Vouched_Example' do
     inherit! :search_paths
   end
 end
-

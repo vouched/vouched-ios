@@ -34,7 +34,7 @@ class IdViewControllerV2: UIViewController {
         loadingIndicator.isHidden = true
         instructionLabel.text = nil
 
-        configureHelper(.id)
+        configureHelper(CardDetect.self)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -56,8 +56,8 @@ class IdViewControllerV2: UIViewController {
         }
     }
 
-    private func configureHelper(_ mode: VouchedCameraMode) {
-        helper = VouchedCameraHelper(with: mode, in: previewContainer)?.withCapture(delegate: { self.handleResult($0) })
+    private func configureHelper(_ detector: Detector.Type) {
+        helper = VouchedCameraHelper(with: detector, in: previewContainer)?.withCapture(delegate: { self.handleResult($0) })
     }
     
     private func handleResult(_ result: VouchedCore.CaptureResult) {
@@ -101,7 +101,7 @@ class IdViewControllerV2: UIViewController {
                             self.onBarcodeStep = true
                             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                                 self.loadingToggle()
-                                self.configureHelper(.barcode(BarcodeDetect.defaultIdentifier, BarcodeScannerOptions(formats: [.PDF417])))
+                                self.configureHelper(BarcodeDetect.self)
                                 self.helper?.startCapture()
                             }
                         } else {

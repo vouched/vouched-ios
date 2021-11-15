@@ -26,7 +26,7 @@ class FaceViewControllerV2: UIViewController {
         loadingIndicator.isHidden = true
         instructionLabel.text = nil
 
-        configureHelper(.selfie)
+        configureHelper(FaceDetect.self)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -48,8 +48,8 @@ class FaceViewControllerV2: UIViewController {
         }
     }
 
-    private func configureHelper(_ mode: VouchedCameraMode) {
-        helper = VouchedCameraHelper(with: mode, detectionOptions: [.faceDetect(FaceDetectOptionsBuilder().withLivenessMode(.mouthMovement).build())], in: previewContainer)?.withCapture(delegate: { self.handleResult($0) })
+    private func configureHelper(_ detector: Detector.Type) {
+        helper = VouchedCameraHelper(with: detector, detectionOptions: [.faceDetect(FaceDetectOptionsBuilder().withLivenessMode(.mouthMovement).build())], in: previewContainer)?.withCapture(delegate: { self.handleResult($0) })
     }
     
     private func handleResult(_ result: VouchedCore.CaptureResult) {
