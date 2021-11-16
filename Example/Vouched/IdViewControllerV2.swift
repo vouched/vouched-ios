@@ -9,7 +9,6 @@ import UIKit
 import TensorFlowLite
 import VouchedCore
 import VouchedBarcode
-import MLKitBarcodeScanning
 
 class IdViewControllerV2: UIViewController {
     @IBOutlet private weak var previewContainer: UIView!
