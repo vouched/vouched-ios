@@ -34,27 +34,33 @@ pod 'Vouched', 'VOUCHED_VERSION'
 
 This section will provide a _step-by-step_ to understand the Vouched SDK through the Example.
 
-0. [Get familiar with Vouched](https://docs.vouched.id/#section/Overview)
+```
+Note:  There are two options to run verification process flow:
+- Use Camera Helper to obtain capture results. See corresponding details for VouchedCameraHelper. 
+- Use raw API to perform all the checks.
+```
 
+0. [Get familiar with Vouched](https://docs.vouched.id/#section/Overview)
 1. [Run the Example](#run-example)
+
    - Go through the verification process but stop after each step and take a look at the logs. Particularly understand the [Job](https://docs.vouched.id/#tag/job-model) data from each step.
+
    ```swift
    print(job)
    ```
+
    - Once completed, take a look at the [Job details on your Dashboard](https://docs.vouched.id/#section/Dashboard/Jobs)
 2. Modify the [SampleBufferDelegate](https://developer.apple.com/documentation/avfoundation/avcapturevideodataoutputsamplebufferdelegate)
 
    - Locate the [captureOutput](https://developer.apple.com/documentation/avfoundation/avcapturevideodataoutputsamplebufferdelegate/1385775-captureoutput) in each Controller and make modifications.
 
-     - Comment out the [RetryableErrors](#retryableerror)
-       `let retryableErrors = ...`
      - Add custom logic to display data or control the navigation
-
    - Locate the Vouched detectors and add logging
-     - `cardDetect?.detect(sampleBuffer)`
-     - `faceDetect?.detect(sampleBuffer)`
 
-3. Tweak [AVCapture](https://developer.apple.com/documentation/avfoundation/avcapturedevice) settings  
+     - `cardDetect?.detect(sampleBuffer)`
+     - `barCodeDetect?.detect(sampleBuffer, cameraPosition: .back)`
+     - `faceDetect?.detect(sampleBuffer)`
+3. Tweak [AVCapture](https://developer.apple.com/documentation/avfoundation/avcapturedevice) settings
    Better images lead to better results from Vouched AI
 4. You are ready to integrate Vouched SDK into your app
 
@@ -62,20 +68,15 @@ This section will provide a _step-by-step_ to understand the Vouched SDK through
 
 ### VouchedCameraHelper
 
-This class is introduced to make it easier for developers to integrate `VouchedSDK` and provide the optimal photography. The helper takes care of configuring the capture session, input, and output. Helper has following modes: 'ID' | 'Selfie' | 'Barcode'
+This class is introduced to make it easier for developers to integrate `VouchedSDK` and provide the optimal photography. The helper takes care of configuring the capture session, input, and output.
 
 ##### Initialize
 
-```swift
-let helper = VouchedCameraHelper(with: VouchedCameraMode, helperOptions: VouchedCameraHelperOptions, detectionOptions: [VouchedDetectionOptions], in: UIView)
-```
+You can initialize the helper by specifying a Detector that you wish to use. Note how some of the controllers have a convenience method ```configureHelper(_ detector: Detector.Type)``` to simplify the configuration of the helper.
 
-| Parameter Type | Nullable |
-| -------------- | :------: |
-| [VouchedCameraMode](vouchedcameramode)         |  false   |
-| [VouchedCameraHelperOptions](vouchedcamerahelperoptions)         |   false   |
-| [[VouchedDetectionOptions](voucheddetectionoptions)]         |   false   |
-| UIView         |   false   |
+```swift
+let helper = VouchedCameraHelper(with detector: Detector.Type, helperOptions: VouchedCameraHelperOptions, detectionOptions: [VouchedDetectionOptions], in: UIView)
+```
 
 ##### Observe Results
 
@@ -85,18 +86,19 @@ There are two helper methods that serve as delegates to obtain capturing results
 func withCapture(delegate: @escaping ((CaptureResult) -> Void)) -> VouchedCameraHelper
 ```
 
-| Parameter Type | Nullable |
-| -------------- | :------: |
-| Closure([CaptureResult](#captureresult) )         |  false   |
+
+| Parameter Type                            | Nullable |
+| ------------------------------------------- | :--------: |
+| Closure([CaptureResult](#captureresult) ) |  false  |
 
 ```swift
 func observeBoundingBox(observer: @escaping ((BoundingBox) -> Void)) -> VouchedCameraHelper
 ```
 
-| Parameter Type | Nullable |
-| -------------- | :------: |
-| Closure([BoundingBox](boundingbox))         |  false   |
 
+| Parameter Type                      | Nullable |
+| ------------------------------------- | :--------: |
+| Closure([BoundingBox](boundingbox)) |  false  |
 
 ##### Run
 
@@ -142,12 +144,14 @@ This class handles a user's Vouched session. It takes care of the API calls. Use
 let session = VouchedSession(apiKey: "PUBLIC_KEY", groupId: "GROUP_ID")
 ```
 
+
 | Parameter Type | Nullable |
-| -------------- | :------: |
-| String         |  false   |
+| ---------------- | :--------: |
+| String         |  false  |
 | String         |   true   |
 
 ##### Initializing with a token
+
 ```swift
 let session = VouchedSession(apiKey: "PUBLIC_KEY", groupId: "GROUP_ID", sessionParameters: VouchedSessionParameters(token: "TOKEN"))
 ```
@@ -158,9 +162,10 @@ let session = VouchedSession(apiKey: "PUBLIC_KEY", groupId: "GROUP_ID", sessionP
 let job = try session.postFrontId(detectedCard: detectedCard, details: details)
 ```
 
+
 | Parameter Type                        | Nullable |
-| ------------------------------------- | :------: |
-| [CardDetectResult](#carddetectresult) |  false   |
+| --------------------------------------- | :--------: |
+| [CardDetectResult](#carddetectresult) |  false  |
 | [Params](#params)                     |   true   |
 
 `Returns` - [Job](https://docs.vouched.id/#tag/job-model)
@@ -171,9 +176,10 @@ let job = try session.postFrontId(detectedCard: detectedCard, details: details)
 let job = try session.postFace(detectedFace: detectedFace)
 ```
 
+
 | Parameter Type                        | Nullable |
-| ------------------------------------- | :------: |
-| [FaceDetectResult](#facedetectresult) |  false   |
+| --------------------------------------- | :--------: |
+| [FaceDetectResult](#facedetectresult) |  false  |
 
 `Returns` - [Job](https://docs.vouched.id/#tag/job-model)
 
@@ -195,9 +201,10 @@ This class handles detecting an ID (cards and passports) and performing necessar
 let cardDetect = CardDetect(options: CardDetectOptionsBuilder().withEnableDistanceCheck(true).build())
 ```
 
+
 | Parameter Type                          | Nullable |
-| --------------------------------------- | :------: |
-| [CardDetectOptions](#carddetectoptions) |  false   |
+| ----------------------------------------- | :--------: |
+| [CardDetectOptions](#carddetectoptions) |  false  |
 
 ##### Process Image
 
@@ -205,9 +212,10 @@ let cardDetect = CardDetect(options: CardDetectOptionsBuilder().withEnableDistan
 let detectedCard = cardDetect?.detect(sampleBuffer)
 ```
 
+
 | Parameter Type | Nullable |
-| -------------- | :------: |
-| CVImageBuffer  |  false   |
+| ---------------- | :--------: |
+| CVImageBuffer  |  false  |
 
 `Returns` - [CardDetectResult](#carddetectresult)
 
@@ -221,9 +229,10 @@ This class handles detecting a face and performing necessary steps to ensure ima
 let faceDetect = FaceDetect(options: FaceDetectOptionsBuilder().withLivenessMode(.distance).build())
 ```
 
+
 | Parameter Type                          | Nullable |
-| --------------------------------------- | :------: |
-| [FaceDetectOptions](#facedetectoptions) |  false   |
+| ----------------------------------------- | :--------: |
+| [FaceDetectOptions](#facedetectoptions) |  false  |
 
 ##### Process Image
 
@@ -231,9 +240,10 @@ let faceDetect = FaceDetect(options: FaceDetectOptionsBuilder().withLivenessMode
 let detectedFace = faceDetect?.detect(sampleBuffer)
 ```
 
+
 | Parameter Type | Nullable |
-| -------------- | :------: |
-| CVImageBuffer  |  false   |
+| ---------------- | :--------: |
+| CVImageBuffer  |  false  |
 
 `Returns` - [FaceDetectResult](#facedetectresult)
 
@@ -367,10 +377,11 @@ public enum VouchedDetectionOptions {
 }
 ```
 
-| Parameter Type | Nullable |
-| -------------- | :------: |
-|  [CardDetectOptions](#carddetectoptions)  |  false   |
-| [FaceDetectOptions](#facedetectoptions)  |  false   |
+
+| Parameter Type                          | Nullable |
+| ----------------------------------------- | :--------: |
+| [CardDetectOptions](#carddetectoptions) |  false  |
+| [FaceDetectOptions](#facedetectoptions) |  false  |
 
 ##### CaptureResult
 
@@ -385,10 +396,10 @@ public enum CaptureResult {
 }
 ```
 
-| Parameter Type | Nullable |
-| -------------- | :------: |
-|  [DetectionResult](#detectionresult)  |  false   |
 
+| Parameter Type                      | Nullable |
+| ------------------------------------- | :--------: |
+| [DetectionResult](#detectionresult) |  false  |
 
 ##### DetectionResult
 
