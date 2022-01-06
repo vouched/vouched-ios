@@ -40,16 +40,16 @@ Note:  There are two options to run verification process flow:
 - Use raw API to perform all the checks.
 ```
 
-0. [Get familiar with Vouched](https://docs.vouched.id/#section/Overview)
+0. [Get familiar with Vouched](https://docs.vouched.id/)
 1. [Run the Example](#run-example)
 
-   - Go through the verification process but stop after each step and take a look at the logs. Particularly understand the [Job](https://docs.vouched.id/#tag/job-model) data from each step.
+   - Go through the verification process but stop after each step and take a look at the logs. Particularly understand the [Job](https://docs.vouched.id/reference/findjobs) data from each step.
 
    ```swift
    print(job)
    ```
 
-   - Once completed, take a look at the [Job details on your Dashboard](https://docs.vouched.id/#section/Dashboard/Jobs)
+   - Once completed, take a look at the [Job details on your Dashboard](https://docs.vouched.id/docs/jobs-1)
 2. Modify the [SampleBufferDelegate](https://developer.apple.com/documentation/avfoundation/avcapturevideodataoutputsamplebufferdelegate)
 
    - Locate the [captureOutput](https://developer.apple.com/documentation/avfoundation/avcapturevideodataoutputsamplebufferdelegate/1385775-captureoutput) in each Controller and make modifications.
@@ -168,7 +168,7 @@ let job = try session.postFrontId(detectedCard: detectedCard, details: details)
 | [CardDetectResult](#carddetectresult) |  false  |
 | [Params](#params)                     |   true   |
 
-`Returns` - [Job](https://docs.vouched.id/#tag/job-model)
+`Returns` - [Job](https://docs.vouched.id/reference/findjobs)
 
 ##### POST Selfie image
 
@@ -181,7 +181,7 @@ let job = try session.postFace(detectedFace: detectedFace)
 | --------------------------------------- | :--------: |
 | [FaceDetectResult](#facedetectresult) |  false  |
 
-`Returns` - [Job](https://docs.vouched.id/#tag/job-model)
+`Returns` - [Job](https://docs.vouched.id/reference/findjobs)
 
 ##### POST confirm verification
 
@@ -189,7 +189,7 @@ let job = try session.postFace(detectedFace: detectedFace)
 let job = try session.postConfirm()
 ```
 
-`Returns` - [Job](https://docs.vouched.id/#tag/job-model)
+`Returns` - [Job](https://docs.vouched.id/reference/findjobs)
 
 ### CardDetect
 
