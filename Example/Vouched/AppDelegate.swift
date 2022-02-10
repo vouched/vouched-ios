@@ -2,8 +2,7 @@
 //  AppDelegate.swift
 //  Vouched
 //
-//  Created by marcusoliver on 07/22/2020.
-//  Copyright (c) 2020 marcusoliver. All rights reserved.
+//  Copyright © 2021 Vouched.id. All rights reserved.
 //
 
 import UIKit

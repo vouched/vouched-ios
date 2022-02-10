@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.0](https://github.com/vouched/vouched-ios/compare/v0.9.0...v1.0.0) - 2021-10-06
+
+#### Added
+- Enchanced data extraction option for ID detection
+- Control of device flash
+- Initial implementation of detected ID orientation
+- Increased logging of errors
+- Exposed JobError properties
+
 ## [0.9.0](https://github.com/vouched/vouched-ios/compare/v0.8.1...v0.9.0) - 2021-11-15
 
 #### Removed

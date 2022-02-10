@@ -2,8 +2,7 @@
 //  MainViewController.swift
 //  Vouched_Example
 //
-//  Created by David Woo on 7/27/20.
-//  Copyright © 2020 CocoaPods. All rights reserved.
+//  Copyright © 2021 Vouched.id. All rights reserved.
 //
 
 import UIKit

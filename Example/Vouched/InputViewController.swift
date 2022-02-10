@@ -2,8 +2,7 @@
 //  inputViewController.swift
 //  Vouched_Example
 //
-//  Created by David Woo on 8/3/20.
-//  Copyright © 2020 CocoaPods. All rights reserved.
+//  Copyright © 2021 Vouched.id. All rights reserved.
 //
 
 import UIKit
@@ -14,6 +13,7 @@ class InputViewController: UIViewController {
     @IBOutlet private weak var inputLastName: UITextField!
     @IBOutlet private weak var barcodeSwitch: UISwitch!
     @IBOutlet private weak var helperSwitch: UISwitch!
+    @IBOutlet private weak var cameraFlashSwitch: UISwitch!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,11 +33,16 @@ class InputViewController: UIViewController {
             destVC.inputFirstName = self.inputFirstName.text!
             destVC.inputLastName = self.inputLastName.text!
             destVC.includeBarcode = self.barcodeSwitch.isOn
+            destVC.useCameraFlash = self.cameraFlashSwitch.isOn
         default:
             break
         }
     }
     
+    @IBAction func onHelperSwitch(_ sender: Any) {
+        cameraFlashSwitch.isEnabled = helperSwitch.isOn
+    }
+
     @IBAction func onContinue(_ sender: Any) {
         if self.helperSwitch.isOn {
             performSegue(withIdentifier: "ToInputNamesWithHelper", sender: self)

@@ -2,14 +2,12 @@
 //  AuthenticateViewController.swift
 //  Vouched_Example
 //
-//  Created by David Woo on 8/5/20.
-//  Copyright © 2020 CocoaPods. All rights reserved.
+//  Copyright © 2021 Vouched.id. All rights reserved.
 //
 
 import UIKit
 import AVFoundation
 import VouchedCore
-import Vision
 
 class AuthenticateViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate {
     

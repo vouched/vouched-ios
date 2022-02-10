@@ -20,6 +20,7 @@ class IdViewControllerV2: UIViewController {
     var inputLastName: String = ""
     var onBarcodeStep = false
     var includeBarcode = false
+    var useCameraFlash = false
 
     private var helper: VouchedCameraHelper?
     private let session = VouchedSession(apiKey: getValue(key:"API_KEY"), sessionParameters: VouchedSessionParameters())
@@ -56,7 +57,12 @@ class IdViewControllerV2: UIViewController {
     }
 
     private func configureHelper(_ detector: Detector.Type) {
-        helper = VouchedCameraHelper(with: detector, in: previewContainer)?.withCapture(delegate: { self.handleResult($0) })
+        var options = VouchedCameraHelperOptions.defaultOptions
+        if useCameraFlash {
+            options.update(with:VouchedCameraHelperOptions.useCameraFlash)
+        }
+        let detectionOptions = [VouchedDetectionOptions.cardDetect(CardDetectOptionsBuilder().withEnhanceInfoExtraction(true).build())]
+        helper = VouchedCameraHelper(with: detector, helperOptions: options, detectionOptions: detectionOptions, in: previewContainer)?.withCapture(delegate: { self.handleResult($0) })
     }
     
     private func handleResult(_ result: VouchedCore.CaptureResult) {
@@ -110,6 +116,8 @@ class IdViewControllerV2: UIViewController {
                         print("Error FrontId: \(error.localizedDescription)")
                     }
                 }
+            @unknown default:
+                self.instructionLabel.text = self.onBarcodeStep ? "Focus camera on barcode" : "Show ID Card"
             }
         case .selfie(_):
             break

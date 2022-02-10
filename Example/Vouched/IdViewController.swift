@@ -2,14 +2,13 @@
 //  IdViewController.swift
 //  Vouched
 //
-//  Copyright © 2021 Vouched All rights reserved.
+//  Copyright © 2021 Vouched.id. All rights reserved.
 //
 
 import UIKit
 import AVFoundation
 import VouchedCore
 import VouchedBarcode
-import Vision
 
 func getValue(key:String)-> String?{
     let v = Bundle.main.infoDictionary?[key] as? String
@@ -203,7 +202,7 @@ class IdViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDe
     func captureBarcode(_ sampleBuffer: CMSampleBuffer) {
         var result: VouchedCore.DetectionResult?
         do {
-            result = try self.barCodeDetect?.detect(sampleBuffer, cameraPosition: .back)
+            result = try self.barCodeDetect?.detect(sampleBuffer)
         } catch {
             DispatchQueue.main.async() {
                 self.instructionLabel.text = "Misconfigured Vouched"

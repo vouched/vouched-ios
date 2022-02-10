@@ -9,7 +9,6 @@
 import UIKit
 import AVFoundation
 import VouchedCore
-import Vision
 
 class FaceViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate {
     
