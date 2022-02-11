@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [1.0.0](https://github.com/vouched/vouched-ios/compare/v0.9.0...v1.0.0) - 2021-10-06
+## [1.0.0](https://github.com/vouched/vouched-ios/compare/v0.9.0...v1.0.0) - 2022-02-09
 
 #### Added
 - Enchanced data extraction option for ID detection
