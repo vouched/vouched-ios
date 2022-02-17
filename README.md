@@ -40,16 +40,16 @@ Note:  There are two options to run verification process flow:
 - Use raw API to perform all the checks.
 ```
 
-0. [Get familiar with Vouched](https://docs.vouched.id/)
+0. [Get familiar with Vouched](https://docs.vouched.id/#section/Overview)
 1. [Run the Example](#run-example)
 
-   - Go through the verification process but stop after each step and take a look at the logs. Particularly understand the [Job](https://docs.vouched.id/reference/findjobs) data from each step.
+   - Go through the verification process but stop after each step and take a look at the logs. Particularly understand the [Job](https://docs.vouched.id/#tag/job-model) data from each step.
 
    ```swift
    print(job)
    ```
 
-   - Once completed, take a look at the [Job details on your Dashboard](https://docs.vouched.id/docs/jobs-1)
+   - Once completed, take a look at the [Job details on your Dashboard](https://docs.vouched.id/#section/Dashboard/Jobs)
 2. Modify the [SampleBufferDelegate](https://developer.apple.com/documentation/avfoundation/avcapturevideodataoutputsamplebufferdelegate)
 
    - Locate the [captureOutput](https://developer.apple.com/documentation/avfoundation/avcapturevideodataoutputsamplebufferdelegate/1385775-captureoutput) in each Controller and make modifications.
@@ -68,11 +68,11 @@ Note:  There are two options to run verification process flow:
 
 ### VouchedCameraHelper
 
-This class is introduced to make it easier for developers to integrate `VouchedSDK` and provide the optimal photography. The helper takes care of configuring the capture session, input, and output. 
+This class is introduced to make it easier for developers to integrate `VouchedSDK` and provide the optimal photography. The helper takes care of configuring the capture session, input, and output.
 
 ##### Initialize
 
-You can initialize the helper by specifying a Detector that you wish to use. Note how some of the controllers have a convenience method ```configureHelper(_ detector: Detector.Type)``` to simplify the configuration of the helper. 
+You can initialize the helper by specifying a Detector that you wish to use. Note how some of the controllers have a convenience method ```configureHelper(_ detector: Detector.Type)``` to simplify the configuration of the helper.
 
 ```swift
 let helper = VouchedCameraHelper(with detector: Detector.Type, helperOptions: VouchedCameraHelperOptions, detectionOptions: [VouchedDetectionOptions], in: UIView)
@@ -134,6 +134,60 @@ let helper = VouchedCameraHelper(with: .id,
     })
 ```
 
+### VouchedDetectionManager
+
+This class is introduced to help guide the ID verification modes by processing job results returned by the Vouched API service, and generating the appropriate modes that are needed to complete ID verification. 
+
+##### Initialize
+
+```swift
+    let helper: VouchedCameraHelper
+    let session: VouchedSession
+    let config = VouchedDetectionManagerConfig(session: session)
+    let callbacks = DetectionCallbacks
+    config.callbacks = callbacks
+    let detectionMgr = VouchedDetectionManager(helper: helper, config: config)
+```
+
+See [CardDetectOptions](#carddetectoptions) for details
+
+##### Run
+
+In order to start detection, put the following code:
+
+```swift
+    detectionMgr.startDetection()
+```
+
+If there is a need to capture additional info the following closure will be called :
+
+```swift
+    let callbacks = DetectionCallbacks { change in
+        let alert = UIAlertController(title: nil, message: "Turn ID card over to backside", preferredStyle: .alert)
+        let ok = UIAlertAction(title: "OK", style: .default, handler: { _ in
+            change.completion(true)
+        })
+        alert.addAction(ok)
+        self.present(alert, animated: true)
+    }
+```
+
+Once the detection process is finished and there is a `Job` result the following closure will be called:
+
+```swift
+    let callbacks: DetectionCallbacks
+    callbacks.detectionComplete = { result in
+        switch result {
+        case .success(let job):
+                print("\(job)")
+        case .failure(let err):
+            print("Error: \(err)")
+        }
+```
+
+Examine the `extension IdViewControllerV2 : VouchedDetectionManager` in the example app to see how this mechanism can be implemented.
+
+
 ### VouchedSession
 
 This class handles a user's Vouched session. It takes care of the API calls. Use one instance for the duration of a user's verification session.
@@ -168,7 +222,7 @@ let job = try session.postFrontId(detectedCard: detectedCard, details: details)
 | [CardDetectResult](#carddetectresult) |  false  |
 | [Params](#params)                     |   true   |
 
-`Returns` - [Job](https://docs.vouched.id/reference/findjobs)
+`Returns` - [Job](https://docs.vouched.id/#tag/job-model)
 
 ##### POST Selfie image
 
@@ -181,7 +235,7 @@ let job = try session.postFace(detectedFace: detectedFace)
 | --------------------------------------- | :--------: |
 | [FaceDetectResult](#facedetectresult) |  false  |
 
-`Returns` - [Job](https://docs.vouched.id/reference/findjobs)
+`Returns` - [Job](https://docs.vouched.id/#tag/job-model)
 
 ##### POST confirm verification
 
@@ -189,7 +243,7 @@ let job = try session.postFace(detectedFace: detectedFace)
 let job = try session.postConfirm()
 ```
 
-`Returns` - [Job](https://docs.vouched.id/reference/findjobs)
+`Returns` - [Job](https://docs.vouched.id/#tag/job-model)
 
 ### CardDetect
 
@@ -313,10 +367,13 @@ The options for [Card Detection](#carddetect).
 ```swift
 class CardDetectOptionsBuilder {
     public func withEnableDistanceCheck(_ enableDistanceCheck: Bool) -> CardDetectOptionsBuilder { ... }
-
+    public func withEnhanceInfoExtraction(_ enhanceInfoExtraction: Bool) -> CardDetectOptionsBuilder
+    
     public func build() -> CardDetectOptions { ... }
 }
 ```
+
+The [VouchedDetectionManager](#voucheddetectionmanager) can increase your verification abilities by recognizing additional sources of information based on the ID that your user submits.  You can enable this behavior by using  ```.withEnhanceInfoExtraction(true)``` when setting
 
 ##### FaceDetectOptions
 
