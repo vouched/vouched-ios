@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.0](https://github.com/vouched/vouched-ios/compare/v1.0.0...v1.1.0) - 2022-02-09
+
+#### Added
+- Enchanced data extraction option now includes the ability to capture infromation from the backside of IDs
+
 ## [1.0.0](https://github.com/vouched/vouched-ios/compare/v0.9.0...v1.0.0) - 2022-02-09
 
 #### Added

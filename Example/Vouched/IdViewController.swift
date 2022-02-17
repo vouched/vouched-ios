@@ -2,7 +2,8 @@
 //  IdViewController.swift
 //  Vouched
 //
-//  Copyright © 2021 Vouched.id. All rights reserved.
+//  Created by marcusoliver on 07/22/2020.
+//  Copyright (c) 2020 marcusoliver. All rights reserved.
 //
 
 import UIKit
@@ -270,10 +271,10 @@ class IdViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDe
                     do {
                         let job: Job
                         if inputFirstName.isEmpty && inputLastName.isEmpty {
-                            job = try session.postFrontId(detectedCard: detectedCard)
+                            job = try session.postCardId(detectedCard: detectedCard)
                         } else {
                             let details = Params(firstName: inputFirstName, lastName: inputLastName)
-                            job = try session.postFrontId(detectedCard: detectedCard, details: details)
+                            job = try session.postCardId(detectedCard: detectedCard, details: details)
                         }
                         print(job)
 
