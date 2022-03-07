@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.2](https://github.com/vouched/vouched-ios/compare/v1.1.0...v1.1.2) - 2022-03-07
+
 ## [1.1.0](https://github.com/vouched/vouched-ios/compare/v1.0.0...v1.1.0) - 2022-02-09
 
 #### Added

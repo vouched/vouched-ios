@@ -113,6 +113,8 @@ class IdViewControllerV2: UIViewController {
             str = "please take off your glasses"
         case .unknown:
             str = "No Error Message"
+        case .idPhoto:
+            str = "ID needs a valid photo"
         @unknown default:
             str = "No Error Message"
         }
@@ -251,7 +253,9 @@ extension IdViewControllerV2 {
                 change.completion(true)
             })
             alert.addAction(ok)
-            self.present(alert, animated: true)
+            DispatchQueue.main.async {
+                self.present(alert, animated: true)
+            }
         }
         callbacks.detectionComplete = { result in
             switch result {
