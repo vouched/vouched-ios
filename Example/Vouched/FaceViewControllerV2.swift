@@ -138,6 +138,10 @@ class FaceViewControllerV2: UIViewController {
             str = "please take off your glasses"
         case .unknown:
             str = "No Error Message"
+        case .idPhoto:
+            str = "ID needs a valid photo"
+        @unknown default:
+            str = "No Error Message"
         }
         DispatchQueue.main.async() {
             self.instructionLabel.text = str
