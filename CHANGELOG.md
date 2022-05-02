@@ -2,7 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.6](https://github.com/vouched/vouched-ios/compare/v1.1.4...v1.1.6) - 2022-03-29
+
+#### Added
+- Fixes for iOS face detection in the React Native SDK
+
 ## [1.1.4](https://github.com/vouched/vouched-ios/compare/v1.1.2...v1.1.4) - 2022-03-29
+
+#### Added
+- Support for the Vouched React Native SDK
 
 ## [1.1.2](https://github.com/vouched/vouched-ios/compare/v1.1.0...v1.1.2) - 2022-03-07
 
