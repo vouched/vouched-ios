@@ -20,7 +20,6 @@ Then, follow steps listed on the [example README](https://github.com/vouched/vou
 
 - An account with Vouched
 - Your Vouched Public Key
-- Mobile Assets (available on the dashboard)
 
 ## Install
 
