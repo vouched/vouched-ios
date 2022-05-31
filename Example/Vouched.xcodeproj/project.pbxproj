@@ -8,8 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		0C6A2519C243527A64963E7C /* Pods_Vouched_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DE2A7B3130594F0C9A1394C /* Pods_Vouched_Example.framework */; };
-		2C072B9524C944F500EE7540 /* inference_graph.tflite in Resources */ = {isa = PBXBuildFile; fileRef = 2C072B9424C944F500EE7540 /* inference_graph.tflite */; };
-		2C072B9724C9452700EE7540 /* labelmap_mobilenet_card.txt in Resources */ = {isa = PBXBuildFile; fileRef = 2C072B9624C9452700EE7540 /* labelmap_mobilenet_card.txt */; };
 		2C2796BF24DBAB5C000CCC9E /* AuthenticateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2796BE24DBAB5C000CCC9E /* AuthenticateViewController.swift */; };
 		2C2796C124DBAB6C000CCC9E /* InputViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2796C024DBAB6C000CCC9E /* InputViewController.swift */; };
 		2C2796C524DBAB9A000CCC9E /* IdViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2796C424DBAB9A000CCC9E /* IdViewController.swift */; };
@@ -26,8 +24,6 @@
 
 /* Begin PBXFileReference section */
 		1CCB48F506D04246FDB4D435 /* Pods-Vouched_Tests.development.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Vouched_Tests.development.xcconfig"; path = "Target Support Files/Pods-Vouched_Tests/Pods-Vouched_Tests.development.xcconfig"; sourceTree = "<group>"; };
-		2C072B9424C944F500EE7540 /* inference_graph.tflite */ = {isa = PBXFileReference; lastKnownFileType = file; path = inference_graph.tflite; sourceTree = "<group>"; };
-		2C072B9624C9452700EE7540 /* labelmap_mobilenet_card.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = labelmap_mobilenet_card.txt; sourceTree = "<group>"; };
 		2C072B9A24D684FC00EE7540 /* Development.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Development.xcconfig; sourceTree = SOURCE_ROOT; };
 		2C2796BE24DBAB5C000CCC9E /* AuthenticateViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticateViewController.swift; sourceTree = "<group>"; };
 		2C2796C024DBAB6C000CCC9E /* InputViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InputViewController.swift; sourceTree = "<group>"; };
@@ -47,7 +43,6 @@
 		BC5F230D24CFFCF100B0CB8E /* FaceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FaceViewController.swift; sourceTree = "<group>"; };
 		BC5F230F24D009F400B0CB8E /* ResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsViewController.swift; sourceTree = "<group>"; };
 		CAD4B8ADC35C30C476C2031A /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
-		D76D281724D572D0009B6362 /* Development.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Development.xcconfig; sourceTree = "<group>"; };
 		DA903CD55119EC4AA9D0851B /* Pods-Vouched_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Vouched_Example.debug.xcconfig"; path = "Target Support Files/Pods-Vouched_Example/Pods-Vouched_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		E0ED76C6EBBA95530A0AF325 /* Pods-Vouched_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Vouched_Tests.release.xcconfig"; path = "Target Support Files/Pods-Vouched_Tests/Pods-Vouched_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		ECAE7D15B84FC0F6F28A20DD /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
@@ -72,7 +67,6 @@
 		607FACC71AFB9204008FA782 = {
 			isa = PBXGroup;
 			children = (
-				D76D281724D572D0009B6362 /* Development.xcconfig */,
 				607FACF51AFB993E008FA782 /* Podspec Metadata */,
 				607FACD21AFB9204008FA782 /* Example */,
 				607FACD11AFB9204008FA782 /* Products */,
@@ -92,8 +86,6 @@
 		607FACD21AFB9204008FA782 /* Example */ = {
 			isa = PBXGroup;
 			children = (
-				2C072B9424C944F500EE7540 /* inference_graph.tflite */,
-				2C072B9624C9452700EE7540 /* labelmap_mobilenet_card.txt */,
 				BC5F230724CF835600B0CB8E /* MainViewController.swift */,
 				607FACD51AFB9204008FA782 /* AppDelegate.swift */,
 				2C2796BE24DBAB5C000CCC9E /* AuthenticateViewController.swift */,
@@ -216,8 +208,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2C072B9524C944F500EE7540 /* inference_graph.tflite in Resources */,
-				2C072B9724C9452700EE7540 /* labelmap_mobilenet_card.txt in Resources */,
 				607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */,
 				607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */,
 				607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */,
@@ -309,7 +299,6 @@
 /* Begin XCBuildConfiguration section */
 		607FACED1AFB9204008FA782 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D76D281724D572D0009B6362 /* Development.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -453,7 +442,6 @@
 		};
 		D76D280E24D56C79009B6362 /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D76D281724D572D0009B6362 /* Development.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
