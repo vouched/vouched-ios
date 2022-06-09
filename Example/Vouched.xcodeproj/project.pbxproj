@@ -43,6 +43,7 @@
 		BC5F230D24CFFCF100B0CB8E /* FaceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FaceViewController.swift; sourceTree = "<group>"; };
 		BC5F230F24D009F400B0CB8E /* ResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsViewController.swift; sourceTree = "<group>"; };
 		CAD4B8ADC35C30C476C2031A /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
+		D76D281724D572D0009B6362 /* Development.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Development.xcconfig; sourceTree = "<group>"; };
 		DA903CD55119EC4AA9D0851B /* Pods-Vouched_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Vouched_Example.debug.xcconfig"; path = "Target Support Files/Pods-Vouched_Example/Pods-Vouched_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		E0ED76C6EBBA95530A0AF325 /* Pods-Vouched_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Vouched_Tests.release.xcconfig"; path = "Target Support Files/Pods-Vouched_Tests/Pods-Vouched_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		ECAE7D15B84FC0F6F28A20DD /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
@@ -67,6 +68,7 @@
 		607FACC71AFB9204008FA782 = {
 			isa = PBXGroup;
 			children = (
+				D76D281724D572D0009B6362 /* Development.xcconfig */,
 				607FACF51AFB993E008FA782 /* Podspec Metadata */,
 				607FACD21AFB9204008FA782 /* Example */,
 				607FACD11AFB9204008FA782 /* Products */,
@@ -299,6 +301,7 @@
 /* Begin XCBuildConfiguration section */
 		607FACED1AFB9204008FA782 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D76D281724D572D0009B6362 /* Development.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -442,6 +445,7 @@
 		};
 		D76D280E24D56C79009B6362 /* Development */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D76D281724D572D0009B6362 /* Development.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
