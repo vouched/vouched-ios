@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'Vouched'
-  s.version          = '1.2.0'
+  s.version          = '1.2.2'
   s.summary          = 'Making Verifications Fast and Simple.'
   s.swift_version    = '5.0'
   s.description      = <<-DESC
@@ -18,7 +18,7 @@ Pod::Spec.new do |s|
 
   s.default_subspec = 'Core'
   s.subspec 'Core' do |cr|
-      cr.dependency 'TensorFlowLiteSwift', '2.7.0'
+      cr.dependency 'TensorFlowLiteSwift, '2.7.0'
       cr.ios.vendored_frameworks = 'VouchedMobileSDK/VouchedCore.framework'
   end
 
