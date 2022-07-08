@@ -2,8 +2,7 @@
 //  ResultsViewController.swift
 //  Vouched_Example
 //
-//  Created by David Woo on 7/28/20.
-//  Copyright © 2020 CocoaPods. All rights reserved.
+//  Copyright © 2020 Vouched.id. All rights reserved.
 //
 
 import UIKit

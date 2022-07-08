@@ -10,19 +10,32 @@ import TensorFlowLite
 import VouchedCore
 import VouchedBarcode
 
-let USE_DETECTION_MANAGER = true
+func getValue(key:String)-> String?{
+    let v = Bundle.main.infoDictionary?[key] as? String
+    if v == "" {
+        return nil
+    }
+    return v
+}
 
 class IdViewControllerV2: UIViewController {
     @IBOutlet private weak var previewContainer: UIView!
     @IBOutlet private weak var nextButton: UIButton!
     @IBOutlet private weak var loadingIndicator: UIActivityIndicatorView!
     @IBOutlet private weak var instructionLabel: UILabel!
+    @IBOutlet private weak var confirmIdButton: UIButton!
+    @IBOutlet private weak var retryIdButton: UIButton!
+    @IBOutlet private weak var confirmPanel: UIView!
 
     var inputFirstName: String = ""
     var inputLastName: String = ""
     var onBarcodeStep = false
     var includeBarcode = false
     var useCameraFlash = false
+    var useDetectionManager = false
+    var confirmID = false
+    // temp storage of current ID to be confirmed
+    var confirmIDDetectionResult: CardDetectResult?
 
     private var helper: VouchedCameraHelper?
     private var detectionMgr: VouchedDetectionManager?
@@ -36,9 +49,10 @@ class IdViewControllerV2: UIViewController {
         nextButton.isHidden = true
         loadingIndicator.isHidden = true
         instructionLabel.text = nil
+        confirmPanel.isHidden = true
 
         configureHelper(.id)
-        if USE_DETECTION_MANAGER {
+        if self.useDetectionManager {
             configureDetectionManager()
         }
     }
@@ -63,7 +77,7 @@ class IdViewControllerV2: UIViewController {
     }
 
     private func startCapture() {
-        if USE_DETECTION_MANAGER {
+        if self.useDetectionManager {
             detectionMgr?.startDetection()
         } else {
             helper?.startCapture()
@@ -71,7 +85,7 @@ class IdViewControllerV2: UIViewController {
     }
 
     private func stopCapture() {
-        if USE_DETECTION_MANAGER {
+        if self.useDetectionManager {
             detectionMgr?.stopDetection()
         } else {
             helper?.stopCapture()
@@ -123,6 +137,20 @@ class IdViewControllerV2: UIViewController {
             self.instructionLabel.text = str
         }
     }
+    
+    private func confirmIDCaptureIsGood(isVisible: Bool, result: CardDetectResult) {
+            self.confirmIDDetectionResult = result
+            self.showConfirmOverlay(isVisible: isVisible)
+    }
+    
+    func showConfirmOverlay(isVisible: Bool) {
+        UIView.transition(with: self.confirmPanel, duration: 0.5, options: .transitionCrossDissolve, animations: {
+            self.confirmPanel.isHidden = !isVisible
+        })
+        instructionLabel.isHidden = isVisible
+        navigationController?.navigationBar.isHidden = isVisible
+    }
+
 
     private func buttonShow() {
         DispatchQueue.main.async() {
@@ -135,6 +163,24 @@ class IdViewControllerV2: UIViewController {
     private func loadingToggle() {
         self.loadingIndicator.isHidden = !self.loadingIndicator.isHidden
     }
+    
+    @IBAction func onConfirmIDButton(_ sender: Any) {
+        guard let confirmedResult = self.confirmIDDetectionResult else {
+            print("no confirmed result to post")
+            return
+        }
+        showConfirmOverlay(isVisible: false)
+        if useDetectionManager {
+            detectionMgr?.onConfirmIdResult(result: confirmedResult)
+        } else {
+            onConfirmIdResult(confirmedResult)
+        }
+    }
+    
+    @IBAction func onRetryIDButton(_ sender: Any) {
+        showConfirmOverlay(isVisible: false)
+        startCapture()
+    }
 }
 
 //MARK: - VouchedCameraHelper
@@ -146,6 +192,47 @@ extension IdViewControllerV2 {
         }
         let detectionOptions = [VouchedDetectionOptions.cardDetect(CardDetectOptionsBuilder().withEnhanceInfoExtraction(true).build())]
         helper = VouchedCameraHelper(with: mode, helperOptions: options, detectionOptions: detectionOptions, in: previewContainer)?.withCapture(delegate: { self.handleResult($0) })
+    }
+    
+    fileprivate func onConfirmIdResult(_ result: CardDetectResult) {
+        self.loadingToggle()
+        self.instructionLabel.text = "Processing Image"
+        DispatchQueue.global().async {
+            do {
+                let job: Job
+                if self.inputFirstName.isEmpty && self.inputLastName.isEmpty {
+                    job = try self.session.postCardId(detectedCard: result)
+                } else {
+                    let details = Params(firstName: self.inputFirstName, lastName: self.inputLastName)
+                    job = try self.session.postCardId(detectedCard: result, details: details)
+                }
+                print(job)
+                
+                // if there are job insights, update label and retry card detection
+                let insights = VouchedUtils.extractInsights(job)
+                if !insights.isEmpty {
+                    self.updateLabel(insights.first!)
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                        self.helper?.resetDetection()
+                        self.loadingToggle()
+                        self.helper?.startCapture()
+                    }
+                    return
+                }
+                if self.includeBarcode {
+                    self.onBarcodeStep = true
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                        self.loadingToggle()
+                        self.configureHelper(.barcode)
+                        self.helper?.startCapture()
+                    }
+                } else {
+                    self.buttonShow()
+                }
+            } catch {
+                print("Error FrontId: \(error.localizedDescription)")
+            }
+        }
     }
     
     private func handleResult(_ result: VouchedCore.CaptureResult) {
@@ -161,44 +248,7 @@ extension IdViewControllerV2 {
                 self.updateLabel(result.instruction)
             case .postable:
                 helper?.stopCapture()
-                self.loadingToggle()
-                self.instructionLabel.text = "Processing Image"
-                DispatchQueue.global().async {
-                    do {
-                        let job: Job
-                        if self.inputFirstName.isEmpty && self.inputLastName.isEmpty {
-                            job = try self.session.postCardId(detectedCard: result)
-                        } else {
-                            let details = Params(firstName: self.inputFirstName, lastName: self.inputLastName)
-                            job = try self.session.postCardId(detectedCard: result, details: details)
-                        }
-                        print(job)
-
-                        // if there are job insights, update label and retry card detection
-                        let insights = VouchedUtils.extractInsights(job)
-                        if !insights.isEmpty {
-                            self.updateLabel(insights.first!)
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
-                                self.helper?.resetDetection()
-                                self.loadingToggle()
-                                self.helper?.startCapture()
-                            }
-                            return
-                        }
-                        if self.includeBarcode {
-                            self.onBarcodeStep = true
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                                self.loadingToggle()
-                                self.configureHelper(.barcode)
-                                self.helper?.startCapture()
-                            }
-                        } else {
-                            self.buttonShow()
-                        }
-                    } catch {
-                        print("Error FrontId: \(error.localizedDescription)")
-                    }
-                }
+                onConfirmIdResult(result as CardDetectResult)
             @unknown default:
                 self.instructionLabel.text = self.onBarcodeStep ? "Focus camera on barcode" : "Show ID Card"
             }
@@ -280,11 +330,12 @@ extension IdViewControllerV2 {
                 print("Error Card ID: \(err.localizedDescription)")
             }
         }
-        callbacks.validateSubmission = { result in
-// uncomment to filter out landscape images
-//            if let cardResult = result as? CardDetectResult, cardResult.orientation != .portrait {
-//                return false
-//            }
+        callbacks.validateSubmission = { [self] result in
+            if self.confirmID {
+                stopCapture()
+                confirmIDCaptureIsGood(isVisible: true, result: result as! CardDetectResult)
+                return false
+            }
             return true
         }
         callbacks.onResultProcessing = { self.onResultProcessing($0) }

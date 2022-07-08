@@ -12,43 +12,41 @@ class InputViewController: UIViewController {
     @IBOutlet private weak var inputFirstName: UITextField!
     @IBOutlet private weak var inputLastName: UITextField!
     @IBOutlet private weak var barcodeSwitch: UISwitch!
-    @IBOutlet private weak var helperSwitch: UISwitch!
+    @IBOutlet private weak var enhancedScanSwitch: UISwitch!
     @IBOutlet private weak var cameraFlashSwitch: UISwitch!
+    @IBOutlet private weak var confirmIDSwitch: UISwitch!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.navigationBar.isHidden = false
-        self.navigationItem.title = "Input Name"
+        self.navigationItem.title = "Settings"
+        
+        barcodeSwitch.isEnabled = !enhancedScanSwitch.isOn
                
         self.setupHideKeyboardOnTap()
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender:Any?) {
         switch segue.destination {
-        case let destVC as IdViewController:
-            destVC.inputFirstName = self.inputFirstName.text!
-            destVC.inputLastName = self.inputLastName.text!
-            destVC.includeBarcode = self.barcodeSwitch.isOn
         case let destVC as IdViewControllerV2:
             destVC.inputFirstName = self.inputFirstName.text!
             destVC.inputLastName = self.inputLastName.text!
             destVC.includeBarcode = self.barcodeSwitch.isOn
             destVC.useCameraFlash = self.cameraFlashSwitch.isOn
+            destVC.confirmID = self.confirmIDSwitch.isOn
+            destVC.useDetectionManager = self.enhancedScanSwitch.isOn
         default:
             break
         }
     }
     
     @IBAction func onHelperSwitch(_ sender: Any) {
-        cameraFlashSwitch.isEnabled = helperSwitch.isOn
+        barcodeSwitch.isEnabled = !enhancedScanSwitch.isOn
     }
 
+
     @IBAction func onContinue(_ sender: Any) {
-        if self.helperSwitch.isOn {
-            performSegue(withIdentifier: "ToInputNamesWithHelper", sender: self)
-        } else {
-            performSegue(withIdentifier: "ToInputNames", sender: self)
-        }
+        performSegue(withIdentifier: "ToInputNamesWithHelper", sender: self)
     }
     
     func setupHideKeyboardOnTap() {
