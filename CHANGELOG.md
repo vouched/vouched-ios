@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.0](https://github.com/vouched/vouched-ios/compare/v1.3.0...v1.2.2) - 2022-03-29
+
+#### Added
+- Support for user confirmation of IDs
+- Simplified example workflow
+
+## [1.2.2](https://github.com/vouched/vouched-ios/compare/v1.2.2...v1.1.6) - 2022-03-29
+
+#### Added
+- Detection assets are now bundled with the SDK, no need to download them anymore
+
 ## [1.1.6](https://github.com/vouched/vouched-ios/compare/v1.1.4...v1.1.6) - 2022-03-29
 
 #### Added
