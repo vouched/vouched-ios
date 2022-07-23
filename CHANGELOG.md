@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.0](https://github.com/vouched/vouched-ios/compare/v1.4.0...v1.3.0) - 2022-07-22
+
+#### Added
+- Support for reverifying selfies against a previously verified job
+
 ## [1.3.0](https://github.com/vouched/vouched-ios/compare/v1.3.0...v1.2.2) - 2022-03-29
 
 #### Added

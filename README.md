@@ -244,6 +244,19 @@ let job = try session.postConfirm()
 
 `Returns` - [Job](https://docs.vouched.id/#tag/job-model)
 
+##### POST re-verification
+
+```swift
+let job = try session.postReverify(jobID: String, userPhoto: String)
+```
+
+`Returns` - [Job](https://docs.vouched.id/#tag/job-model)
+
+| Parameter Type                    | Nullable |
+| --------------------------------- | :------: |
+| jobID                             |  false   |
+| userPhoto (base64 encoded string) |  false   |
+
 ### CardDetect
 
 This class handles detecting an ID (cards and passports) and performing necessary steps to ensure image is `Step.postable`.
