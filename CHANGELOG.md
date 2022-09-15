@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.4.5](https://github.com/vouched/vouched-ios/compare/v1.4.5...v1.4.4) - 2022-09-15
+
+#### Removed
+- Support for bitcode, which is deprecated in Xcode 14
+
 ## [1.4.4](https://github.com/vouched/vouched-ios/compare/v1.4.4...v1.4.2) - 2022-08-24
 
 #### Added
