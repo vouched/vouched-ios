@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.4.8](https://github.com/vouched/vouched-ios/compare/v1.4.5...v1.4.8) - 2022-10-04
+
+#### Added
+- Added support for data used in verification options
+
 ## [1.4.5](https://github.com/vouched/vouched-ios/compare/v1.4.5...v1.4.4) - 2022-09-15
 
 #### Removed
