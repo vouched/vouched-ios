@@ -9,7 +9,7 @@ import UIKit
 import AVFoundation
 import VouchedCore
 
-class AuthenticateViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate {
+class ReverificationViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate {
     
     @IBOutlet weak var cameraView: UIView!
     @IBOutlet weak var nextButton: UIButton!
@@ -33,17 +33,37 @@ class AuthenticateViewController: UIViewController, AVCaptureVideoDataOutputSamp
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.navigationBar.isHidden = false
-        self.navigationItem.title = "Capture Face To Authenticate"
+        self.navigationItem.title = "Capture Face To Reverify"
         
         nextButton.isHidden = true
         loadingIndicator.isHidden = true
+        self.initVouchedSession()
         
-        setupCamera()
+        promptForJobId()
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    func promptForJobId() {
+        let alert = UIAlertController(title: "Job ID", message: "Specify the existing job ID you wish to verify against. ", preferredStyle: UIAlertController.Style.alert)
+        let ok = UIAlertAction(title: "OK", style: .default, handler: { _ in
+            let textField = alert.textFields![0]
+            self.jobId = textField.text!
+            self.setupCamera()
+        })
+        alert.addAction(ok)
+        alert.addTextField(configurationHandler: {(textField: UITextField!) in
+            textField.placeholder = "Job ID"
+            textField.isSecureTextEntry = false 
+        })
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    func initVouchedSession() {
+        self.session = VouchedSession(apiKey: getValue(key:"API_KEY"), sessionParameters: VouchedSessionParameters())
     }
     
     /**
@@ -98,22 +118,38 @@ class AuthenticateViewController: UIViewController, AVCaptureVideoDataOutputSamp
             self.loadingIndicator.isHidden = false
         }
     }
-    func buttonShow(authenticationResult: AuthenticateResult){
-        if authenticationResult.match > 0.9 {
-            DispatchQueue.main.async() { // Correct
-                self.authenticationResultLabel.text = "Authentication Success"
-                self.authenticationResultLabel.isHidden = false
-                self.loadingIndicator.isHidden = true
-                self.instructionLabel.text = nil
-            }
-        }else{
-            DispatchQueue.main.async() { // Correct
-                self.authenticationResultLabel.text = "Authentication Failed"
-                self.authenticationResultLabel.isHidden = false
-                self.loadingIndicator.isHidden = true
-                self.instructionLabel.text = nil
-           }
-        }
+    func showResult(jobResult: JobResult){
+        
+        self.loadingIndicator.isHidden = true
+        self.instructionLabel.text = nil
+
+        let matchSuccess = jobResult.success ? "successfully matched" : "did not match"
+        let alert = UIAlertController(title: "Re-Verification Result", message: "The image \(matchSuccess) the job ID specified", preferredStyle: UIAlertController.Style.alert)
+        let ok = UIAlertAction(title: "OK", style: .default, handler: { (action) -> Void in
+            let vc = self.storyboard?.instantiateViewController(withIdentifier:"MainViewController")
+            self.navigationController?.pushViewController(vc!, animated: true)
+        })
+        alert.addAction(ok)
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    func showError(error: Error) {
+        self.loadingIndicator.isHidden = true
+        self.instructionLabel.text = nil
+        let alert = UIAlertController(
+                    title: "An error occured",
+                    message: error.localizedDescription,
+                    preferredStyle: .alert
+                )
+                alert.addAction(UIAlertAction(
+                    title: "Retry",
+                    style: .default,
+                    handler: { (action) -> Void in
+                        let vc = self.storyboard?.instantiateViewController(withIdentifier:"AuthenticateViewController")
+                        self.navigationController?.pushViewController(vc!, animated: true)
+                    }
+                ))
+        self.present(alert, animated: true)
     }
     
     func updateLabel(_ instruction:Instruction) {
@@ -176,11 +212,16 @@ class AuthenticateViewController: UIViewController, AVCaptureVideoDataOutputSamp
                 }
                 self.loadingShow()
                 do {
-                    let authenticationResult: AuthenticateResult = try session!.postAuthenticate(id: self.jobId, userPhoto: detectedFace.image!, matchId: true)
-                    self.buttonShow(authenticationResult: authenticationResult)
+                    let job = try session!.postReverify(jobId: self.jobId, matchId: "id", userPhoto: detectedFace.image!)
+                    DispatchQueue.main.async() {
+                        self.showResult(jobResult: job.result)
+                    }
                 } catch {
-                    print("Error info: \(error)")
-                    self.buttonShow(authenticationResult: AuthenticateResult(match: 0))
+                    // exception is happening off the main thread,
+                    // so push the display of error onto the main thread
+                    DispatchQueue.main.async() {
+                        self.showError(error: error)
+                    }
                 }
             @unknown default:
                 DispatchQueue.main.async() {

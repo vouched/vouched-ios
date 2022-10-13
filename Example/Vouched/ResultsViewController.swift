@@ -154,7 +154,7 @@ class ResultsViewController: UIViewController, UITableViewDataSource {
     
     override func prepare(for segue: UIStoryboardSegue, sender:Any?){
         if segue.identifier == "ToAuthenticate"{
-            let destVC = segue.destination as! AuthenticateViewController
+            let destVC = segue.destination as! ReverificationViewController
             destVC.jobId = self.job!.id
             destVC.session = self.session
         }

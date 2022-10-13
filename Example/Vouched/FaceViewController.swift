@@ -8,7 +8,7 @@
 import UIKit
 import VouchedCore
 
-class FaceViewControllerV2: UIViewController {
+class FaceViewController: UIViewController {
     @IBOutlet private weak var previewContainer: UIView!
     @IBOutlet private weak var nextButton: UIButton!
     @IBOutlet private weak var loadingIndicator: UIActivityIndicatorView!
@@ -21,7 +21,7 @@ class FaceViewControllerV2: UIViewController {
         super.viewDidLoad()
         
         self.navigationController?.navigationBar.isHidden = false
-        self.navigationItem.title = "Place Camera On ID"
+        self.navigationItem.title = "Face Detection"
         nextButton.isHidden = true
         loadingIndicator.isHidden = true
         instructionLabel.text = nil
@@ -70,7 +70,7 @@ class FaceViewControllerV2: UIViewController {
                 DispatchQueue.global().async {
                     do {
                         let job = try self.session?.postFace(detectedFace: result)
-                        print(job)
+                        //print(job)
 
                         // if there are job insights, update label and retry card detection
                         let insights = VouchedUtils.extractInsights(job)
@@ -88,6 +88,8 @@ class FaceViewControllerV2: UIViewController {
                         print("Error Selfie: \(error.localizedDescription)")
                     }
                 }
+            @unknown default:
+                print("Unhandled selfie step: \(result.step)") 
             }
         default:
             break

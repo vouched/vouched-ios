@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0C6A2519C243527A64963E7C /* Pods_Vouched_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DE2A7B3130594F0C9A1394C /* Pods_Vouched_Example.framework */; };
-		2C2796BF24DBAB5C000CCC9E /* AuthenticateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2796BE24DBAB5C000CCC9E /* AuthenticateViewController.swift */; };
+		2C2796BF24DBAB5C000CCC9E /* ReverificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2796BE24DBAB5C000CCC9E /* ReverificationViewController.swift */; };
 		2C2796C124DBAB6C000CCC9E /* InputViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2796C024DBAB6C000CCC9E /* InputViewController.swift */; };
 		607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD51AFB9204008FA782 /* AppDelegate.swift */; };
 		607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 607FACD91AFB9204008FA782 /* Main.storyboard */; };
@@ -16,14 +16,14 @@
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
 		BC5F230824CF835600B0CB8E /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC5F230724CF835600B0CB8E /* MainViewController.swift */; };
 		BC5F231024D009F400B0CB8E /* ResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC5F230F24D009F400B0CB8E /* ResultsViewController.swift */; };
-		FA428A3926835247009C5720 /* IdViewControllerV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA428A1026834E8A009C5720 /* IdViewControllerV2.swift */; };
-		FAE2340826A82A2B00F15EBC /* FaceViewControllerV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAE2340726A82A2B00F15EBC /* FaceViewControllerV2.swift */; };
+		FA428A3926835247009C5720 /* IdViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA428A1026834E8A009C5720 /* IdViewController.swift */; };
+		FAE2340826A82A2B00F15EBC /* FaceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAE2340726A82A2B00F15EBC /* FaceViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		1CCB48F506D04246FDB4D435 /* Pods-Vouched_Tests.development.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Vouched_Tests.development.xcconfig"; path = "Target Support Files/Pods-Vouched_Tests/Pods-Vouched_Tests.development.xcconfig"; sourceTree = "<group>"; };
 		2C072B9A24D684FC00EE7540 /* Development.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Development.xcconfig; sourceTree = SOURCE_ROOT; };
-		2C2796BE24DBAB5C000CCC9E /* AuthenticateViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticateViewController.swift; sourceTree = "<group>"; };
+		2C2796BE24DBAB5C000CCC9E /* ReverificationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReverificationViewController.swift; sourceTree = "<group>"; };
 		2C2796C024DBAB6C000CCC9E /* InputViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InputViewController.swift; sourceTree = "<group>"; };
 		2C27FAAA263A279D000007E8 /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
 		3DE2A7B3130594F0C9A1394C /* Pods_Vouched_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Vouched_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -42,10 +42,11 @@
 		D76D281724D572D0009B6362 /* Development.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Development.xcconfig; sourceTree = "<group>"; };
 		DA903CD55119EC4AA9D0851B /* Pods-Vouched_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Vouched_Example.debug.xcconfig"; path = "Target Support Files/Pods-Vouched_Example/Pods-Vouched_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		E0ED76C6EBBA95530A0AF325 /* Pods-Vouched_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Vouched_Tests.release.xcconfig"; path = "Target Support Files/Pods-Vouched_Tests/Pods-Vouched_Tests.release.xcconfig"; sourceTree = "<group>"; };
+		EC50BD5928DD01B0002F5081 /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Colors.xcassets; path = "../../../../vouched-ios-demo/Sources/Resources/Colors.xcassets"; sourceTree = "<group>"; };
 		ECAE7D15B84FC0F6F28A20DD /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		F54B3D67EEAD23D2219B1856 /* Pods-Vouched_Example.development.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Vouched_Example.development.xcconfig"; path = "Target Support Files/Pods-Vouched_Example/Pods-Vouched_Example.development.xcconfig"; sourceTree = "<group>"; };
-		FA428A1026834E8A009C5720 /* IdViewControllerV2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdViewControllerV2.swift; sourceTree = "<group>"; };
-		FAE2340726A82A2B00F15EBC /* FaceViewControllerV2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FaceViewControllerV2.swift; sourceTree = "<group>"; };
+		FA428A1026834E8A009C5720 /* IdViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdViewController.swift; sourceTree = "<group>"; };
+		FAE2340726A82A2B00F15EBC /* FaceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FaceViewController.swift; sourceTree = "<group>"; };
 		FC756112F5C3ACBF38E604B1 /* Pods-Vouched_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Vouched_Tests.debug.xcconfig"; path = "Target Support Files/Pods-Vouched_Tests/Pods-Vouched_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -86,12 +87,13 @@
 			children = (
 				BC5F230724CF835600B0CB8E /* MainViewController.swift */,
 				607FACD51AFB9204008FA782 /* AppDelegate.swift */,
-				2C2796BE24DBAB5C000CCC9E /* AuthenticateViewController.swift */,
+				2C2796BE24DBAB5C000CCC9E /* ReverificationViewController.swift */,
 				2C2796C024DBAB6C000CCC9E /* InputViewController.swift */,
-				FA428A1026834E8A009C5720 /* IdViewControllerV2.swift */,
+				FA428A1026834E8A009C5720 /* IdViewController.swift */,
 				BC5F230F24D009F400B0CB8E /* ResultsViewController.swift */,
-				FAE2340726A82A2B00F15EBC /* FaceViewControllerV2.swift */,
+				FAE2340726A82A2B00F15EBC /* FaceViewController.swift */,
 				607FACD91AFB9204008FA782 /* Main.storyboard */,
+				EC50BD5928DD01B0002F5081 /* Colors.xcassets */,
 				607FACDC1AFB9204008FA782 /* Images.xcassets */,
 				607FACDE1AFB9204008FA782 /* LaunchScreen.xib */,
 				607FACD31AFB9204008FA782 /* Supporting Files */,
@@ -260,11 +262,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				BC5F230824CF835600B0CB8E /* MainViewController.swift in Sources */,
-				FA428A3926835247009C5720 /* IdViewControllerV2.swift in Sources */,
-				FAE2340826A82A2B00F15EBC /* FaceViewControllerV2.swift in Sources */,
+				FA428A3926835247009C5720 /* IdViewController.swift in Sources */,
+				FAE2340826A82A2B00F15EBC /* FaceViewController.swift in Sources */,
 				2C2796C124DBAB6C000CCC9E /* InputViewController.swift in Sources */,
 				BC5F231024D009F400B0CB8E /* ResultsViewController.swift in Sources */,
-				2C2796BF24DBAB5C000CCC9E /* AuthenticateViewController.swift in Sources */,
+				2C2796BF24DBAB5C000CCC9E /* ReverificationViewController.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -407,6 +409,7 @@
 					"@executable_path/Frameworks",
 				);
 				MODULE_NAME = ExampleApp;
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = id.vouched.dev.example;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
@@ -428,6 +431,7 @@
 					"@executable_path/Frameworks",
 				);
 				MODULE_NAME = ExampleApp;
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = id.vouched.dev.example;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
@@ -503,6 +507,7 @@
 					"@executable_path/Frameworks",
 				);
 				MODULE_NAME = ExampleApp;
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = id.vouched.dev.example;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
