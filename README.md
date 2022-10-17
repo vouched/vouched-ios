@@ -135,7 +135,7 @@ let helper = VouchedCameraHelper(with: .id,
 
 ### VouchedDetectionManager
 
-This class is introduced to help guide the ID verification modes by processing job results returned by the Vouched API service, and generating the appropriate modes that are needed to complete ID verification. 
+This class is introduced to help guide the ID verification modes by processing job results returned by the Vouched API service, and generating the appropriate modes that are needed to complete ID verification. This is particularly important if you are verifying identities in countries where some of the information needed for verification is on the back side of the ID, the detection manager will prompt the user to turn the card around to capture that information.
 
 ##### Initialize
 
