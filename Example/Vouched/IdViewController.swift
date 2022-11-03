@@ -132,11 +132,13 @@ class IdViewController: UIViewController {
     }
     
     func showConfirmOverlay(isVisible: Bool) {
-        UIView.transition(with: self.confirmPanel, duration: 0.5, options: .transitionCrossDissolve, animations: {
-            self.confirmPanel.isHidden = !isVisible
-        })
-        instructionLabel.isHidden = isVisible
-        navigationController?.navigationBar.isHidden = isVisible
+        DispatchQueue.main.async {
+            UIView.transition(with: self.confirmPanel, duration: 0.5, options: .transitionCrossDissolve, animations: {
+                self.confirmPanel.isHidden = !isVisible
+            })
+            self.instructionLabel.isHidden = isVisible
+            self.navigationController?.navigationBar.isHidden = isVisible
+        }
     }
 
 
@@ -158,6 +160,7 @@ class IdViewController: UIViewController {
             return
         }
         showConfirmOverlay(isVisible: false)
+        stopCapture()
         detectionMgr?.onConfirmIdResult(result: confirmedResult)
     }
     
@@ -185,18 +188,18 @@ extension IdViewController {
     private func configureDetectionManager() {
         guard let helper = helper else { return }
         guard let config = VouchedDetectionManagerConfig(session: session) else { return }
-        // optional validation parameter data can be added to detection manager added here
+        // optional validation parameters are added here
         config.validationParams.firstName = inputFirstName
         config.validationParams.lastName = inputLastName
 
         config.progress = ProgressAnimation(loadingIndicator: loadingIndicator)
         let callbacks = DetectionCallbacks { change in
-            let alert = UIAlertController(title: nil, message: "Turn ID card over to backside", preferredStyle: .alert)
-            let ok = UIAlertAction(title: "OK", style: .default, handler: { _ in
-                change.completion(true)
-            })
-            alert.addAction(ok)
             DispatchQueue.main.async {
+                let alert = UIAlertController(title: nil, message: "Turn ID card over to backside", preferredStyle: .alert)
+                let ok = UIAlertAction(title: "OK", style: .default, handler: { _ in
+                    change.completion(true)
+                })
+                alert.addAction(ok)
                 self.present(alert, animated: true)
             }
         }
