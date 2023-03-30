@@ -1,0 +1,9 @@
+name: Add PRs to Project boards
+on:
+  pull_request:
+    types: [opened, labeled]
+jobs:
+  call-add-to-project:
+    uses: vouched/gh-actions/.github/workflows/addprstoprojectboards.yml@main
+    secrets:
+      token : ${{ secrets.CI_GITHUB_TOKEN }}

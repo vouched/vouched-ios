@@ -1,0 +1,10 @@
+name: Add issues to Project boards
+on:
+  issues:
+    types:
+      - opened
+jobs:
+  call-add-to-project:
+    uses: vouched/gh-actions/.github/workflows/addissuestoprojectboards.yml@main
+    secrets:
+      token : ${{ secrets.CI_GITHUB_TOKEN }}
