@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'Vouched'
-  s.version          = '1.7.0-beta2'
+  s.version          = '1.7.0-beta6'
   s.summary          = 'Making Verifications Fast and Simple.'
   s.swift_version    = '5.0'
   s.description      = <<-DESC
