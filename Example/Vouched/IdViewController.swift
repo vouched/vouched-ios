@@ -188,9 +188,11 @@ extension IdViewController {
     private func configureDetectionManager() {
         guard let helper = helper else { return }
         guard let config = VouchedDetectionManagerConfig(session: session) else { return }
-        // optional validation parameters are added here
+        // optional validation parameters can be added here.
         config.validationParams.firstName = inputFirstName
         config.validationParams.lastName = inputLastName
+        config.validationParams.enablePhysicalAddress = true
+        config.validationParams.enableIPAddress = true
 
         config.progress = ProgressAnimation(loadingIndicator: loadingIndicator)
         let callbacks = DetectionCallbacks { change in

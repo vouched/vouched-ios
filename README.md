@@ -67,7 +67,7 @@ Note:  There are two options to run verification process flow:
 
 ### VouchedCameraHelper
 
-This class is introduced to make it easier for developers to integrate `VouchedSDK` and provide the optimal photography. The helper takes care of configuring the capture session, input, and output.
+This class is introduced to make it easier for developers to integrate `VouchedSDK` and provide the optimal photography. The helper takes care of configuring the capture session, input, and output. 
 
 ##### Initialize
 
@@ -148,8 +148,6 @@ This class is introduced to help guide the ID verification modes by processing j
     let detectionMgr = VouchedDetectionManager(helper: helper, config: config)
 ```
 
-See [CardDetectOptions](#carddetectoptions) for details
-
 ##### Run
 
 In order to start detection, put the following code:
@@ -184,7 +182,7 @@ Once the detection process is finished and there is a `Job` result the following
         }
 ```
 
-Examine the `extension IdViewControllerV2 : VouchedDetectionManager` in the example app to see how this mechanism can be implemented.
+Examine the `extension IdViewController : VouchedDetectionManager` in the example app to see how this mechanism can be implemented. 
 
 
 ### VouchedSession
@@ -386,6 +384,27 @@ class CardDetectOptionsBuilder {
 ```
 
 The [VouchedDetectionManager](#voucheddetectionmanager) can increase your verification abilities by recognizing additional sources of information based on the ID that your user submits.  You can enable this behavior by using  ```.withEnhanceInfoExtraction(true)``` when setting
+
+**ValidationParameters**
+
+These are optional configuration parameters can be used used to provide input to the IDV session when using the [VouchedDetectionManager](#voucheddetectionmanager). More information about their usage can be found in [our documentation] (https://docs.vouched.id/docs/js-plugin#verification-object). 
+
+```
+public struct VouchedValidationParamSettings: VouchedValidationParams {
+    public var firstName: String?
+    public var lastName: String?
+    public var email: String?
+    public var phone: String?
+    public var birthDate: String?
+    public var geoLocation: Geolocation?
+    public var enablePhysicalAddress: Bool?
+    public var enableIPAddress: Bool?
+    public var enableDarkWeb: Bool?
+    public var enableCrossCheck: Bool?
+    public var enableDriversLicenseValidation: Bool?
+```
+
+
 
 ##### FaceDetectOptions
 
