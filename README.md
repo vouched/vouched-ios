@@ -67,7 +67,7 @@ Note:  There are two options to run verification process flow:
 
 ### VouchedCameraHelper
 
-This class is introduced to make it easier for developers to integrate `VouchedSDK` and provide the optimal photography. The helper takes care of configuring the capture session, input, and output.
+This class is introduced to make it easier for developers to integrate `VouchedSDK` and provide the optimal photography. The helper takes care of configuring the capture session, input, and output. 
 
 ##### Initialize
 
@@ -147,8 +147,6 @@ This class is introduced to help guide the ID verification modes by processing j
     config.callbacks = callbacks
     let detectionMgr = VouchedDetectionManager(helper: helper, config: config)
 ```
-
-When using the VouchedDetectionManager, you can add See [CardDetectOptions](#carddetectoptions) for details
 
 ##### Run
 
