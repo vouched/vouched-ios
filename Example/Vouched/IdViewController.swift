@@ -191,8 +191,8 @@ extension IdViewController {
         // optional validation parameters can be added here.
         config.validationParams.firstName = inputFirstName
         config.validationParams.lastName = inputLastName
-        config.validationParams.enablePhysicalAddress = true
-        config.validationParams.enableIPAddress = true
+        config.validationParams.enablePhysicalAddress = false
+        config.validationParams.enableIPAddress = false
 
         config.progress = ProgressAnimation(loadingIndicator: loadingIndicator)
         let callbacks = DetectionCallbacks { change in
