@@ -7,8 +7,8 @@
 
 import UIKit
 import TensorFlowLite
-import VouchedCore
-import VouchedBarcode
+@preconcurrency import VouchedCore
+@preconcurrency import VouchedBarcode
 
 func getValue(key:String)-> String?{
     let v = Bundle.main.infoDictionary?[key] as? String
@@ -80,6 +80,7 @@ class IdViewController: UIViewController {
         detectionMgr?.stopDetection()
     }
 
+    @MainActor
     private func updateLabel(_ instruction: Instruction) {
         var str: String
         switch instruction {
@@ -94,11 +95,14 @@ class IdViewController: UIViewController {
         default:
             str = "Show ID"
         }
-        DispatchQueue.main.async() {
-            self.instructionLabel.text = str
+        Task {
+            await MainActor.run {
+                self.instructionLabel.text = str
+            }
         }
     }
-        
+     
+    @MainActor
     private func updateLabel(_ insight: Insight) {
         var str: String
 
@@ -121,9 +125,9 @@ class IdViewController: UIViewController {
             str = "No Error Message"
         }
         
-        DispatchQueue.main.async() {
-            self.instructionLabel.text = str
-        }
+//        DispatchQueue.main.async() {
+//            self.instructionLabel.text = str
+//        }
     }
     
     private func confirmIDCaptureIsGood(isVisible: Bool, result: CardDetectResult) {
@@ -132,22 +136,25 @@ class IdViewController: UIViewController {
     }
     
     func showConfirmOverlay(isVisible: Bool) {
-        DispatchQueue.main.async {
-            UIView.transition(with: self.confirmPanel, duration: 0.5, options: .transitionCrossDissolve, animations: {
-                self.confirmPanel.isHidden = !isVisible
-            })
-            self.instructionLabel.isHidden = isVisible
-            self.navigationController?.navigationBar.isHidden = isVisible
+        Task {
+            await MainActor.run {
+                UIView.transition(with: self.confirmPanel, duration: 0.5, options: .transitionCrossDissolve, animations: {
+                    self.confirmPanel.isHidden = !isVisible
+                })
+                self.instructionLabel.isHidden = isVisible
+                self.navigationController?.navigationBar.isHidden = isVisible
+            }
         }
     }
 
-
     private func buttonShow() {
-        DispatchQueue.main.async() {
-            self.nextButton.isHidden = false
-            self.loadingIndicator.isHidden = true
-            self.instructionLabel.text = nil
-       }
+        Task {
+            await MainActor.run {
+                self.nextButton.isHidden = false
+                self.loadingIndicator.isHidden = true
+                self.instructionLabel.text = nil
+            }
+        }
     }
 
     private func loadingToggle() {
@@ -196,21 +203,25 @@ extension IdViewController {
 
         config.progress = ProgressAnimation(loadingIndicator: loadingIndicator)
         let callbacks = DetectionCallbacks { change in
-            DispatchQueue.main.async {
-                let alert = UIAlertController(title: nil, message: "Turn ID card over to backside", preferredStyle: .alert)
-                let ok = UIAlertAction(title: "OK", style: .default, handler: { _ in
-                    change.completion(true)
-                })
-                alert.addAction(ok)
-                self.present(alert, animated: true)
+            Task {
+                await MainActor.run {
+                    let alert = UIAlertController(title: nil, message: "Turn ID card over to backside", preferredStyle: .alert)
+                    let ok = UIAlertAction(title: "OK", style: .default, handler: { _ in
+                        change.completion(true)
+                    })
+                    alert.addAction(ok)
+                    self.present(alert, animated: true)
+                }
             }
         }
         callbacks.detectionComplete = { result in
             switch result {
             case .success(let job):
-                DispatchQueue.main.async {
-                    print("\(job)")
-                    self.buttonShow()
+                Task {
+                    await MainActor.run {
+                        print("\(job)")
+                        self.buttonShow()
+                    }
                 }
             case .failure(let err):
                 print("Error Card ID: \(err.localizedDescription)")
@@ -253,15 +264,25 @@ extension IdViewController {
     }
 }
 
+@MainActor
+// XXX need to address this in the SDK
 private struct ProgressAnimation: VouchedProgressAnimation {
     let loadingIndicator: UIActivityIndicatorView?
     
-    func startAnimating() {
-        self.loadingIndicator?.isHidden = false
+    nonisolated func startAnimating() {
+        Task {
+            await MainActor.run {
+                self.loadingIndicator?.isHidden = false
+            }
+        }
     }
     
-    func stopAnimating() {
-        self.loadingIndicator?.isHidden = true
+    nonisolated func stopAnimating() {
+        Task {
+            await MainActor.run {
+                self.loadingIndicator?.isHidden = true
+            }
+        }
     }
 }
 

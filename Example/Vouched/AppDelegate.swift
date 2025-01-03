@@ -9,7 +9,7 @@ import UIKit
 import VouchedCore
 import VouchedBarcode
 
-@UIApplicationMain
+@main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?

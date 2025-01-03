@@ -67,22 +67,23 @@ class FaceViewController: UIViewController {
                 helper?.stopCapture()
                 self.loadingToggle()
                 self.instructionLabel.text = "Processing Image"
-                DispatchQueue.global().async {
+                Task {
                     do {
                         let job = try self.session?.postFace(detectedFace: result)
-                        //print(job)
 
-                        // if there are job insights, update label and retry card detection
+                        // Process the insights
                         let insights = VouchedUtils.extractInsights(job)
                         if !insights.isEmpty {
+                            // Update the label and restart detection after a delay
                             self.updateLabel(insights.first!)
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
-                                self.helper?.resetDetection()
-                                self.loadingToggle()
-                                self.helper?.startCapture()
-                            }
+                            try await Task.sleep(nanoseconds: 5 * 1_000_000_000) // 5 seconds delay
+                            self.helper?.resetDetection()
+                            self.loadingToggle()
+                            self.helper?.startCapture()
                             return
                         }
+                        
+                        // Show the button
                         self.buttonShow()
                     } catch {
                         print("Error Selfie: \(error.localizedDescription)")

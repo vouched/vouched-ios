@@ -9,7 +9,7 @@ import UIKit
 import AVFoundation
 import VouchedCore
 
-class ReverificationViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate {
+class ReverificationViewController: UIViewController, @preconcurrency AVCaptureVideoDataOutputSampleBufferDelegate {
     
     @IBOutlet weak var cameraView: UIView!
     @IBOutlet weak var nextButton: UIButton!
