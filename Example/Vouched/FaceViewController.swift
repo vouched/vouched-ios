@@ -72,7 +72,7 @@ class FaceViewController: UIViewController {
                     do {
                         let job: Job?
                         if (self.isLivenessJob) {
-                            job = try self.session?.postSelfieLiveness(detectedFace: result)
+                            job = try self.session?.postSelfieVerification(detectedFace: result)
                         } else {
                             job = try self.session?.postFace(detectedFace: result)
                         }
