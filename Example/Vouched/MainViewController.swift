@@ -21,7 +21,7 @@ class MainViewController: UIViewController {
         if segue.identifier == "ToLivenessSession" {
             let destVC = segue.destination as! FaceViewController
             destVC.isLivenessJob = true
-            destVC.session = VouchedSession(apiKey: getValue(key:"API_KEY"), sessionParameters: VouchedSessionParameters(), apiUrl: "https://thorough-destined-foal.ngrok-free.app")
+            destVC.session = VouchedSession(apiKey: getValue(key:"API_KEY"), sessionParameters: VouchedSessionParameters())
         }
     }
 
