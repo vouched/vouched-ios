@@ -15,6 +15,7 @@ class FaceViewController: UIViewController {
     @IBOutlet private weak var instructionLabel: UILabel!
 
     private var helper: VouchedCameraHelper?
+    var isLivenessJob: Bool = false
     var session: VouchedSession?
 
     override func viewDidLoad() {
@@ -47,7 +48,7 @@ class FaceViewController: UIViewController {
             destVC.session = self.session
         }
     }
-
+    
     private func configureHelper(_ mode: VouchedDetectionMode) {
         helper = VouchedCameraHelper(with: mode, detectionOptions: [.faceDetect(FaceDetectOptionsBuilder().withLivenessMode(.mouthMovement).build())], in: previewContainer)?.withCapture(delegate: { self.handleResult($0) })
     }
@@ -69,7 +70,12 @@ class FaceViewController: UIViewController {
                 self.instructionLabel.text = "Processing Image"
                 DispatchQueue.global().async {
                     do {
-                        let job = try self.session?.postFace(detectedFace: result)
+                        let job: Job?
+                        if (self.isLivenessJob) {
+                            job = try self.session?.postSelfieVerification(detectedFace: result)
+                        } else {
+                            job = try self.session?.postFace(detectedFace: result)
+                        }
                         //print(job)
 
                         // if there are job insights, update label and retry card detection
