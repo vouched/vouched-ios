@@ -1,6 +1,6 @@
 use_frameworks!
 platform :ios, '15.0'
-pod 'Vouched', '1.9.2'
+pod 'Vouched', '1.9.5'
 
 target 'Vouched_Example' do
   pod 'Vouched/Barcode'

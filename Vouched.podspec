@@ -1,13 +1,12 @@
 Pod::Spec.new do |s|
   s.name             = 'Vouched'
-  s.version          = '1.9.2'
+  s.version          = '1.9.5'
   s.summary          = 'Making Verifications Fast and Simple.'
   s.swift_version    = '5.0'
   s.description      = <<-DESC
                        The Vouched Library allows for fast and simple verifications using an ID and Selfie.
                        DESC
   s.homepage         = 'https://github.com/vouched/vouched-ios'
-  s.license          = { :type => 'Apache 2.0', :file => 'LICENSE' }
   s.authors          = { "Vouched" => "support@vouched.id" }
   s.source           = { :http => "https://github.com/vouched/vouched-ios/releases/download/v#{s.version}/VouchedMobileSDK.zip" }
 
