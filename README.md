@@ -48,6 +48,8 @@ Note:  There are two options to run verification process flow:
    print(job)
    ```
 
+   - Note the example apps shows you how to create a normal IDV job, a reverifcation, and a selfie verification, which allows a user to take a face selfie, assuming they can perform a task to show its a live image.
+
    - Once completed, take a look at the [Job details on your Dashboard](https://docs.vouched.id/#section/Dashboard/Jobs)
 2. Modify the [SampleBufferDelegate](https://developer.apple.com/documentation/avfoundation/avcapturevideodataoutputsamplebufferdelegate)
 
