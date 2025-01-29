@@ -1,4 +1,4 @@
-# Vouched iOS SDK
+# Vouched
 
 [![Version](https://img.shields.io/cocoapods/v/Vouched.svg?style=flat)](https://cocoapods.org/pods/Vouched)
 [![License](https://img.shields.io/cocoapods/l/Vouched.svg?style=flat)](https://cocoapods.org/pods/Vouched)
@@ -21,6 +21,7 @@ Then, follow steps listed on the [example README](https://github.com/vouched/vou
 - An account with Vouched
 - Your Vouched Public Key
 
+
 ## Install
 
 Add the package to your existing project's Podfile
@@ -29,39 +30,26 @@ Add the package to your existing project's Podfile
 pod 'Vouched', 'VOUCHED_VERSION'
 ```
 
-## Getting Started
+## SDK Job Types
 
-This section will provide a _step-by-step_ to understand the Vouched SDK through the Example.
+The Vouched SDK supports three different types of verification jobs, which serve different purposed in verification:
 
-```
-Note:  There are two options to run verification process flow:
-- Use Camera Helper to obtain capture results. See corresponding details for VouchedCameraHelper. 
-- Use raw API to perform all the checks.
-```
-
-0. [Get familiar with Vouched](https://docs.vouched.id/#section/Overview)
-1. [Run the Example](#run-example)
-
-   - Go through the verification process but stop after each step and take a look at the logs. Particularly understand the [Job](https://docs.vouched.id/#tag/job-model) data from each step.
-
-   ```swift
-   print(job)
-   ```
-
-   - Once completed, take a look at the [Job details on your Dashboard](https://docs.vouched.id/#section/Dashboard/Jobs)
-2. Modify the [SampleBufferDelegate](https://developer.apple.com/documentation/avfoundation/avcapturevideodataoutputsamplebufferdelegate)
-
-   - Locate the [captureOutput](https://developer.apple.com/documentation/avfoundation/avcapturevideodataoutputsamplebufferdelegate/1385775-captureoutput) in each Controller and make modifications.
-
-     - Add custom logic to display data or control the navigation
-   - Locate the Vouched detectors and add logging
-
-     - `cardDetect?.detect(sampleBuffer)`
-     - `barCodeDetect?.detect(sampleBuffer, cameraPosition: .back)`
-     - `faceDetect?.detect(sampleBuffer)`
-3. Tweak [AVCapture](https://developer.apple.com/documentation/avfoundation/avcapturedevice) settings
-   Better images lead to better results from Vouched AI
-4. You are ready to integrate Vouched SDK into your app
+1. **IDV (Identity Verification) Job**
+   - Captures and verifies an ID document (driver's license, passport, etc.)
+   - Captures a selfie of the user
+   - Performs liveness detection
+   - Matches the selfie against the ID photo
+   - Used for full identity verification workflows
+   - Use the 
+2. **Reverification Job**
+   - Captures a new selfie and compares it against a previously completed IDV job
+   - Useful for re-authenticating returning users
+   - Requires the original job ID and user photo
+3. **Selfie Verification Job**
+   - Captures only a selfie of the user
+   - Performs liveness detection
+   - Does not require ID document
+   - Useful for basic presence and liveness verification
 
 ## Reference
 
@@ -115,7 +103,8 @@ helper.stopCapture()
 
 ##### Usage
 
-Typical usage is as following:
+Typical usage is as follows:
+**Note:** you can inspect the results delivered from the callback, and do additional processing before using the session object to post the results to the api service.:
 
 ```swift
 let helper = VouchedCameraHelper(with: .id,
@@ -135,7 +124,7 @@ let helper = VouchedCameraHelper(with: .id,
 
 ### VouchedDetectionManager
 
-This class is introduced to help guide the ID verification modes by processing job results returned by the Vouched API service, and generating the appropriate modes that are needed to complete ID verification. This is particularly important if you are verifying identities in countries where some of the information needed for verification is on the back side of the ID, the detection manager will prompt the user to turn the card around to capture that information.
+This class is introduced to help guide the ID verification modes by processing job results returned by the Vouched API service, and generating the appropriate modes that are needed to complete ID verification.  For example, consider a ID that has important verification This is particularly important if you are verifying identities in countries where some of the information needed for verification is on the back side of the ID, the detection manager will prompt the user to turn the card around to capture that information.
 
 ##### Initialize
 
@@ -187,7 +176,8 @@ Examine the `extension IdViewController : VouchedDetectionManager` in the exampl
 
 ### VouchedSession
 
-This class handles a user's Vouched session. It takes care of the API calls. Use one instance for the duration of a user's verification session.
+This class handles a user's Vouched session. It takes care of the API calls. 
+**Note:** Use only one instance of the session object for the duration of a user's verification session
 
 ##### Initialize
 
@@ -247,6 +237,19 @@ let job = try session.postConfirm()
 ```swift
 let job = try session.postReverify(jobID: String, userPhoto: String)
 ```
+
+`Returns` - [Job](https://docs.vouched.id/#tag/job-model)
+
+##### POST Selfie verification
+
+```swift
+let job = try session.postSelfieVerification(detectedFace: detectedFace)
+```
+
+
+| Parameter Type                        | Nullable |
+| ------------------------------------- | :------: |
+| [FaceDetectResult](#facedetectresult) |  false   |
 
 `Returns` - [Job](https://docs.vouched.id/#tag/job-model)
 
