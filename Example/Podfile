@@ -1,6 +1,8 @@
 use_frameworks!
 platform :ios, '15.0'
-pod 'Vouched', '1.9.5'
+pod 'Vouched', '1.9.6'
+
+source 'https://github.com/CocoaPods/Specs.git'
 
 target 'Vouched_Example' do
   pod 'Vouched/Barcode'
