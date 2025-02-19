@@ -2,11 +2,11 @@
 //  FaceViewControllerV2.swift
 //  Vouched_Example
 //
-//  Copyright © 2021 Vouched.id. All rights reserved.
+//  Copyright © 2025 Vouched.id. All rights reserved.
 //
 
 import UIKit
-import VouchedCore
+@preconcurrency import VouchedCore
 
 class FaceViewController: UIViewController {
     @IBOutlet private weak var previewContainer: UIView!
@@ -68,28 +68,33 @@ class FaceViewController: UIViewController {
                 helper?.stopCapture()
                 self.loadingToggle()
                 self.instructionLabel.text = "Processing Image"
+                let isLivenessJob = self.isLivenessJob
+                guard let captureSession = self.session else { return }
                 DispatchQueue.global().async {
                     do {
                         let job: Job?
-                        if (self.isLivenessJob) {
-                            job = try self.session?.postSelfieVerification(detectedFace: result)
+                        if (isLivenessJob) {
+                            job = try captureSession.postSelfieVerification(detectedFace: result)
                         } else {
-                            job = try self.session?.postFace(detectedFace: result)
+                            job = try captureSession.postFace(detectedFace: result)
                         }
                         //print(job)
 
-                        // if there are job insights, update label and retry card detection
                         let insights = VouchedUtils.extractInsights(job)
-                        if !insights.isEmpty {
-                            self.updateLabel(insights.first!)
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
-                                self.helper?.resetDetection()
-                                self.loadingToggle()
-                                self.helper?.startCapture()
+
+                        // if there are job insights, update label and retry card detection
+                        DispatchQueue.main.async {
+                            if !insights.isEmpty {
+                                self.updateLabel(insights.first!)
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+                                    self.helper?.resetDetection()
+                                    self.loadingToggle()
+                                    self.helper?.startCapture()
+                                }
+                                return
                             }
-                            return
+                            self.buttonShow()
                         }
-                        self.buttonShow()
                     } catch {
                         print("Error Selfie: \(error.localizedDescription)")
                     }
