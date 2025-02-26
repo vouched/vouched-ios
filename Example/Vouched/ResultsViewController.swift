@@ -2,7 +2,7 @@
 //  ResultsViewController.swift
 //  Vouched_Example
 //
-//  Copyright © 2020 Vouched.id. All rights reserved.
+//  Copyright © 2025 Vouched.id. All rights reserved.
 //
 
 import UIKit

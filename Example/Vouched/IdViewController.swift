@@ -2,7 +2,7 @@
 //  IdViewControllerV2.swift
 //  Vouched
 //
-//  Copyright © 2021 Vouched.id. All rights reserved.
+//  Copyright © 2025 Vouched.id. All rights reserved.
 //
 
 import UIKit
@@ -253,14 +253,14 @@ extension IdViewController {
     }
 }
 
-private struct ProgressAnimation: VouchedProgressAnimation {
+private struct ProgressAnimation: @preconcurrency VouchedProgressAnimation {
     let loadingIndicator: UIActivityIndicatorView?
     
-    func startAnimating() {
+    @MainActor func startAnimating() {
         self.loadingIndicator?.isHidden = false
     }
     
-    func stopAnimating() {
+    @MainActor func stopAnimating() {
         self.loadingIndicator?.isHidden = true
     }
 }

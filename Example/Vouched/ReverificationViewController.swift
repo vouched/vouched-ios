@@ -2,14 +2,14 @@
 //  AuthenticateViewController.swift
 //  Vouched_Example
 //
-//  Copyright © 2021 Vouched.id. All rights reserved.
+//  Copyright © 2025 Vouched.id. All rights reserved.
 //
 
 import UIKit
 import AVFoundation
 import VouchedCore
 
-class ReverificationViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate {
+class ReverificationViewController: UIViewController, @preconcurrency AVCaptureVideoDataOutputSampleBufferDelegate {
     
     @IBOutlet weak var cameraView: UIView!
     @IBOutlet weak var nextButton: UIButton!
