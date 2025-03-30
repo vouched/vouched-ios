@@ -2,7 +2,7 @@
 //  FaceViewControllerV2.swift
 //  Vouched_Example
 //
-//  Copyright © 2025 Vouched.id. All rights reserved.
+//  Copyright 2025 Vouched.id. All rights reserved.
 //
 
 import UIKit
@@ -69,12 +69,14 @@ class FaceViewController: UIViewController {
                 self.loadingToggle()
                 self.instructionLabel.text = "Processing Image"
                 let isLivenessJob = self.isLivenessJob
+                // swift concurrency requires livenessMode is accessed before entering background
+                let livenessMode = self.helper?.livenessMode
                 guard let captureSession = self.session else { return }
                 DispatchQueue.global().async {
                     do {
                         let job: Job?
                         if (isLivenessJob) {
-                            job = try captureSession.postSelfieVerification(detectedFace: result)
+                            job = try captureSession.postSelfieVerification(detectedFace: result, liveness: livenessMode)
                         } else {
                             job = try captureSession.postFace(detectedFace: result)
                         }

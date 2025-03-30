@@ -1,6 +1,6 @@
 use_frameworks!
 platform :ios, '15.0'
-pod 'Vouched', '1.9.9'
+pod 'Vouched', '1.9.8'
 
 source 'https://github.com/CocoaPods/Specs.git'
 
