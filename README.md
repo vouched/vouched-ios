@@ -115,7 +115,7 @@ The Vouched SDK provides several core classes that you will use to capture image
 
 ### VouchedCameraHelper
 
-The `VouchedCameraHelper` simplifies camera integration and optimizes it for identity document or face capture. It configures the camera capture session (inputs, outputs, focus, etc.) and provides callbacks for detection results.
+The `VouchedCameraHelper` simplifies camera integration and optimizes it for identity document or face capture. It configures the camera capture session (inputs, outputs, focus, etc.) and provides callbacks for detection results. Note that for newer Pro iPhones, the camera helper will attempt to use the extra wide lens, to increase the chance of capture success.
 
 #### Initialization
 
@@ -526,7 +526,7 @@ class CardDetectOptionsBuilder {
 }
 ```
 
-- `withEnableDistanceCheck(true)` will have the SDK enforce a proper distance for the ID capture (not too close to the camera). If the ID is too close/far, the `instruction` in `CardDetectResult` will likely prompt the user to adjust.
+- `withEnableDistanceCheck(true)` will have the SDK enforce a proper distance for the ID capture (not too close to the camera). If the ID is too close/far, the `instruction` in `CardDetectResult` will likely prompt the user to adjust. 
 - `withEnhanceInfoExtraction(true)` (if available in your SDK version) allows the `VouchedDetectionManager` to gather additional info from the ID, such as using the barcode (on US driver’s licenses) or other sources to improve verification. This can increase verification thoroughness by cross-checking data (for example, reading the PDF417 barcode on the back of US IDs).
 
 #### FaceDetectOptions
