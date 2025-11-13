@@ -1,25 +1,26 @@
 use_frameworks!
 platform :ios, '15.0'
-pod 'Vouched', '1.9.8'
 
 source 'https://github.com/CocoaPods/Specs.git'
 
-target 'Vouched_Example' do
-  pod 'Vouched/Barcode'
+use_local = ENV['VOUCHED_LOCAL'] == '1'
 
-  post_install do |installer|
+target 'Vouched_Example' do
+    if use_local
+    pod 'Vouched/Barcode', :path => '../Vouched.podspec'
+  else
+    pod 'Vouched/Barcode', '~> 1.9.8'
+  end
+
+ post_install do |installer|
     installer.aggregate_targets.each do |target|
       target.xcconfigs.each do |variant, xcconfig|
         xcconfig_path = target.client_root + target.xcconfig_relative_path(variant)
         IO.write(xcconfig_path, IO.read(xcconfig_path).gsub("DT_TOOLCHAIN_DIR", "TOOLCHAIN_DIR"))
       end
     end
-    
     installer.pods_project.targets.each do |target|
       target.build_configurations.each do |config|
-        # Update architecture settings to use inheritance
-        config.build_settings['EXCLUDED_ARCHS[sdk=iphonesimulator*]'] = '$(inherited) arm64'
-        
         if config.base_configuration_reference.is_a? Xcodeproj::Project::Object::PBXFileReference
           xcconfig_path = config.base_configuration_reference.real_path
           IO.write(xcconfig_path, IO.read(xcconfig_path).gsub("DT_TOOLCHAIN_DIR", "TOOLCHAIN_DIR"))

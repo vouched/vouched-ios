@@ -2,7 +2,7 @@
 //  MainViewController.swift
 //  Vouched_Example
 //
-//  Copyright © 2025 Vouched.id. All rights reserved.
+//  Copyright © 2021 Vouched.id. All rights reserved.
 //
 
 import UIKit
@@ -15,14 +15,11 @@ class MainViewController: UIViewController {
         self.navigationController?.navigationBar.isHidden = true
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender:Any?){
-        // set up default session if we are doing a liveness job, as
-        // we are reusing the FaceViewController
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "ToLivenessSession" {
-            let destVC = segue.destination as! FaceViewController
+            guard let destVC = segue.destination as? FaceViewController else { return }
             destVC.isLivenessJob = true
-            destVC.session = VouchedSession(apiKey: getValue(key:"API_KEY"), sessionParameters: VouchedSessionParameters())
+            destVC.session = VouchedSession(apiKey: getValue(key:"API_KEY"), sessionParameters: VouchedSessionParameters(), apiUrl: getValue(key: "API_URL"))
         }
     }
-
 }

@@ -22,11 +22,8 @@ DerivedData
 *.ipa
 
 # models
-inference_graph.tflite
-labelmap_mobilenet_card.txt
-
-# Vouched IP
-/Vouched
+# inference_graph.tflite
+# labelmap_mobilenet_card.txt
 
 # Bundler
 .bundle
@@ -45,3 +42,6 @@ Carthage/Build
 #
 Pods/
 Podfile.lock
+
+# Built frameworks and SDK archives
+VouchedMobileSDK*
