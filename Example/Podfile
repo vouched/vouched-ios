@@ -9,7 +9,7 @@ target 'Vouched_Example' do
     if use_local
     pod 'Vouched/Barcode', :path => '../Vouched.podspec'
   else
-    pod 'Vouched/Barcode', '~> 1.9.8'
+    pod 'Vouched/Barcode', '~> 1.9.9'
   end
 
  post_install do |installer|
