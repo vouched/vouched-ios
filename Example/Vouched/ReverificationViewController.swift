@@ -2,14 +2,14 @@
 //  AuthenticateViewController.swift
 //  Vouched_Example
 //
-//  Copyright © 2025 Vouched.id. All rights reserved.
+//  Copyright © 2021 Vouched.id. All rights reserved.
 //
 
 import UIKit
 import AVFoundation
 import VouchedCore
 
-class ReverificationViewController: UIViewController, @preconcurrency AVCaptureVideoDataOutputSampleBufferDelegate {
+class ReverificationViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate {
     
     @IBOutlet weak var cameraView: UIView!
     @IBOutlet weak var nextButton: UIButton!
@@ -63,7 +63,7 @@ class ReverificationViewController: UIViewController, @preconcurrency AVCaptureV
     }
     
     func initVouchedSession() {
-        self.session = VouchedSession(apiKey: getValue(key:"API_KEY"), sessionParameters: VouchedSessionParameters())
+        self.session = VouchedSession(apiKey: getValue(key:"API_KEY"), sessionParameters: VouchedSessionParameters(), apiUrl: getValue(key: "API_URL"))
     }
     
     /**

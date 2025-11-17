@@ -2,14 +2,14 @@
 //  AppDelegate.swift
 //  Vouched
 //
-//  Copyright © 2025 Vouched.id. All rights reserved.
+//  Copyright © 2021 Vouched.id. All rights reserved.
 //
 
 import UIKit
 import VouchedCore
 import VouchedBarcode
 
-@main
+@UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?

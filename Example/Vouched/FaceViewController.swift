@@ -2,11 +2,11 @@
 //  FaceViewControllerV2.swift
 //  Vouched_Example
 //
-//  Copyright 2025 Vouched.id. All rights reserved.
+//  Copyright © 2021 Vouched.id. All rights reserved.
 //
 
 import UIKit
-@preconcurrency import VouchedCore
+import VouchedCore
 
 class FaceViewController: UIViewController {
     @IBOutlet private weak var previewContainer: UIView!
@@ -48,7 +48,7 @@ class FaceViewController: UIViewController {
             destVC.session = self.session
         }
     }
-    
+
     private func configureHelper(_ mode: VouchedDetectionMode) {
         helper = VouchedCameraHelper(with: mode, detectionOptions: [.faceDetect(FaceDetectOptionsBuilder().withLivenessMode(.mouthMovement).build())], in: previewContainer)?.withCapture(delegate: { self.handleResult($0) })
     }
@@ -69,34 +69,37 @@ class FaceViewController: UIViewController {
                 self.loadingToggle()
                 self.instructionLabel.text = "Processing Image"
                 let isLivenessJob = self.isLivenessJob
-                // swift concurrency requires livenessMode is accessed before entering background
                 let livenessMode = self.helper?.livenessMode
-                guard let captureSession = self.session else { return }
+                let captureSession = self.session
                 DispatchQueue.global().async {
                     do {
                         let job: Job?
-                        if (isLivenessJob) {
-                            job = try captureSession.postSelfieVerification(detectedFace: result, liveness: livenessMode)
-                        } else {
-                            job = try captureSession.postFace(detectedFace: result)
-                        }
-                        //print(job)
-
-                        let insights = VouchedUtils.extractInsights(job)
-
-                        // if there are job insights, update label and retry card detection
-                        DispatchQueue.main.async {
-                            if !insights.isEmpty {
-                                self.updateLabel(insights.first!)
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
-                                    self.helper?.resetDetection()
+                        if isLivenessJob {
+                            guard let captureSession = captureSession else {
+                                DispatchQueue.main.async {
                                     self.loadingToggle()
                                     self.helper?.startCapture()
                                 }
                                 return
                             }
-                            self.buttonShow()
+                            job = try captureSession.postSelfieVerification(detectedFace: result, liveness: livenessMode)
+                        } else {
+                            job = try captureSession?.postFace(detectedFace: result)
                         }
+                        //print(job)
+
+                        // if there are job insights, update label and retry card detection
+                        let insights = VouchedUtils.extractInsights(job)
+                        if !insights.isEmpty {
+                            self.updateLabel(insights.first!)
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+                                self.helper?.resetDetection()
+                                self.loadingToggle()
+                                self.helper?.startCapture()
+                            }
+                            return
+                        }
+                        self.buttonShow()
                     } catch {
                         print("Error Selfie: \(error.localizedDescription)")
                     }

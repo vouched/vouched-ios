@@ -2,19 +2,24 @@
 //  IdViewControllerV2.swift
 //  Vouched
 //
-//  Copyright © 2025 Vouched.id. All rights reserved.
+//  Copyright © 2021 Vouched.id. All rights reserved.
 //
 
 import UIKit
-import TensorFlowLite
 import VouchedCore
 import VouchedBarcode
+import TensorFlowLite
 
 func getValue(key:String)-> String?{
     let v = Bundle.main.infoDictionary?[key] as? String
     if v == "" {
         return nil
     }
+    
+    if let value = v, key.contains("URL") {
+        return value.replacingOccurrences(of: "__DOUBLE_SLASH__", with: "//")
+    }
+    
     return v
 }
 
@@ -26,18 +31,18 @@ class IdViewController: UIViewController {
     @IBOutlet private weak var confirmIdButton: UIButton!
     @IBOutlet private weak var retryIdButton: UIButton!
     @IBOutlet private weak var confirmPanel: UIView!
-
+    
     var inputFirstName: String = ""
     var inputLastName: String = ""
     var useCameraFlash = false
     var confirmID = false
     // temp storage of current ID to be confirmed
     var confirmIDDetectionResult: CardDetectResult?
-
+    
     private var helper: VouchedCameraHelper?
     private var detectionMgr: VouchedDetectionManager?
-    private let session = VouchedSession(apiKey: getValue(key:"API_KEY"), sessionParameters: VouchedSessionParameters())
-
+    private let session = VouchedSession(apiKey: getValue(key:"API_KEY"), sessionParameters: VouchedSessionParameters(), apiUrl: getValue(key:"API_URL"))
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -47,10 +52,9 @@ class IdViewController: UIViewController {
         loadingIndicator.isHidden = true
         instructionLabel.text = nil
         confirmPanel.isHidden = true
-
+        
         configureHelper(.id)
         configureDetectionManager()
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -64,22 +68,22 @@ class IdViewController: UIViewController {
         
         stopCapture()
     }
-
+    
     override func prepare(for segue: UIStoryboardSegue, sender:Any?){
         if segue.identifier == "ToFaceDetect"{
             let destVC = segue.destination as! FaceViewController
             destVC.session = self.session
         }
     }
-
+    
     private func startCapture() {
         detectionMgr?.startDetection()
     }
-
+    
     private func stopCapture() {
         detectionMgr?.stopDetection()
     }
-
+    
     private func updateLabel(_ instruction: Instruction) {
         var str: String
         switch instruction {
@@ -98,10 +102,10 @@ class IdViewController: UIViewController {
             self.instructionLabel.text = str
         }
     }
-        
+    
     private func updateLabel(_ insight: Insight) {
         var str: String
-
+        
         switch insight {
         case .nonGlare:
             str = "image has glare"
@@ -127,8 +131,8 @@ class IdViewController: UIViewController {
     }
     
     private func confirmIDCaptureIsGood(isVisible: Bool, result: CardDetectResult) {
-            self.confirmIDDetectionResult = result
-            self.showConfirmOverlay(isVisible: isVisible)
+        self.confirmIDDetectionResult = result
+        self.showConfirmOverlay(isVisible: isVisible)
     }
     
     func showConfirmOverlay(isVisible: Bool) {
@@ -140,16 +144,16 @@ class IdViewController: UIViewController {
             self.navigationController?.navigationBar.isHidden = isVisible
         }
     }
-
-
+    
+    
     private func buttonShow() {
         DispatchQueue.main.async() {
             self.nextButton.isHidden = false
             self.loadingIndicator.isHidden = true
             self.instructionLabel.text = nil
-       }
+        }
     }
-
+    
     private func loadingToggle() {
         self.loadingIndicator.isHidden = !self.loadingIndicator.isHidden
     }
@@ -181,19 +185,19 @@ extension IdViewController {
         helper = VouchedCameraHelper(with: mode, helperOptions: options, detectionOptions: detectionOptions, in: previewContainer)
     }
 }
-    
+
 //MARK: - VouchedDetectionManager
 
 extension IdViewController {
     private func configureDetectionManager() {
         guard let helper = helper else { return }
-        guard let config = VouchedDetectionManagerConfig(session: session) else { return }
-        // optional validation parameters can be added here.
+        guard let config = VouchedDetectionManagerConfig(session: session) else {
+            return
+        }
+        // optional validation parameters are added here
         config.validationParams.firstName = inputFirstName
         config.validationParams.lastName = inputLastName
-        config.validationParams.enablePhysicalAddress = false
-        config.validationParams.enableIPAddress = false
-
+        
         config.progress = ProgressAnimation(loadingIndicator: loadingIndicator)
         let callbacks = DetectionCallbacks { change in
             DispatchQueue.main.async {
@@ -228,7 +232,7 @@ extension IdViewController {
         config.callbacks = callbacks
         detectionMgr = VouchedDetectionManager(helper: helper, config: config)
     }
-
+    
     private func onResultProcessing(_ options: VouchedResultProcessingOptions) {
         guard options.step != nil else {
             self.instructionLabel.text = (options.mode == .barcode) ? "Focus camera on barcode" : "Show ID Card"
@@ -253,14 +257,14 @@ extension IdViewController {
     }
 }
 
-private struct ProgressAnimation: @preconcurrency VouchedProgressAnimation {
+private struct ProgressAnimation: VouchedProgressAnimation {
     let loadingIndicator: UIActivityIndicatorView?
     
-    @MainActor func startAnimating() {
+    func startAnimating() {
         self.loadingIndicator?.isHidden = false
     }
     
-    @MainActor func stopAnimating() {
+    func stopAnimating() {
         self.loadingIndicator?.isHidden = true
     }
 }
