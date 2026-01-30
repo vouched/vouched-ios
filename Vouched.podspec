@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'Vouched'
-  s.version          = '1.10.0'
+  s.version          = '1.11.0'
   s.summary          = 'Making Verifications Fast and Simple.'
   s.swift_version    = '5.0'
   s.description      = <<-DESC
@@ -12,7 +12,7 @@ Pod::Spec.new do |s|
   s.source           = { :http => "https://github.com/vouched/vouched-ios/releases/download/v#{s.version}/VouchedMobileSDK.zip" }
 
   s.platform = :ios
-  s.ios.deployment_target = '15.0'
+  s.ios.deployment_target = '16.0'
 
   s.default_subspec = 'Core'
   s.subspec 'Core' do |cr|

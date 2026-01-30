@@ -1,5 +1,5 @@
 use_frameworks!
-platform :ios, '15.0'
+platform :ios, '16.0'
 
 source 'https://github.com/CocoaPods/Specs.git'
 
@@ -9,7 +9,7 @@ target 'Vouched_Example' do
     if use_local
     pod 'Vouched/Barcode', :path => '../Vouched.podspec'
   else
-    pod 'Vouched/Barcode', '~> 1.10.0'
+    pod 'Vouched/Barcode', '~> 1.11.0'
   end
 
  post_install do |installer|
