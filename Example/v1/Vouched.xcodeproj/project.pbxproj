@@ -42,7 +42,7 @@
 		E25B58BF2EC242E3005A2B51 /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
 		E25B58C12EC24E97005A2B51 /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = SOURCE_ROOT; };
 		EB25B3DD3E9AD6BD8C6065CE /* Pods-Vouched_Example.development.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Vouched_Example.development.xcconfig"; path = "Target Support Files/Pods-Vouched_Example/Pods-Vouched_Example.development.xcconfig"; sourceTree = "<group>"; };
-		EC50BD5928DD01B0002F5081 /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Colors.xcassets; path = "../../../../vouched-ios-demo/Sources/Resources/Colors.xcassets"; sourceTree = "<group>"; };
+		EC50BD5928DD01B0002F5081 /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
 		ECAE7D15B84FC0F6F28A20DD /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../../README.md; sourceTree = "<group>"; };
 		F01FAA71589CA57F8A0A3BD7 /* Pods-Vouched_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Vouched_Example.release.xcconfig"; path = "Target Support Files/Pods-Vouched_Example/Pods-Vouched_Example.release.xcconfig"; sourceTree = "<group>"; };
 		FA428A1026834E8A009C5720 /* IdViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdViewController.swift; sourceTree = "<group>"; };
