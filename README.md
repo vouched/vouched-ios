@@ -11,10 +11,10 @@ Clone this repo and change directory to _example_
 ```shell
 git clone https://github.com/vouched/vouched-ios
 
-cd vouched-ios/Example
+cd vouched-ios/Example/v1
 ```
 
-Then, follow steps listed on the [example README](https://github.com/vouched/vouched-ios/blob/master/Example/README.md)
+Then, follow steps listed on the [v1 example README](https://github.com/vouched/vouched-ios/blob/master/Example/v1/README.md)
 
 ## Prerequisites
 

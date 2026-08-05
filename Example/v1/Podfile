@@ -7,7 +7,7 @@ use_local = ENV['VOUCHED_LOCAL'] == '1'
 
 target 'Vouched_Example' do
     if use_local
-    pod 'Vouched/Barcode', :path => '../Vouched.podspec'
+    pod 'Vouched/Barcode', :path => '../../Vouched.podspec'
   else
     pod 'Vouched/Barcode', '~> 1.11.0'
   end
