@@ -1,0 +1,7 @@
+// Replace with your Apple Developer team and bundle identifier.
+DEVELOPMENT_TEAM =
+PRODUCT_NAME = vouched_sample
+PRODUCT_BUNDLE_IDENTIFIER = id.vouched.sample
+
+CURRENT_PROJECT_VERSION = 1
+MARKETING_VERSION = 2.0.0

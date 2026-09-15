@@ -1,529 +1,278 @@
-# Vouched
+# Vouched iOS SDK
 
-[![Version](https://img.shields.io/cocoapods/v/Vouched.svg?style=flat)](https://cocoapods.org/pods/Vouched)
-[![License](https://img.shields.io/cocoapods/l/Vouched.svg?style=flat)](https://cocoapods.org/pods/Vouched)
-[![Platform](https://img.shields.io/cocoapods/p/Vouched.svg?style=flat)](https://cocoapods.org/pods/Vouched)
-
-## Run Example
-
-Clone this repo and change directory to _example_
-
-```shell
-git clone https://github.com/vouched/vouched-ios
-
-cd vouched-ios/Example/v1
-```
-
-Then, follow steps listed on the [v1 example README](https://github.com/vouched/vouched-ios/blob/master/Example/v1/README.md)
+Identity verification SDK for iOS. Drop-in flow that handles document capture, face capture with liveness, and submission to the Vouched backend.
 
 ## Prerequisites
 
-- An account with Vouched
-- Your Vouched Public Key
+- A [Vouched account](https://app.vouched.id) with an active API key. If you don't have one, contact your Vouched representative.
+- *Optional, for enhanced ID capture:* enhanced document detection reads documents faster and more reliably than the classic pipeline, and is licensed per application. To enable it, give your Vouched representative the bundle identifier of every app that will run the SDK, including build variants (for example `com.example.myapp` and `com.example.myapp.staging`).
 
+  Until it is enabled, document capture runs the classic pipeline instead. Capture still works, and no code change is needed on your side once enhanced capture is turned on.
 
-## Install
+## Requirements
 
-Add the package to your existing project's Podfile
+- iOS 17.0+
+- Xcode 16.0+
+- Swift 5.9+
+- An Apple Developer account (free tier works for local development)
+- A Vouched API key (contact your Vouched representative)
 
-```shell
-pod 'Vouched', 'VOUCHED_VERSION'
+## Features
+
+- Document capture (front, back, and full ID) with automatic detection
+- Face capture with liveness verification
+- Drop-in SwiftUI view that drives the entire verification flow end to end
+- Customizable terminal screens (success, cancelled, error)
+- Optional custom instruction screens before ID and face stages
+
+## Installation
+
+Add the package via **File → Add Package Dependencies** in Xcode:
+
+```
+https://github.com/vouched/vouched-ios
 ```
 
-## SDK Job Types
-
-The Vouched SDK supports three different types of verification jobs, which serve different purposed in verification:
-
-1. **IDV (Identity Verification) Job**
-   - Captures and verifies an ID document (driver's license, passport, etc.)
-   - Captures a selfie of the user
-   - Performs liveness detection
-   - Matches the selfie against the ID photo
-   - Used for full identity verification workflows
-   - Use the 
-2. **Reverification Job**
-   - Captures a new selfie and compares it against a previously completed IDV job
-   - Useful for re-authenticating returning users
-   - Requires the original job ID and user photo
-3. **Selfie Verification Job**
-   - Captures only a selfie of the user
-   - Performs liveness detection
-   - Does not require ID document
-   - Useful for basic presence and liveness verification
-
-## Reference
-
-### VouchedCameraHelper
-
-This class is introduced to make it easier for developers to integrate `VouchedSDK` and provide the optimal photography. The helper takes care of configuring the capture session, input, and output. 
-
-##### Initialize
-
-You can initialize the helper by specifying a Detector that you wish to use. Note how some of the controllers have a convenience method ```configureHelper(_ detector: Detector.Type)``` to simplify the configuration of the helper.
+Or add it to your `Package.swift`:
 
 ```swift
-let helper = VouchedCameraHelper(with detector: Detector.Type, helperOptions: VouchedCameraHelperOptions, detectionOptions: [VouchedDetectionOptions], in: UIView)
+dependencies: [
+    .package(url: "https://github.com/vouched/vouched-ios", from: "2.0.0")
+]
 ```
 
-##### Observe Results
+## Permissions
 
-There are two helper methods that serve as delegates to obtain capturing results
+Add the camera usage description to your app's `Info.plist`:
 
-```swift
-func withCapture(delegate: @escaping ((CaptureResult) -> Void)) -> VouchedCameraHelper
+```xml
+<key>NSCameraUsageDescription</key>
+<string>We use the camera to capture your ID and take a selfie for identity verification.</string>
 ```
 
+## Required Info.plist Entry
 
-| Parameter Type                            | Nullable |
-| ------------------------------------------- | :--------: |
-| Closure([CaptureResult](#captureresult) ) |  false  |
+The SDK's capture screens require your app to opt in to full-speed rendering on iPhone. Without this key, the app crashes on launch as soon as a Vouched screen is presented:
 
-```swift
-func observeBoundingBox(observer: @escaping ((BoundingBox) -> Void)) -> VouchedCameraHelper
+```xml
+<key>CADisableMinimumFrameDurationOnPhone</key>
+<true/>
 ```
 
+## Quick Start
 
-| Parameter Type                      | Nullable |
-| ------------------------------------- | :--------: |
-| Closure([BoundingBox](boundingbox)) |  false  |
+### 1. Present the verification flow
 
-##### Run
-
-In order to start capturing, put the following code:
+`VouchedFlowView` drives the full flow. Provide an `AppConfig` with your API key and chain modifiers to register terminal screens:
 
 ```swift
-helper.startCapture()
+import SwiftUI
+import Vouched
+
+struct VerificationView: View {
+    private let config = AppConfig(
+        type: .idv,
+        sessionParams: .init(apiKey: "YOUR_VOUCHED_API_KEY")
+    )
+
+    var body: some View {
+        VouchedFlowView(config: config)
+            .successScreen { job in
+                Text("Verification complete: \(job.id)")
+            }
+            .cancelledScreen { reason in
+                Text("Cancelled: \(reason ?? "user cancelled")")
+            }
+            .errorScreen { error, retry in
+                VStack {
+                    Text("Error: \(error.localizedDescription)")
+                    Button("Retry", action: retry)
+                }
+            }
+    }
+}
 ```
 
-Once the results are ready to process/submit, stop capturing:
+### 2. (Optional) Custom instruction screens
+
+Show your own SwiftUI screens before the ID and face capture stages:
 
 ```swift
-helper.stopCapture()
-```
-
-##### Usage
-
-Typical usage is as follows:
-**Note:** you can inspect the results delivered from the callback, and do additional processing before using the session object to post the results to the api service.:
-
-```swift
-let helper = VouchedCameraHelper(with: .id,
-                                 detectionOptions: [.cardDetect(CardDetectOptionsBuilder().withEnableDistanceCheck(false).build())],
-                                 in: previewContainer)?
-    .withCapture(delegate: { (result) in
-        switch result {
-        case .empty:
-            ...
-        case .id(let result):
-            ...
-        default:
-            break
-        }
-    })
-```
-
-### VouchedDetectionManager
-
-This class is introduced to help guide the ID verification modes by processing job results returned by the Vouched API service, and generating the appropriate modes that are needed to complete ID verification.  For example, consider a ID that has important verification This is particularly important if you are verifying identities in countries where some of the information needed for verification is on the back side of the ID, the detection manager will prompt the user to turn the card around to capture that information.
-
-##### Initialize
-
-```swift
-    let helper: VouchedCameraHelper
-    let session: VouchedSession
-    let config = VouchedDetectionManagerConfig(session: session)
-    let callbacks = DetectionCallbacks
-    config.callbacks = callbacks
-    let detectionMgr = VouchedDetectionManager(helper: helper, config: config)
-```
-
-##### Run
-
-In order to start detection, put the following code:
-
-```swift
-    detectionMgr.startDetection()
-```
-
-If there is a need to capture additional info the following closure will be called :
-
-```swift
-    let callbacks = DetectionCallbacks { change in
-        let alert = UIAlertController(title: nil, message: "Turn ID card over to backside", preferredStyle: .alert)
-        let ok = UIAlertAction(title: "OK", style: .default, handler: { _ in
-            change.completion(true)
-        })
-        alert.addAction(ok)
-        self.present(alert, animated: true)
+VouchedFlowView(config: config)
+    .withIdStageInstructionsScreen { onContinue in
+        IdInstructionsScreen(onContinue: onContinue)
+    }
+    .withFaceStageInstructionsScreen { onContinue in
+        FaceInstructionsScreen(onContinue: onContinue)
     }
 ```
 
-Once the detection process is finished and there is a `Job` result the following closure will be called:
+### 3. (Optional) Observe stage transitions
 
 ```swift
-    let callbacks: DetectionCallbacks
-    callbacks.detectionComplete = { result in
-        switch result {
-        case .success(let job):
-                print("\(job)")
-        case .failure(let err):
-            print("Error: \(err)")
-        }
+VouchedFlowView(config: config)
+    .onStageChange { from, to in
+        print("Stage: \(from) → \(to)")
+    }
 ```
 
-Examine the `extension IdViewController : VouchedDetectionManager` in the example app to see how this mechanism can be implemented. 
+### 4. (Optional) Enable analytics tracking
 
-
-### VouchedSession
-
-This class handles a user's Vouched session. It takes care of the API calls. 
-**Note:** Use only one instance of the session object for the duration of a user's verification session
-
-##### Initialize
+We recommend enabling anonymous analytics. It lets Vouched diagnose verification failures in your integration, which is the fastest path to a resolution when you raise a support ticket:
 
 ```swift
-let session = VouchedSession(apiKey: "PUBLIC_KEY", groupId: "GROUP_ID")
+VouchedFlowView(config: config)
+    .trackingConsent(true)
 ```
 
+## Sample App
 
-| Parameter Type | Nullable |
-| ---------------- | :--------: |
-| String         |  false  |
-| String         |   true   |
+This repository ships a working sample app under `Example/` that demonstrates the full integration above.
 
-##### Initializing with a token
+### Configure signing
+
+1. Open `Example/VouchedSample.xcodeproj` in Xcode.
+2. Select the `VouchedSample` target → **Signing & Capabilities**.
+3. Choose your Apple Developer team from the dropdown.
+
+### Provide an API key
+
+The sample reads its API key from `Example/VouchedSample/Secrets.swift`, which is gitignored.
+
+1. Copy the template:
+   ```bash
+   cp Example/VouchedSample/Secrets.swift.template Example/VouchedSample/Secrets.swift
+   ```
+2. Open `Secrets.swift` and replace `VOUCHED_API_KEY_PLACEHOLDER` with your Vouched API key.
+
+### Run
+
+Build and run on a physical iOS device. Camera access is required for ID and face capture; the simulator does not provide a real camera.
+
+## Advanced Configuration
+
+### Flow types
+
+`AppConfig.type` selects which stages the flow runs:
+
+| Type | Stages |
+|---|---|
+| `.id` | Document capture only |
+| `.idv` | Document capture and face capture |
+| `.reverify` | Face capture only, matched against a previous job (re-verification) |
+| `.selfieVerification` | Face capture only |
+
+### Document Capture Options
 
 ```swift
-let session = VouchedSession(apiKey: "PUBLIC_KEY", groupId: "GROUP_ID", sessionParameters: VouchedSessionParameters(token: "TOKEN"))
+let config = AppConfig(
+    type: .idv,
+    sessionParams: .init(apiKey: "YOUR_VOUCHED_API_KEY"),
+    documentCaptureConfig: DocumentCaptureConfig(
+        detectionMode: .enhancedWithFallback,
+        includeBackId: true,
+        classicDocumentDetectionOptions: .init(
+            enableDistanceCheck: true,
+            captureMethod: .both,
+            tuning: .init(
+                timeoutMs: 30000,
+                holdSteadyDurationMs: 1000
+            )
+        ),
+        includeBarcodeScanning: true,
+        options: .init(
+            userImageConfirmation: true,
+            cardIDThreshold: 0.8
+        )
+    )
+)
 ```
 
-##### POST Front Id image
+`DocumentCaptureConfig`:
+
+| Field | Default | Description |
+|---|---|---|
+| `detectionMode` | `.enhancedWithFallback` | Which detection pipeline runs. `.enhancedWithFallback` uses enhanced detection and falls back to classic when it is unavailable. `.classicOnly` uses platform-native detection (Vision framework). |
+| `includeBackId` | `false` | Capture the back of the ID in addition to the front. |
+| `classicDocumentDetectionOptions` | see below | Options that apply to the classic pipeline. |
+| `includeBarcodeScanning` | `false` | Scan the PDF417 barcode on the back of driver's licenses. Only relevant when `includeBackId` is `true`. |
+| `options` | see below | Capture-result acceptance options. |
+
+#### `classicDocumentDetectionOptions`
+
+`enableDistanceCheck` applies only to the classic pipeline, and only when it actually runs: either because `.enhancedWithFallback` fell back to it, or because `detectionMode` is `.classicOnly`. `captureMethod` and `tuning.timeoutMs` apply in both modes: `captureMethod` decides whether the third-party pipeline runs at all, and `timeoutMs` drives the enhanced-detection fallback timer.
+
+| Field | Default | Description |
+|---|---|---|
+| `enableDistanceCheck` | `false` | Run the distance challenge (hold the ID farther away, then move closer) before the final capture, and send a `distanceImage` alongside the ID result. Front ID only. |
+| `captureMethod` | `.camera` | How the user provides the image. See the capture methods table below. |
+| `tuning` | see below | Capture timing. |
+
+#### `tuning`
+
+| Field | Default | Description |
+|---|---|---|
+| `timeoutMs` | `30000` | How long the capture session runs before it fails with a timeout. Must be positive; set it to `nil` for no timeout. |
+| `holdSteadyDurationMs` | `1000` | How long the user must hold steady before auto-capture triggers. Must be positive. Raising it reduces motion blur at the cost of a slower capture. |
+
+#### `options`
+
+| Field | Default | Description |
+|---|---|---|
+| `userImageConfirmation` | `false` | Show a confirmation screen after capture so the user can accept or retake the image. When `false`, capture proceeds immediately. |
+| `cardIDThreshold` | `0.0` | Minimum ID confidence, from 0.0 to 1.0, that the backend must report before the flow advances. Below it, the stage returns to retry. The default of `0.0` disables the gate. |
+
+#### Capture methods
+
+| Value | Behavior |
+|---|---|
+| `.camera` | Live camera capture only. |
+| `.upload` | Gallery upload only. The camera is never started; the capture screen shows just the upload button. |
+| `.both` | Live camera capture with an additional upload-from-gallery button. |
+
+Uploaded images are posted directly and skip on-device detection. The gallery uses the system photo picker, so `.upload` and `.both` need no additional `Info.plist` permission.
+
+### Face Capture Options
 
 ```swift
-let job = try session.postFrontId(detectedCard: detectedCard, details: details)
+let config = AppConfig(
+    type: .idv,
+    sessionParams: .init(apiKey: "YOUR_VOUCHED_API_KEY"),
+    faceCaptureConfig: FaceCaptureConfig(
+        timeoutMs: 30000,
+        detectionMode: .enhancedWithFallback,
+        livenessMode: .straight,
+        selfieThreshold: 0.8,
+        captureMethod: .camera
+    )
+)
 ```
 
+| Field | Default | Description |
+|---|---|---|
+| `timeoutMs` | `30000` | How long the capture session runs before the user is offered a manual photo. Must be positive; set it to `nil` for no timeout. |
+| `detectionMode` | `.classicOnly` | Which pipeline runs. `.enhancedWithFallback` uses enhanced liveness detection and falls back to classic on failure. `.classicOnly` uses platform-native detection (Vision framework). |
+| `livenessMode` | `.straight` | The classic liveness challenge: `.straight`, `.mouthMovement`, `.distance`, or `.orientation`. Ignored when enhanced liveness succeeds. |
+| `selfieThreshold` | `0.0` | Minimum selfie confidence, from 0.0 to 1.0, that the backend must report before the flow advances. Below it, the stage returns to retry. The default of `0.0` disables the gate. |
+| `captureMethod` | `.camera` | How the user provides the selfie, using the same values as document capture. |
 
-| Parameter Type                        | Nullable |
-| --------------------------------------- | :--------: |
-| [CardDetectResult](#carddetectresult) |  false  |
-| [Params](#params)                     |   true   |
+## Versioning
 
-`Returns` - [Job](https://docs.vouched.id/#tag/job-model)
+This SDK follows Semantic Versioning. Each tagged release on this repository corresponds to one published XCFramework, hosted as a GitHub Release asset and pinned in `Package.swift` with a SHA-256 checksum.
 
-##### POST Selfie image
+## Support
 
-```swift
-let job = try session.postFace(detectedFace: detectedFace)
-```
-
-
-| Parameter Type                        | Nullable |
-| --------------------------------------- | :--------: |
-| [FaceDetectResult](#facedetectresult) |  false  |
-
-`Returns` - [Job](https://docs.vouched.id/#tag/job-model)
-
-##### POST confirm verification
-
-```swift
-let job = try session.postConfirm()
-```
-
-`Returns` - [Job](https://docs.vouched.id/#tag/job-model)
-
-##### POST re-verification
-
-```swift
-let job = try session.postReverify(jobID: String, userPhoto: String)
-```
-
-`Returns` - [Job](https://docs.vouched.id/#tag/job-model)
-
-##### POST Selfie verification
-
-```swift
-let job = try session.postSelfieVerification(detectedFace: detectedFace)
-```
-
-
-| Parameter Type                        | Nullable |
-| ------------------------------------- | :------: |
-| [FaceDetectResult](#facedetectresult) |  false   |
-
-`Returns` - [Job](https://docs.vouched.id/#tag/job-model)
-
-| Parameter Type                    | Nullable |
-| --------------------------------- | :------: |
-| jobID                             |  false   |
-| userPhoto (base64 encoded string) |  false   |
-
-### CardDetect
-
-This class handles detecting an ID (cards and passports) and performing necessary steps to ensure image is `Step.postable`.
-
-##### Initialize
-
-```swift
-let cardDetect = CardDetect(options: CardDetectOptionsBuilder().withEnableDistanceCheck(true).build())
-```
-
-
-| Parameter Type                          | Nullable |
-| ----------------------------------------- | :--------: |
-| [CardDetectOptions](#carddetectoptions) |  false  |
-
-##### Process Image
-
-```swift
-let detectedCard = cardDetect?.detect(sampleBuffer)
-```
-
-
-| Parameter Type | Nullable |
-| ---------------- | :--------: |
-| CVImageBuffer  |  false  |
-
-`Returns` - [CardDetectResult](#carddetectresult)
-
-### FaceDetect
-
-This class handles detecting a face and performing necessary steps to ensure image is `Step.postable`.
-
-##### Initialize
-
-```swift
-let faceDetect = FaceDetect(options: FaceDetectOptionsBuilder().withLivenessMode(.distance).build())
-```
-
-
-| Parameter Type                          | Nullable |
-| ----------------------------------------- | :--------: |
-| [FaceDetectOptions](#facedetectoptions) |  false  |
-
-##### Process Image
-
-```swift
-let detectedFace = faceDetect?.detect(sampleBuffer)
-```
-
-
-| Parameter Type | Nullable |
-| ---------------- | :--------: |
-| CVImageBuffer  |  false  |
-
-`Returns` - [FaceDetectResult](#facedetectresult)
-
-### Types
-
-##### BoundingBox
-
-The bounding box of detected `ID card` for the output from [Card Detection](#carddetectresult).
-
-```swift
-public struct BoundingBox {
-    public let box: CGRect?
-    public let imageSize: CGSize
-}
-```
-
-##### CardDetectResult
-
-The output from [Card Detection](#carddetect) and used to submit an ID.
-
-```swift
-struct CardDetectResult {
-    public let image: String?
-    public let distanceImage: String?
-    public let step: Step
-    public let instruction: Instruction
-    public let boundingBox: CGRect?
-}
-```
-
-##### FaceDetectResult
-
-The output from [Face Detection](#facedetect) and used to submit a Selfie.
-
-```swift
-struct FaceDetectResult {
-    public let image: String?
-    public let distanceImage: String?
-    public let step: Step
-    public let instruction: Instruction
-}
-```
-
-##### Params
-
-The parameters that are used to submit a Job.
-
-```swift
-struct Params: Codable{
-    var firstName: String?
-    var lastName: String?
-    var email: String?
-    var phone: String?
-    var birthDate: String?
-    var properties: [Property]?
-    var idPhoto: String?
-    var userPhoto: String?
-    var idDistancePhoto: String?
-    var userDistancePhoto: String?
-}
-```
-
-##### CardDetectOptions
-
-The options for [Card Detection](#carddetect).
-
-```swift
-class CardDetectOptionsBuilder {
-    public func withEnableDistanceCheck(_ enableDistanceCheck: Bool) -> CardDetectOptionsBuilder { ... }
-    public func withEnhanceInfoExtraction(_ enhanceInfoExtraction: Bool) -> CardDetectOptionsBuilder
-    
-    public func build() -> CardDetectOptions { ... }
-}
-```
-
-The [VouchedDetectionManager](#voucheddetectionmanager) can increase your verification abilities by recognizing additional sources of information based on the ID that your user submits.  You can enable this behavior by using  ```.withEnhanceInfoExtraction(true)``` when setting
-
-**ValidationParameters**
-
-These are optional configuration parameters can be used used to provide input to the IDV session when using the [VouchedDetectionManager](#voucheddetectionmanager). More information about their usage can be found in [our documentation] (https://docs.vouched.id/docs/js-plugin#verification-object). 
-
-```
-public struct VouchedValidationParamSettings: VouchedValidationParams {
-    public var firstName: String?
-    public var lastName: String?
-    public var email: String?
-    public var phone: String?
-    public var birthDate: String?
-    public var geoLocation: Geolocation?
-    public var enablePhysicalAddress: Bool?
-    public var enableIPAddress: Bool?
-    public var enableDarkWeb: Bool?
-    public var enableCrossCheck: Bool?
-    public var enableDriversLicenseValidation: Bool?
-```
-
-
-
-##### FaceDetectOptions
-
-The options for [Face Detection](#facedetect).
-
-```swift
-class FaceDetectOptionsBuilder {
-    public func withLivenessMode(_ livenessMode: LivenessMode) -> FaceDetectOptionsBuilder { ... }
-
-    public func build() -> FaceDetectOptions { ... }
-}
-```
-
-##### RetryableError
-
-An enum to provide an optional baseline of Verification Error(s) for a given Job.
-
-```swift
-enum RetryableError: String {
-    case invalidIdPhotoError
-    case blurryIdPhotoError
-    case glareIdPhotoError
-    case invalidUserPhotoError
-}
-```
-
-##### VouchedCameraMode
-
-An enum to provide mode for [VouchedCameraHelper](#vouchedcamerahelper)
-
-```swift
-public enum VouchedCameraMode {
-    case id
-    case barcode(String, DetectorOptions)
-    case selfie
-}
-```
-
-##### VouchedCameraHelperOptions
-
-List of options to alter image processing for [VouchedCameraHelper](#vouchedcamerahelper)
-
-```swift
-public struct VouchedCameraHelperOptions {
-    public static var usePhotoCapture: VouchedCameraHelperOptions
-    public static var cropIdImage: VouchedCameraHelperOptions
-}
-```
-
-##### VouchedDetectionOptions
-
-An enum to provide settings for `ID`/`Selfie` detection for [VouchedCameraHelper](#vouchedcamerahelper)
-
-```swift
-public enum VouchedDetectionOptions {
-    case cardDetect(CardDetectOptions)
-    case faceDetect(FaceDetectOptions)
-}
-```
-
-
-| Parameter Type                          | Nullable |
-| ----------------------------------------- | :--------: |
-| [CardDetectOptions](#carddetectoptions) |  false  |
-| [FaceDetectOptions](#facedetectoptions) |  false  |
-
-##### CaptureResult
-
-An enum to deliver detection results
-
-```swift
-public enum CaptureResult {
-    case empty
-    case id(DetectionResult)
-    case selfie(DetectionResult)
-    case barcode(DetectionResult)
-}
-```
-
-
-| Parameter Type                      | Nullable |
-| ------------------------------------- | :--------: |
-| [DetectionResult](#detectionresult) |  false  |
-
-##### DetectionResult
-
-Generic protocol, used to submit detection results
-
-```swift
-public protocol DetectionResult {
-    func params() throws -> Params
-}
-```
-
-## Debugging/Logging
-
-Configure VouchedLogger to the destination and level desired. If not configured, VouchedLogger defaults to `.none` and `.error`
-
-```swift
-VouchedLogger.shared.configure(destination: .xcode, level: .debug)
-```
-
-Destinations - where the log output is written
-
-- .xcode (Xcode output)
-- .console (Console app via [os_log](https://developer.apple.com/documentation/os/oslog))
-- .none
-
-Levels - the severity of the log
-
-- .debug
-- .info
-- .error
-
-The level is inclusive of more severe logs. i.e - `.debug` will also log `.info` and `.error`
+- Documentation: https://docs.vouched.id
+- Contact: support@vouched.id
 
 ## License
 
-Vouched is available under the Apache License 2.0 license. See the LICENSE file for more info.
+Apache 2.0. See [LICENSE](LICENSE) for details.
+
+## Migrating from v1
+
+If you were using the CocoaPods-based v1 SDK, see [MIGRATION.md](MIGRATION.md) for a full breakdown of what changed and how to upgrade.
+
+## Legacy SDK
+
+Looking for the v1.x SDK? See the [v1.11.0 README](https://github.com/vouched/vouched-ios/blob/v1.11.0/README.md).
