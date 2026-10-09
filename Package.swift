@@ -53,8 +53,8 @@ let package = Package(
         ),
         .binaryTarget(
             name: "VouchedCore",
-            url: "https://github.com/vouched/vouched-ios/releases/download/v2.0.0/VouchedCore.xcframework.zip",
-            checksum: "d449c3a124ea29cec44d4f92c90ccc06d5ff37dc35615ecd32ff010451e26bfa"
+            url: "https://github.com/vouched/vouched-ios/releases/download/v2.0.1/VouchedCore.xcframework.zip",
+            checksum: "944443eda6253c3f00b41adfaa94e0da42b5e6c60115af5a937319070cbae693"
         ),
     ]
 )
